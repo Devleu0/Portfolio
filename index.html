@@ -2800,8 +2800,12 @@
     </div>
 
     <div class="mobile-controls-left">
-        <button class="ctrl-btn" id="btn-left" aria-label="Left"><img src="./images/dpad.svg" alt="D-Pad Left" style="width:48px;height:48px;image-rendering:pixelated;display:block;"/></button>
-        <button class="ctrl-btn" id="btn-right" aria-label="Right"><img src="./images/dpad.svg" alt="D-Pad Right" style="width:48px;height:48px;image-rendering:pixelated;display:block;transform:scaleX(-1);"/></button>
+        <div class="dpad-container" style="position:relative; width:96px; height:96px; display:flex; align-items:center; justify-content:center;">
+            <img src="./images/dpad.svg" alt="D-Pad" style="width:96px;height:96px;display:block;image-rendering:pixelated;"/>
+            <!-- left/right invisible buttons positioned outside the D-Pad image so visual remains single image -->
+            <button id="btn-left" class="dpad-action" aria-label="Left" style="position:absolute; left:-52px; top:50%; transform:translateY(-50%); width:48px; height:48px; background:none; border:none; cursor:pointer; pointer-events:auto;"></button>
+            <button id="btn-right" class="dpad-action" aria-label="Right" style="position:absolute; right:-52px; top:50%; transform:translateY(-50%); width:48px; height:48px; background:none; border:none; cursor:pointer; pointer-events:auto;"></button>
+        </div>
     </div>
     <div class="mobile-controls-right">
         <button class="ctrl-btn" id="btn-duck" aria-label="Duck"><img src="./images/action-b.svg" alt="Duck (B)" style="width:44px;height:44px;image-rendering:pixelated;display:block;"/></button>
