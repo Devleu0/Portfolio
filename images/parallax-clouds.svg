@@ -8,12 +8,22 @@
     </linearGradient>
   </defs>
   <g fill="url(#cg)">
-    <ellipse cx="120" cy="40" rx="140" ry="28" />
-    <ellipse cx="340" cy="28" rx="120" ry="22" />
-    <ellipse cx="620" cy="44" rx="160" ry="30" />
-    <ellipse cx="860" cy="32" rx="110" ry="20" />
-    <!-- repeat block to tile -->
-    <ellipse cx="1120" cy="40" rx="140" ry="28" />
-    <ellipse cx="1340" cy="28" rx="120" ry="22" />
+    <!-- denser cloud band: multiple overlapping ellipses to increase visual density -->
+    <ellipse cx="40" cy="42" rx="160" ry="34" />
+    <ellipse cx="180" cy="32" rx="120" ry="26" />
+    <ellipse cx="300" cy="46" rx="180" ry="36" />
+    <ellipse cx="460" cy="34" rx="140" ry="28" />
+    <ellipse cx="620" cy="48" rx="200" ry="40" />
+    <ellipse cx="820" cy="38" rx="150" ry="30" />
+    <ellipse cx="980" cy="28" rx="120" ry="22" />
+    <ellipse cx="1120" cy="42" rx="160" ry="34" />
+    <ellipse cx="1280" cy="36" rx="140" ry="28" />
+    <ellipse cx="1440" cy="46" rx="180" ry="36" />
+    <ellipse cx="1600" cy="34" rx="140" ry="28" />
+    <ellipse cx="1760" cy="26" rx="120" ry="22" />
+    <!-- a few smaller front puffs for texture -->
+    <ellipse cx="220" cy="56" rx="54" ry="12" opacity="0.9" />
+    <ellipse cx="700" cy="58" rx="68" ry="14" opacity="0.85" />
+    <ellipse cx="1300" cy="52" rx="52" ry="10" opacity="0.9" />
   </g>
 </svg>

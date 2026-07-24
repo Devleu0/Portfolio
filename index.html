@@ -151,31 +151,31 @@
 
         /* zone-building overlays: centered buildings that scale by level */
         .zone { position: relative; }
-        .zone-building { position: absolute; left: 50%; transform: translateX(-50%); bottom: 8vh; pointer-events: none; background-repeat: no-repeat; background-position: center bottom; background-size: contain; z-index: 20; }
-        .zone-building--small { width: 120px; height: 96px; background-image: url('./images/building-small.svg'); }
-        .zone-building--medium { width: 180px; height: 120px; background-image: url('./images/building-medium.svg'); }
-        .zone-building--large { width: 260px; height: 160px; background-image: url('./images/building-large.svg'); }
-        .zone-building--tower { width: 320px; height: 240px; background-image: url('./images/building-tower.svg'); }
+        .zone-building { position: absolute; left: 50%; transform: translateX(-50%); bottom: 18vh; pointer-events: none; background-repeat: no-repeat; background-position: center bottom; background-size: contain; z-index: 20; }
+        .zone-building--small { width: 140px; height: 112px; background-image: url('./images/building-small.svg'); }
+        .zone-building--medium { width: 200px; height: 140px; background-image: url('./images/building-medium.svg'); }
+        .zone-building--large { width: 340px; height: 220px; background-image: url('./images/building-large.svg'); }
+        .zone-building--tower { width: 420px; height: 300px; background-image: url('./images/building-tower.svg'); }
 
         /* scramble crossing overlay for Shibuya internship zone */
         .zone-overlay--scramble { position: absolute; left: 50%; transform: translateX(-50%); bottom: 6vh; width: 420px; height: 220px; background-image: url('./images/scramble-crossing.svg'); background-repeat: no-repeat; background-size: contain; z-index: 21; opacity: 0.95; pointer-events: none; }
 
         /* small responsiveness tweaks */
         @media (max-width: 600px) {
-            .zone-building--small { width: 88px; height: 72px; bottom: 10vh; }
-            .zone-building--medium { width: 120px; height: 84px; bottom: 10vh; }
-            .zone-building--large { width: 160px; height: 100px; bottom: 12vh; }
-            .zone-building--tower { width: 200px; height: 160px; bottom: 14vh; }
+            .zone-building--small { width: 92px; height: 76px; bottom: 14vh; }
+            .zone-building--medium { width: 140px; height: 96px; bottom: 16vh; }
+            .zone-building--large { width: 200px; height: 140px; bottom: 20vh; }
+            .zone-building--tower { width: 260px; height: 200px; bottom: 24vh; }
             .zone-overlay--scramble { width: 260px; height: 140px; bottom: 10vh; }
         }
 
         .parallax-bg-far {
             height: 300px;
             /* moon (no-repeat, positioned) + cloud band (repeat-x & animating) + starfield (repeat-x) */
-            background-image: url('./images/moon.svg'), url('./images/parallax-clouds.svg'), url('./images/parallax-far.svg');
-            background-repeat: no-repeat, repeat-x, repeat-x;
-            background-position: 12% 24%, 0 40px, 0 0;
-            background-size: 120px auto, auto 120px, auto 300px;
+            background-image: url('./images/parallax-clouds.svg'), url('./images/parallax-far.svg');
+            background-repeat: repeat-x, repeat-x;
+            background-position: 0 40px, 0 0;
+            background-size: auto 120px, auto 300px;
             position: relative;
         }
 
@@ -218,13 +218,13 @@
 
         @keyframes cloudMove { from { transform: translateX(0);} to { transform: translateX(-50%);} }
 
-        .parallax-moon {
+.parallax-moon {
             position: fixed;
             left: 10%;
             top: 8vh;
             width: 120px;
             height: 120px;
-            background-image: url('./images/moon.svg');
+            background-image: none;
             background-size: contain;
             background-repeat: no-repeat;
             pointer-events: none;
@@ -2761,7 +2761,6 @@
         </div>
         <div id="sky-overlay"></div>
         <div id="sun"></div>
-        <div class="parallax-moon" aria-hidden="true"></div>
         <div class="global-clouds" aria-hidden="true"></div>
         <div id="finale-flash"></div>
         <div id="progress-bar-wrap">
@@ -3829,7 +3828,7 @@
                 {k: '장덕초등학교', cls: 'zone-building--small'},
                 {k: '장덕중학교', cls: 'zone-building--medium'},
                 {k: '광주진흥고등학교', cls: 'zone-building--large'},
-                {k: '대학교', cls: 'zone-building--medium'},
+                {k: '대학교', cls: 'zone-building--large'},
                 {k: '해외(일본) 인턴십', cls: 'zone-building--tower', overlay: 'zone-overlay--scramble'}
             ];
 
@@ -3837,6 +3836,11 @@
                 const title = zone.querySelector('.zone-title');
                 if (!title) return;
                 const text = (title.textContent || '').trim();
+                // Treat sections that contain '학년' or '학기' as university-level (larger building)
+                if (/학년|학기/.test(text)) {
+                    const b = document.createElement('div'); b.className = 'zone-building zone-building--large'; zone.appendChild(b);
+                    return;
+                }
                 mapping.forEach(function(m) {
                     if (m.k === '대학교') {
                         if (text.indexOf('대학') !== -1 || text.indexOf('대학교') !== -1) {
