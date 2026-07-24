@@ -739,6 +739,7 @@
             font-weight: 700;
             color: var(--text-sub);
             letter-spacing: 0.1em;
+            animation: blink 1s step-start infinite;
         }
 
         .scroll-chevrons {
@@ -1124,7 +1125,7 @@
         .ctrl-btn {
             width: 56px;
             height: 56px;
-            border-radius: 0;
+            border-radius: 50%;
             background: var(--card-bg);
             border: 4px solid #F8FAFC;
             box-shadow: inset -4px -4px 0 rgba(0, 0, 0, 0.5), 4px 4px 0 var(--shadow);
@@ -1137,13 +1138,13 @@
             justify-content: center;
             cursor: pointer;
             touch-action: none;
-            transition: transform 0.1s;
+            transition: transform 0.1s, box-shadow 0.1s;
             opacity: 0.7;
         }
 
         .ctrl-btn:active {
-            box-shadow: inset 4px 4px 0 rgba(0, 0, 0, 0.5);
-            transform: translate(4px, 4px);
+            box-shadow: inset 4px 4px 0 rgba(0, 0, 0, 0.5), 2px 2px 0 var(--shadow);
+            transform: translateY(4px);
             color: var(--accent);
         }
     </style>
@@ -3527,10 +3528,41 @@
         var jumpHeight = -250;
         var duckScale = THEME === 'minimal' ? 0.6 : 0.5;
 
+        function createJumpDust() {
+            const dustCount = 3;
+            const playerX = gsap.getProperty(player, "x");
+            
+            for (let i = 0; i < dustCount; i++) {
+                const dustParticle = document.createElement('div');
+                dustParticle.style.cssText = `position: absolute; width: 8px; height: 8px; background-color: white; bottom: 35vh; left: ${150 + (player.offsetWidth / 2)}px; transform: translateX(${playerX}px);`;
+                gameContainer.appendChild(dustParticle);
+
+                gsap.to(dustParticle, {
+                    x: `+=${(Math.random() - 0.5) * 50}`, // relative to current transform
+                    y: -15 - Math.random() * 20,
+                    scale: Math.random() * 0.5 + 0.5,
+                    opacity: 0,
+                    duration: 0.5 + Math.random() * 0.3,
+                    ease: "power1.out",
+                    onComplete: () => {
+                        dustParticle.remove();
+                    }
+                });
+            }
+        }
+        
         window.addEventListener('keydown', (e) => {
             const k = e.key.toLowerCase(); if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) e.preventDefault();
             if (k === 'd' || k === 'arrowright') keys.right = true; if (k === 'a' || k === 'arrowleft') keys.left = true;
-            if ((k === 'w' || k === 'arrowup') && !isJumping && !isDucking) {isJumping = true; playSound(jumpBuffer); gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => isJumping = false});}
+            if ((k === 'w' || k === 'arrowup') && !isJumping && !isDucking) {
+                isJumping = true; 
+                playSound(jumpBuffer); 
+                createJumpDust();
+                gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => {
+                    isJumping = false;
+                    createJumpDust();
+                }});
+            }
             if ((k === 's' || k === 'arrowdown') && !isJumping && !isDucking) {isDucking = true; gsap.to(player, {scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1});}
         });
         window.addEventListener('keyup', (e) => {
@@ -3542,7 +3574,16 @@
         function attachTouch(id, onDown, onUp) {var btn = document.getElementById(id); if (!btn) return; btn.addEventListener('pointerdown', onDown); btn.addEventListener('pointerup', onUp); btn.addEventListener('pointerleave', onUp);}
         attachTouch('btn-left', function (e) {e.preventDefault(); keys.left = true;}, function (e) {e.preventDefault(); keys.left = false;});
         attachTouch('btn-right', function (e) {e.preventDefault(); keys.right = true;}, function (e) {e.preventDefault(); keys.right = false;});
-        attachTouch('btn-jump', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {isJumping = true; playSound(jumpBuffer); gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => isJumping = false});} }, function (e) {e.preventDefault();});
+        attachTouch('btn-jump', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {
+                isJumping = true;
+                playSound(jumpBuffer);
+                createJumpDust();
+                gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => {
+                    isJumping = false;
+                    createJumpDust();
+                }});
+            } 
+        }, function (e) {e.preventDefault();});
         attachTouch('btn-duck', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {isDucking = true; gsap.to(player, {scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1});} }, function (e) {e.preventDefault(); gsap.to(player, {scaleY: 1, duration: 0.1, onComplete: () => isDucking = false});});
 
         var scrollSpeed = 24;
@@ -3658,28 +3699,30 @@
             statObserver.observe(document.querySelector('.stat-grid'));
         }
 
+        function resetAndGoToTop() {
+            gsap.to(window, {
+                scrollTo: 0,
+                duration: 1.5,
+                ease: 'power2.inOut',
+                onComplete: function () {
+                    locallyCollected.clear();
+                    collectedIds.clear();
+                    obstacleElements.forEach(function (el) {el.classList.remove('collected');});
+                    updateCounter();
+                }
+            });
+        }
+        
         var restartBtn = document.getElementById('restart-btn');
         if (restartBtn) {
-            restartBtn.addEventListener('click', function () {
-                gsap.to(window, {
-                    scrollTo: 0,
-                    duration: 1.5,
-                    ease: 'power2.inOut',
-                    onComplete: function () {
-                        locallyCollected.clear();
-                        collectedIds.clear();
-                        obstacleElements.forEach(function (el) {el.classList.remove('collected');});
-                        updateCounter();
-                    }
-                });
-            });
+            restartBtn.addEventListener('click', resetAndGoToTop);
         }
 
         var destSection = document.getElementById('dest-section');
         if (skipGameBtn && destSection) {
             skipGameBtn.addEventListener('click', function () {
                 if (isScrolledToEnd) {
-                    gsap.to(window, {scrollTo: 0, duration: 1.5, ease: 'power2.inOut'});
+                    resetAndGoToTop();
                 } else {
                     obstacleElements.forEach(function (obs) {
                         var dataId = parseInt(obs.getAttribute('data-id'), 10);
