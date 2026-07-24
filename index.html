@@ -1166,8 +1166,13 @@
 
                 /* D-Pad container + action areas */
                 .dpad-container { position:relative; width:140px; height:96px; display:flex; align-items:center; justify-content:center; }
-                .dpad-container .dpad-img { width:140px; height:96px; display:block; image-rendering:pixelated; }
-                .dpad-action { position:absolute; top:0; height:100%; width:44%; background: rgba(255,255,255,0.02); border-radius:8px; border:1px solid transparent; cursor:pointer; }
+                .dpad-container .dpad-img { display:none; }
+                .dpad-visual { width:140px; height:96px; border-radius:10px; background:#0b0f16; display:flex; overflow:hidden; position:relative; box-shadow: inset 4px 4px 0 rgba(255,255,255,0.02); }
+                .dpad-visual .dpad-half { width:50%; height:100%; display:flex; align-items:center; justify-content:center; font-size:28px; color:rgba(255,255,255,0.9); user-select:none; }
+                .dpad-visual .dpad-half.left { background: linear-gradient(180deg, #0f172a 0%, #061026 100%); }
+                .dpad-visual .dpad-half.right { background: linear-gradient(180deg, #0f172a 0%, #20101a 100%); }
+                .dpad-visual .dpad-arrow { font-family: var(--font-mono); font-weight:900; }
+                .dpad-action { position:absolute; top:0; height:100%; width:50%; background: rgba(255,255,255,0.02); border-radius:8px; border:1px solid transparent; cursor:pointer; }
                 .dpad-action.left { left:0; }
                 .dpad-action.right { right:0; }
                 .dpad-action:hover, .dpad-action:active { background: rgba(255,255,255,0.06); }
@@ -2829,7 +2834,10 @@
 
     <div class="mobile-controls-left">
         <div class="dpad-container">
-            <img src="./images/dpad.svg" alt="D-Pad" class="dpad-img" />
+            <div class="dpad-visual" aria-hidden="true">
+                <div class="dpad-half left"><span class="dpad-arrow">◀</span></div>
+                <div class="dpad-half right"><span class="dpad-arrow">▶</span></div>
+            </div>
             <!-- left/right action areas sit over the left/right halves of the image -->
             <button id="btn-left" class="dpad-action left" aria-label="Left"></button>
             <button id="btn-right" class="dpad-action right" aria-label="Right"></button>
@@ -3606,17 +3614,8 @@
         function attachTouch(id, onDown, onUp) {var btn = document.getElementById(id); if (!btn) return; btn.addEventListener('pointerdown', onDown); btn.addEventListener('pointerup', onUp); btn.addEventListener('pointerleave', onUp);}
         attachTouch('btn-left', function (e) {e.preventDefault(); keys.left = true;}, function (e) {e.preventDefault(); keys.left = false;});
         attachTouch('btn-right', function (e) {e.preventDefault(); keys.right = true;}, function (e) {e.preventDefault(); keys.right = false;});
-        attachTouch('btn-jump', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {
-                isJumping = true;
-                playSound(jumpBuffer);
-                createJumpDust();
-                gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => {
-                    isJumping = false;
-                    createJumpDust();
-                }});
-            } 
-        }, function (e) {e.preventDefault();});
-        attachTouch('btn-duck', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {isDucking = true; gsap.to(player, {scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1});} }, function (e) {e.preventDefault(); gsap.to(player, {scaleY: 1, duration: 0.1, onComplete: () => isDucking = false});});
+        attachTouch('btn-jump', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {isDucking = true; gsap.to(player, {scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1});} }, function (e) {e.preventDefault(); gsap.to(player, {scaleY: 1, duration: 0.1, onComplete: () => isDucking = false});});
+        attachTouch('btn-duck', function (e) {e.preventDefault(); if (!isJumping && !isDucking) { isJumping = true; playSound(jumpBuffer); createJumpDust(); gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { isJumping = false; createJumpDust(); } }); } }, function (e) { e.preventDefault(); });
 
         var scrollSpeed = 24;
         const locallyCollected = new Set();
