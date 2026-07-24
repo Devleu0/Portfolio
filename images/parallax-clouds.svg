@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="120" viewBox="0 0 1000 120" preserveAspectRatio="xMinYMin slice">
+  <rect width="100%" height="100%" fill="transparent" />
+  <defs>
+    <linearGradient id="cg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <g fill="url(#cg)">
+    <ellipse cx="120" cy="40" rx="140" ry="28" />
+    <ellipse cx="340" cy="28" rx="120" ry="22" />
+    <ellipse cx="620" cy="44" rx="160" ry="30" />
+    <ellipse cx="860" cy="32" rx="110" ry="20" />
+    <!-- repeat block to tile -->
+    <ellipse cx="1120" cy="40" rx="140" ry="28" />
+    <ellipse cx="1340" cy="28" rx="120" ry="22" />
+  </g>
+</svg>

@@ -133,13 +133,56 @@
         /* Hide old inline placeholder SVGs (kept in the DOM for safety) and use CSS backgrounds instead */
         .parallax-bg .silhouette { display: none; }
 
+        /* ensure parallax-mid neon shapes glow a bit */
+        .parallax-bg-mid { filter: drop-shadow(0 0 8px rgba(124,58,237,0.22)) drop-shadow(0 0 6px rgba(255,107,214,0.08)); }
+
         .parallax-bg-far {
             height: 300px;
-            background-image: url('./images/parallax-far.svg');
-            background-repeat: repeat-x;
-            background-position: bottom left;
-            background-size: auto 300px;
+            /* moon (no-repeat, positioned) + cloud band (repeat-x & animating) + starfield (repeat-x) */
+            background-image: url('./images/moon.svg'), url('./images/parallax-clouds.svg'), url('./images/parallax-far.svg');
+            background-repeat: no-repeat, repeat-x, repeat-x;
+            background-position: 12% 24%, 0 40px, 0 0;
+            background-size: 120px auto, auto 120px, auto 300px;
+            position: relative;
         }
+
+        .parallax-bg-far::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 40px; /* cloud vertical offset inside far layer */
+            right: 0;
+            height: 120px;
+            pointer-events: none;
+            background-image: url('./images/parallax-clouds.svg');
+            background-repeat: repeat-x;
+            background-size: auto 120px;
+            animation: cloudFlow 48s linear infinite;
+            opacity: 0.9;
+        }
+
+        @keyframes cloudFlow {
+            from { background-position: 0 0; }
+            to { background-position: -1000px 0; }
+        }
+
+        .parallax-moon {
+            position: fixed;
+            left: 10%;
+            top: 10%;
+            width: 120px;
+            height: 120px;
+            background-image: url('./images/moon.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 4;
+            transform-origin: center;
+            animation: moonBob 6s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255,220,130,0.25));
+        }
+
+        @keyframes moonBob { 0% { transform: translateY(0);} 50% { transform: translateY(-6px);} 100% { transform: translateY(0);} }
 
         .parallax-bg-mid {
             height: 180px;
@@ -147,6 +190,7 @@
             background-repeat: repeat-x;
             background-position: bottom left;
             background-size: auto 180px;
+            filter: drop-shadow(0 0 12px rgba(34,211,238,0.12));
         }
 
         .parallax-bg-near {
