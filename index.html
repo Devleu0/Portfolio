@@ -1189,15 +1189,37 @@
             border: 2px solid var(--zone-border);
             padding: 24px;
             box-shadow: 4px 4px 0 var(--shadow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             position: relative;
             overflow: hidden;
         }
 
         .skill-card:hover {
             transform: translate(-4px, -4px);
-            box-shadow: 8px 8px 0 var(--accent);
+            box-shadow: 8px 8px 0 var(--accent), 0 0 20px rgba(34, 211, 238, 0.5);
             border-color: var(--accent);
+        }
+        
+        .skill-card:hover .exp-popup {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .exp-popup {
+            position: absolute;
+            top: 10px;
+            left: 85%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 900;
+            color: #FDE047;
+            text-shadow: 2px 2px 0 var(--shadow);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            white-space: nowrap;
         }
 
         .skill-card::after {
@@ -1232,8 +1254,38 @@
             font-family: 'Pretendard', sans-serif;
             font-size: 0.95rem;
             color: var(--text-sub);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-weight: 500;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .skill-name {
+            margin-right: 10px;
+        }
+
+        .skill-level {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .xp-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: #020617;
+            border: 1px solid var(--zone-border);
+            margin-top: 4px;
+            order: 2; /* Ensures it appears below name and level */
+        }
+
+        .xp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #22D3EE, #FDE047);
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
         }
         
         .card-wide { grid-column: span 2; }
@@ -1256,36 +1308,94 @@
             <p class="about-intro reveal-on-scroll">안녕하세요! 저는 게임의 세계에 생명을 불어넣는 것을 꿈꾸는 게임 개발자 지망생입니다. 새로운 기술을 배우고 직접 프로그램을 만드는 것을 즐깁니다. 현재는 대학에서 소프트웨어 공학을 전공하며 재미있고 독창적인 게임을 만들기 위해 끊임없이 아이디어를 탐구하고 기술을 연마하고 있습니다.</p>
             <h2 class="reveal-on-scroll">기술 스택</h2>
             <div class="skills-bento-grid">
+                <!-- 
+                    개발자 참고: 
+                    스킬 레벨을 수정하려면 각 'li' 항목 아래의 '.xp-bar'의 style="width: XX%" 값과
+                    '.skill-level'의 텍스트를 수정하세요.
+                -->
                 <div class="skill-card card-large reveal-on-scroll">
                     <h3>Game Engine &amp; Graphics</h3>
+                    <span class="exp-popup">+25 EXP</span>
                     <ul>
-                        <li>Unity</li>
-                        <li>HLSL</li>
-                        <li>ShaderLab</li>
-                        <li>DirectX 11</li>
+                        <li>
+                            <span class="skill-name">Unity</span>
+                            <span class="skill-level">Lv. 90</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">HLSL</span>
+                            <span class="skill-level">Lv. 75</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">ShaderLab</span>
+                            <span class="skill-level">Lv. 75</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">DirectX 11</span>
+                            <span class="skill-level">Lv. 60</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="skill-card card-tall reveal-on-scroll">
                     <h3>Languages</h3>
+                    <span class="exp-popup">+15 EXP</span>
                     <ul>
-                        <li>C#</li>
-                        <li>C++</li>
-                        <li>Python</li>
+                        <li>
+                            <span class="skill-name">C#</span>
+                            <span class="skill-level">Lv. 95</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 95%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">C++</span>
+                            <span class="skill-level">Lv. 80</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 80%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Python</span>
+                            <span class="skill-level">Lv. 70</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 70%;"></div></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="skill-card reveal-on-scroll">
                     <h3>Web / Backend</h3>
-                    <ul><li>Node.js</li></ul>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Node.js</span>
+                            <span class="skill-level">Lv. 50</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 50%;"></div></div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="skill-card reveal-on-scroll">
                     <h3>Database</h3>
-                    <ul><li>MySQL</li></ul>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">MySQL</span>
+                            <span class="skill-level">Lv. 60</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="skill-card card-wide reveal-on-scroll">
                     <h3>Tools &amp; Collaboration</h3>
+                    <span class="exp-popup">+10 EXP</span>
                     <ul>
-                        <li>Git, Visual Studio Code</li>
-                        <li>Jira, Slack, Notion</li>
+                        <li>
+                            <span class="skill-name">Git, VS Code</span>
+                            <span class="skill-level">Lv. 90</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Jira, Slack, Notion</span>
+                            <span class="skill-level">Lv. 85</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 85%;"></div></div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -1296,36 +1406,93 @@
             <p class="about-intro reveal-on-scroll">Hello! I am a passionate aspiring game developer who dreams of bringing virtual worlds to life. I enjoy learning new technologies and creating highly interactive experiences. Currently, I am studying computer science at university, constantly exploring ideas and honing my skills to build fun and original games.</p>
             <h2 class="reveal-on-scroll">Skills</h2>
             <div class="skills-bento-grid">
+                <!-- 
+                    Developer Note: 
+                    To edit skill levels, modify the style="width: XX%" of the '.xp-bar' and the text of '.skill-level' under each 'li' item.
+                -->
                 <div class="skill-card card-large reveal-on-scroll">
                     <h3>Game Engine &amp; Graphics</h3>
+                    <span class="exp-popup">+25 EXP</span>
                     <ul>
-                        <li>Unity</li>
-                        <li>HLSL</li>
-                        <li>ShaderLab</li>
-                        <li>DirectX 11</li>
+                        <li>
+                            <span class="skill-name">Unity</span>
+                            <span class="skill-level">Lv. 90</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">HLSL</span>
+                            <span class="skill-level">Lv. 75</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">ShaderLab</span>
+                            <span class="skill-level">Lv. 75</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">DirectX 11</span>
+                            <span class="skill-level">Lv. 60</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="skill-card card-tall reveal-on-scroll">
                     <h3>Languages</h3>
+                    <span class="exp-popup">+15 EXP</span>
                     <ul>
-                        <li>C#</li>
-                        <li>C++</li>
-                        <li>Python</li>
+                        <li>
+                            <span class="skill-name">C#</span>
+                            <span class="skill-level">Lv. 95</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 95%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">C++</span>
+                            <span class="skill-level">Lv. 80</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 80%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Python</span>
+                            <span class="skill-level">Lv. 70</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 70%;"></div></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="skill-card reveal-on-scroll">
                     <h3>Web / Backend</h3>
-                    <ul><li>Node.js</li></ul>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Node.js</span>
+                            <span class="skill-level">Lv. 50</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 50%;"></div></div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="skill-card reveal-on-scroll">
                     <h3>Database</h3>
-                    <ul><li>MySQL</li></ul>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">MySQL</span>
+                            <span class="skill-level">Lv. 60</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="skill-card card-wide reveal-on-scroll">
                     <h3>Tools &amp; Collaboration</h3>
+                    <span class="exp-popup">+10 EXP</span>
                     <ul>
-                        <li>Git, Visual Studio Code</li>
-                        <li>Jira, Slack, Notion</li>
+                        <li>
+                            <span class="skill-name">Git, VS Code</span>
+                            <span class="skill-level">Lv. 90</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Jira, Slack, Notion</span>
+                            <span class="skill-level">Lv. 85</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 85%;"></div></div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -1336,36 +1503,94 @@
             <p class="about-intro reveal-on-scroll">こんにちは！ゲームの世界に命を吹き込むことを夢見る、情熱的なゲーム開発者志望です。新しい技術を学び、インタラクティブな体験を創り出すことを楽しんでいます。現在、大学でコンピューターサイエンスを専攻しながら、面白くて独創的なゲームを作るために、絶えずアイデアを探求し、技術を磨いています。</p>
             <h2 class="reveal-on-scroll">スキル</h2>
             <div class="skills-bento-grid">
+                <!-- 
+                    開発者メモ:
+                    スキルレベルを編集するには、各'li'項目の下にある'.xp-bar'のstyle="width: XX%"の値と
+                    '.skill-level'のテキストを修正してください。
+                -->
                 <div class="skill-card card-large reveal-on-scroll">
                     <h3>ゲームエンジン &amp; グラフィックス</h3>
+                    <span class="exp-popup">+25 EXP</span>
                     <ul>
-                        <li>Unity</li>
-                        <li>HLSL</li>
-                        <li>ShaderLab</li>
-                        <li>DirectX 11</li>
+                        <li>
+                            <span class="skill-name">Unity</span>
+                            <span class="skill-level">Lv. 90</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">HLSL</span>
+                            <span class="skill-level">Lv. 75</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">ShaderLab</span>
+                            <span class="skill-level">Lv. 75</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">DirectX 11</span>
+                            <span class="skill-level">Lv. 60</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="skill-card card-tall reveal-on-scroll">
                     <h3>言語</h3>
+                    <span class="exp-popup">+15 EXP</span>
                     <ul>
-                        <li>C#</li>
-                        <li>C++</li>
-                        <li>Python</li>
+                        <li>
+                            <span class="skill-name">C#</span>
+                            <span class="skill-level">Lv. 95</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 95%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">C++</span>
+                            <span class="skill-level">Lv. 80</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 80%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Python</span>
+                            <span class="skill-level">Lv. 70</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 70%;"></div></div>
+                        </li>
                     </ul>
                 </div>
                 <div class="skill-card reveal-on-scroll">
                     <h3>ウェブ・バックエンド</h3>
-                    <ul><li>Node.js</li></ul>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Node.js</span>
+                            <span class="skill-level">Lv. 50</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 50%;"></div></div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="skill-card reveal-on-scroll">
                     <h3>データベース</h3>
-                    <ul><li>MySQL</li></ul>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">MySQL</span>
+                            <span class="skill-level">Lv. 60</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="skill-card card-wide reveal-on-scroll">
                     <h3>ツール &amp; コラボレーション</h3>
+                    <span class="exp-popup">+10 EXP</span>
                     <ul>
-                        <li>Git, Visual Studio Code</li>
-                        <li>Jira, Slack, Notion</li>
+                        <li>
+                            <span class="skill-name">Git, VS Code</span>
+                            <span class="skill-level">Lv. 90</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Jira, Slack, Notion</span>
+                            <span class="skill-level">Lv. 85</span>
+                            <div class="xp-bar-container"><div class="xp-bar" style="width: 85%;"></div></div>
+                        </li>
                     </ul>
                 </div>
             </div>
