@@ -151,7 +151,7 @@
 
         /* zone-building overlays: centered buildings that scale by level */
         .zone { position: relative; }
-        .zone-building { position: absolute; left: 50%; transform: translateX(-50%); bottom: 18vh; pointer-events: none; background-repeat: no-repeat; background-position: center bottom; background-size: contain; z-index: 20; }
+        .zone-building { position: absolute; left: 50%; transform: translateX(-50%); bottom: 18vh; pointer-events: none; background-repeat: no-repeat; background-position: center bottom; background-size: contain; z-index: 3; }
         .zone-building--small { width: 140px; height: 112px; background-image: url('./images/building-small.svg'); }
         .zone-building--medium { width: 200px; height: 140px; background-image: url('./images/building-medium.svg'); }
         .zone-building--large { width: 340px; height: 220px; background-image: url('./images/building-large.svg'); }
@@ -3784,9 +3784,9 @@
                 const title = zone.querySelector('.zone-title');
                 if (!title) return;
                 const text = (title.textContent || '').trim();
-                // Treat sections that contain '학년' or '학기' as university-level (larger building)
-                if (/학년|학기/.test(text)) {
-                                    const b = document.createElement('div'); b.className = 'zone-building zone-building--university'; zone.appendChild(b);
+                // Treat sections that contain '학년' or '학기' as university-level only if not a seasonal/vacation entry
+                if ((/학년|학기/.test(text)) && !(/여름|겨울|방학|휴학|방학/.test(text))) {
+                    const b = document.createElement('div'); b.className = 'zone-building zone-building--university'; zone.appendChild(b);
                     return;
                 }
                 mapping.forEach(function(m) {
