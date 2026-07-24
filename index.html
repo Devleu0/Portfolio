@@ -124,9 +124,10 @@
             bottom: 35vh;
             left: 0;
             display: flex;
-            width: max-content;
+            width: 100%; /* span viewport so tiled backgrounds are visible */
             pointer-events: none;
             overflow: visible;
+            z-index: 2;
         }
 
         /* Hide old inline placeholder SVGs (kept in the DOM for safety) and use CSS backgrounds instead */
