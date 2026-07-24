@@ -10,6 +10,7 @@
            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <style>
         :root { --bg-color: #020617; --text-main: #FFFFFF; --text-sub: #94A3B8; --card-bg: #1E293B; --accent: #22D3EE; --shadow: #020617; --font-title: 'DungGeunMo', sans-serif; --font-mono: 'Press Start 2P', monospace; --zone-border: rgba(255,255,255,0.15); --sun-color: #FDE047; --tr-bg: #1E1B4B; }
+        html { scroll-behavior: auto; }
         body { margin: 0; font-family: var(--font-title); overflow-x: hidden; background-color: var(--bg-color); color: var(--text-main); user-select: none; -webkit-user-select: none; image-rendering: pixelated; }
         .horizontal-container { width: 100%; height: 100vh; overflow: hidden; position: relative; }
         .horizontal-section { display: flex; height: 100%; width: max-content; position: relative; }
@@ -31,6 +32,7 @@
         
         .parallax-bg { position: absolute; bottom: 35vh; left: 0; display: flex; width: max-content; pointer-events: none; }
         .silhouette { width: 1000px; height: 100%; flex-shrink: 0; preserveAspectRatio: none; }
+        /* [수정] 호버 시 레이어 최상위로 */
         .obstacle-wrapper { pointer-events: auto; transition: z-index 0.2s; }
         .obstacle-wrapper:hover { z-index: 100; }
 
@@ -56,6 +58,7 @@
         .info-tag .title { font-family: var(--font-title); font-size: 16px; font-weight: normal; color: var(--text-main); text-shadow: 2px 2px 0 var(--shadow); }
         .info-tag .desc { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--text-sub); margin-top: 4px; }
         
+        /* 3D Grid Ground */
         .ground-area { position: absolute; left: 0; bottom: 0; width: 100%; height: 35vh; z-index: 4; background: #0F172A; border-top: 4px solid var(--accent); overflow: hidden; pointer-events: none; }
         .ground-grid { width: 100%; height: 200%; position: absolute; top: 0; left: 0; background-image: linear-gradient(rgba(34,211,238,0.25) 2px, transparent 2px), linear-gradient(90deg, rgba(34,211,238,0.25) 2px, transparent 2px); background-size: 64px 64px; transform: perspective(500px) rotateX(60deg); transform-origin: top center; }
 
@@ -67,6 +70,8 @@
         #progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent);  box-shadow: 0 0 10px var(--accent); }
         
         .obstacle-wrapper.collected { opacity: 0.65; filter: grayscale(100%); transition: all 0.3s ease; }
+        
+        /* [수정] 획득한 아이템에 호버 시 원래대로 복원 (디테일 뷰) */
         .obstacle-wrapper.collected:hover {
             opacity: 1 !important;
             filter: grayscale(0%) !important;
@@ -132,30 +137,32 @@
         .stat-label { font-family: var(--font-title); font-size: 12px; font-weight: 700; color: var(--text-sub); margin-top: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
         
         .restart-btn { font-family: var(--font-title); font-size: 16px; font-weight: 700; color: #fff; background: var(--accent); border-radius: 0; border: 4px solid #F8FAFC; padding: 16px 36px; cursor: pointer; box-shadow: inset -4px -4px 0 rgba(0,0,0,0.2), 6px 6px 0 var(--shadow); transition: transform 0.2s, box-shadow 0.2s; }
-        .restart-btn:hover { transform: translateY(-2px); }
+        .restart-btn:hover { transform: translateY(-2px); box-shadow: ; }
         .restart-btn:active { transform: translateY(2px); box-shadow: inset 4px 4px 0 rgba(0,0,0,0.3), 0 0 0 var(--shadow); }
-        
-        .text-resume-overlay { position: fixed; inset: 0; z-index: 200; background: var(--tr-bg); backdrop-filter: none; border: 8px solid #818CF8; box-shadow: inset 0 0 0 4px var(--shadow), inset 0 0 0 8px #818CF8; padding: 64px 32px; box-sizing: border-box; display: none; overflow-y: auto; color: var(--text-main); }
-        .text-resume-overlay.is-open { display: block; }
-        .tr-inner { max-width: 720px; margin: 0 auto; background: transparent; padding: 0; border-radius: 0; box-shadow: none; border: none; }
-        .tr-inner h1 { font-family: var(--font-title); font-size: 2.5rem; font-weight: 900; margin-bottom: 16px; color: var(--text-main); letter-spacing: -0.03em; text-shadow: 4px 4px 0 var(--shadow); }
-        .tr-intro { font-family: var(--font-mono); font-size: 15px; font-weight: 500; color: var(--text-sub); margin-bottom: 48px; }
-        .tr-chapter { border-left: 4px solid var(--accent); padding-left: 24px; margin-bottom: 48px; }
-        .tr-chapter h3 { font-family: var(--font-title); font-size: 1.4rem; font-weight: 800; margin: 0 0 6px; color: var(--text-main); text-shadow: 2px 2px 0 var(--shadow); }
-        .tr-subtitle { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--text-sub); margin: 0 0 20px; }
+
+        #resume-section { position: relative; overflow: hidden; background: var(--bg-color); padding: 100px 5vw; max-width: 800px; margin: 0 auto; font-family: 'Pretendard', sans-serif; }
+        #resume-section h1 { position: relative; z-index: 2; font-size: 2.5rem; font-weight: 800; color: var(--text-main); border-bottom: 1px solid var(--zone-border); padding-bottom: 20px; margin-bottom: 20px; }
+        .tr-chapter { position: relative; z-index: 2; margin-bottom: 48px; }
+        .tr-chapter h3 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin: 0 0 8px; }
+        .tr-subtitle { font-size: 0.9rem; font-weight: 500; color: var(--text-sub); margin: 0 0 24px; }
         .tr-chapter ul { list-style: none; margin: 0; padding: 0; }
-        .tr-chapter li { padding: 16px 0; border-top: 1px dashed #334155; font-size: 16px; font-family: var(--font-title); font-weight: 500; color: var(--text-main); }
+        .tr-chapter li { padding: 20px 0; border-top: 1px solid var(--zone-border); display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
         .tr-chapter li:first-child { border-top: none; padding-top: 0; }
-        .tr-chapter li strong { display: block; color: var(--text-main); margin-bottom: 6px; font-size: 17px; font-weight: 800; text-shadow: 2px 2px 0 var(--shadow); }
-        .tr-desc { display: block; color: var(--text-sub); font-size: 15px; }
-        .tr-tag { color: var(--accent); font-size: 13px; font-style: normal; font-weight: 700; background: transparent; padding: 0; border-radius: 4px; border: none; }
-        .tr-close { position: sticky; top: 0; float: right; background: #E11D48; border: 4px solid #F8FAFC; color: #FFF; box-shadow: 4px 4px 0 var(--shadow); border-radius: 0; padding: 10px 20px; font-weight: bold; cursor: pointer; }
-        
+        .tr-item-content { flex-grow: 1; }
+        .tr-item-content strong { display: block; font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+        .tr-desc { display: block; color: var(--text-sub); font-size: 1rem; }
+        .tr-tag { color: var(--accent); font-size: 0.9rem; font-style: normal; font-weight: 700; background: rgba(56,189,248,0.1); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(56,189,248,0.3); margin-left: 8px; }
+        .tr-item-media { flex-shrink: 0; width: 120px; }
+        .tr-item-media a { display: block; text-decoration: none; }
+        .tr-item-media img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--zone-border); object-fit: cover; aspect-ratio: 16/9; }
+        .tr-item-link { text-align: right; }
+
+        /* HEADER UI */
         .top-header { position: fixed; top: 0; left: 0; width: 100%; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(2,6,23,0.85); backdrop-filter: none; border-bottom: 4px solid var(--accent); box-sizing: border-box; }
         .header-title { font-family: var(--font-title); font-size: 20px; font-weight: 900; color: #FFF; margin: 0; letter-spacing: 1px; }
         .header-sub { font-family: var(--font-mono); font-size: 10px; color: var(--accent); margin-top: 4px; }
         .header-controls { display: flex; gap: 16px; align-items: center; }
-        .header-btn { background: transparent; color: #FFF; border: 2px solid #F8FAFC; border-radius: 0; padding: 6px 16px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; outline: none; }
+        .header-btn { background: transparent; color: #FFF; border: 2px solid #F8FAFC; border-radius: 0; padding: 6px 16px; min-width: 90px; text-align: center; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; outline: none; }
         .header-btn.primary { background: var(--accent); color: #020617; border: 2px solid #F8FAFC; }
         
         .counter-display { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.1); font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #FFF; }
@@ -181,29 +188,20 @@
 <body>
     <header id="top-header" class="top-header">
        <div>
-           <h1 class="header-title">OOO</h1>
+           <h1 class="header-title">HONG GIL-DONG</h1>
            <div class="header-sub">FRONTEND DEVELOPER</div>
        </div>
        <div class="header-controls">
            <div class="counter-display hidden-mobile">
                <span class="dot"></span>
-               <span id="counter-current">0</span> / 20
+               <span id="counter-current">0</span> / 22
            </div>
            <select id="lang-selector" class="header-btn"><option value="ko" style="color:#000">KOR</option><option value="en" style="color:#000">ENG</option><option value="ja" style="color:#000">JPN</option></select>
-           <button class="header-btn lang-text" data-ko="SKIP" data-en="SKIP" data-ja="SKIP" id="skip-game-btn">SKIP</button>
-           <button class="header-btn primary lang-text" data-ko="RESUME" data-en="RESUME" data-ja="RESUME" id="text-resume-btn">RESUME</button>
+           <button class="header-btn lang-text" data-ko="SKIP" data-en="SKIP" data-ja="SKIP" data-ko-return="RETURN" data-en-return="RETURN" data-ja-return="RETURN" id="skip-game-btn">SKIP</button>
+            <a href="#resume-section" class="header-btn primary lang-text" data-ko="RESUME" data-en="RESUME" data-ja="RESUME">RESUME</a>
        </div>
     </header>
 
-<div class="text-resume-overlay" id="text-resume-overlay" role="dialog" aria-modal="true" aria-label="이력서">
-        <div class="tr-inner">
-            <button class="tr-close lang-text" data-ko="✕ CLOSE" data-en="✕ CLOSE" data-ja="✕ CLOSE" id="text-resume-close-btn" type="button">✕ CLOSE</button>
-            <h1 class="lang-text" data-ko="Career Resume" data-en="Career Resume" data-ja="Career Resume">Career Resume</h1>
-            <p class="tr-intro"></p>
-<section class="tr-chapter"><h3 class="lang-text" data-ko="계속해서 성장 중..." data-en="계속해서 성장 중..." data-ja="계속해서 성장 중...">계속해서 성장 중...</h3><p class="tr-subtitle lang-text" data-ko="" data-en="" data-ja=""></p></section><section class="tr-chapter"><h3 class="lang-text" data-ko="해외(OO) 인턴십" data-en="Overseas Internship" data-ja="海外インターンシップ">해외(OO) 인턴십</h3><p class="tr-subtitle lang-text" data-ko="OO시 OOO (2026.06 ~ 2026.08)" data-en="OO City (2026.06 ~ 2026.08)" data-ja="OO (2026.06 ~ 2026.08)">OO시 OOO (2026.06 ~ 2026.08)</p><ul><li><strong class="lang-text" data-ko="해외 인턴십 시작" data-en="Global Internship Start" data-ja="海外インターン開始">해외 인턴십 시작</strong><span class="tr-desc lang-text" data-ko="Global Innovation Handle (2026.06)" data-en="Global Innovation Handle (2026.06)" data-ja="Global Innovation Handle (2026.06)">Global Innovation Handle (2026.06)</span> <em class="tr-tag">(Ing)</em></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="3학년 1학기" data-en="3학년 1학기" data-ja="3학년 1학기">3학년 1학기</h3><p class="tr-subtitle lang-text" data-ko="2026.03 ~ 2026.06" data-en="2026.03 ~ 2026.06" data-ja="2026.03 ~ 2026.06">2026.03 ~ 2026.06</p><ul><li><strong class="lang-text" data-ko="Blind Walker" data-en="Blind Walker (VR)" data-ja="Blind Walker">Blind Walker</strong><span class="tr-desc lang-text" data-ko="유니티 VR 프로젝트" data-en="유니티 VR 프로젝트" data-ja="유니티 VR 프로젝트">유니티 VR 프로젝트</span> <a href="https://github.com/Devleu0/BlindWalker" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="ADsP 합격" data-en="ADsP Passed" data-ja="ADsP 合格">ADsP 합격</strong><span class="tr-desc lang-text" data-ko="데이터분석 준전문가 (2026.06)" data-en="데이터분석 준전문가 (2026.06)" data-ja="데이터분석 준전문가 (2026.06)">데이터분석 준전문가 (2026.06)</span> <a href="https://www.dataq.or.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="TOEIC 780점" data-en="TOEIC 780" data-ja="TOEIC 780点">TOEIC 780점</strong><span class="tr-desc lang-text" data-ko="ETS (2026.04)" data-en="ETS (2026.04)" data-ja="ETS (2026.04)">ETS (2026.04)</span> <a href="https://exam.toeic.co.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="2학년 겨울방학" data-en="2학년 겨울방학" data-ja="2학년 겨울방학">2학년 겨울방학</h3><p class="tr-subtitle lang-text" data-ko="2025.12 ~ 2026.02" data-en="2025.12 ~ 2026.02" data-ja="2025.12 ~ 2026.02">2025.12 ~ 2026.02</p><ul><li><strong class="lang-text" data-ko="SQL개발자(SQLD)" data-en="SQL Developer (SQLD)" data-ja="SQL開発者(SQLD)">SQL개발자(SQLD)</strong><span class="tr-desc lang-text" data-ko="한국데이터산업진흥원 (2026.03)" data-en="한국데이터산업진흥원 (2026.03)" data-ja="한국데이터산업진흥원 (2026.03)">한국데이터산업진흥원 (2026.03)</span> <a href="https://www.dataq.or.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="2학년 2학기 (복학)" data-en="2학년 2학기 (복학)" data-ja="2학년 2학기 (복학)">2학년 2학기 (복학)</h3><p class="tr-subtitle lang-text" data-ko="2025.09 ~ 2025.12" data-en="2025.09 ~ 2025.12" data-ja="2025.09 ~ 2025.12">2025.09 ~ 2025.12</p></section><section class="tr-chapter"><h3 class="lang-text" data-ko="대한민국 국군 병 OOO기" data-en="Military Service" data-ja="兵役">대한민국 국군 병 OOO기</h3><p class="tr-subtitle lang-text" data-ko="입대: 2023.09 ~ 전역: 2025.06" data-en="입대: 2023.09 ~ 전역: 2025.06" data-ja="입대: 2023.09 ~ 전역: 2025.06">입대: 2023.09 ~ 전역: 2025.06</p><ul><li><strong class="lang-text" data-ko="만기 전역" data-en="Discharged" data-ja="満期除隊">만기 전역</strong><span class="tr-desc lang-text" data-ko="병장 만기전역 (2025.06)" data-en="Discharged (2025.06)" data-ja="満期除隊 (2025.06)">병장 만기전역 (2025.06)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="JLPT N1 취득" data-en="JLPT N1" data-ja="JLPT N1 取得">JLPT N1 취득</strong><span class="tr-desc lang-text" data-ko="군 복무 중 달성 (2025.01)" data-en="군 복무 중 달성 (2025.01)" data-ja="군 복무 중 달성 (2025.01)">군 복무 중 달성 (2025.01)</span> <a href="https://www.jlpt.or.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="병장 진급" data-en="Promoted to Sergeant" data-ja="兵長 進級">병장 진급</strong><span class="tr-desc lang-text" data-ko="(2024.11)" data-en="(2024.11)" data-ja="(2024.11)">(2024.11)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="상병 진급" data-en="Promoted to Corporal" data-ja="上等兵 進級">상병 진급</strong><span class="tr-desc lang-text" data-ko="(2024.05)" data-en="(2024.05)" data-ja="(2024.05)">(2024.05)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="일병 진급" data-en="Promoted to PFC" data-ja="一等兵 進級">일병 진급</strong><span class="tr-desc lang-text" data-ko="(2023.11)" data-en="(2023.11)" data-ja="(2023.11)">(2023.11)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="입대 (이병)" data-en="Enlistment (Private)" data-ja="入隊 (二等兵)">입대 (이병)</strong><span class="tr-desc lang-text" data-ko="특기 보직 (2023.09)" data-en="Enlistment (2023.09)" data-ja="入隊 (2023.09)">특기 보직 (2023.09)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="2학년 1학기" data-en="2학년 1학기" data-ja="2학년 1학기">2학년 1학기</h3><p class="tr-subtitle lang-text" data-ko="2023.03 ~ 2023.06 (휴학 전)" data-en="2023.03 ~ 2023.06 (휴학 전)" data-ja="2023.03 ~ 2023.06 (휴학 전)">2023.03 ~ 2023.06 (휴학 전)</p><ul><li><strong class="lang-text" data-ko="ISTQB CTFL 취득" data-en="ISTQB CTFL" data-ja="ISTQB CTFL取得">ISTQB CTFL 취득</strong><span class="tr-desc lang-text" data-ko="KSTQB (2023.06)" data-en="KSTQB (2023.06)" data-ja="KSTQB (2023.06)">KSTQB (2023.06)</span> <a href="https://www.kstqb.org/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="1학년 겨울방학" data-en="1학년 겨울방학" data-ja="1학년 겨울방학">1학년 겨울방학</h3><p class="tr-subtitle lang-text" data-ko="2022.12 ~ 2023.02" data-en="2022.12 ~ 2023.02" data-ja="2022.12 ~ 2023.02">2022.12 ~ 2023.02</p></section><section class="tr-chapter"><h3 class="lang-text" data-ko="1학년 2학기" data-en="1학년 2학기" data-ja="1학년 2학기">1학년 2학기</h3><p class="tr-subtitle lang-text" data-ko="2022.09 ~ 2022.12" data-en="2022.09 ~ 2022.12" data-ja="2022.09 ~ 2022.12">2022.09 ~ 2022.12</p></section><section class="tr-chapter"><h3 class="lang-text" data-ko="1학년 여름방학" data-en="1학년 여름방학" data-ja="1학년 여름방학">1학년 여름방학</h3><p class="tr-subtitle lang-text" data-ko="2022.06 ~ 2022.08" data-en="2022.06 ~ 2022.08" data-ja="2022.06 ~ 2022.08">2022.06 ~ 2022.08</p><ul><li><strong class="lang-text" data-ko="한국사 3급 취득" data-en="Korean History Lvl 3" data-ja="韓国史3級取得">한국사 3급 취득</strong><span class="tr-desc lang-text" data-ko="국사편찬위원회 (2022.08)" data-en="국사편찬위원회 (2022.08)" data-ja="국사편찬위원회 (2022.08)">국사편찬위원회 (2022.08)</span> <a href="https://www.historyexam.go.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="1학년 1학기" data-en="1학년 1학기" data-ja="1학년 1학기">1학년 1학기</h3><p class="tr-subtitle lang-text" data-ko="OO대학교 AI학부 (2022.03 ~ 2022.06)" data-en="OO University (2022.03 ~ 2022.06)" data-ja="OO大学 (2022.03 ~ 2022.06)">OO대학교 AI학부 (2022.03 ~ 2022.06)</p></section><section class="tr-chapter"><h3 class="lang-text" data-ko="OO고등학교" data-en="OO High School" data-ja="OO高校">OO고등학교</h3><p class="tr-subtitle lang-text" data-ko="재학: 2019.03 ~ 2022.02" data-en="재학: 2019.03 ~ 2022.02" data-ja="재학: 2019.03 ~ 2022.02">재학: 2019.03 ~ 2022.02</p><ul><li><strong class="lang-text" data-ko="고등학교 졸업" data-en="High School Grad" data-ja="高校卒業">고등학교 졸업</strong><span class="tr-desc lang-text" data-ko="OO고 (2022.02)" data-en="OO High School (2022.02)" data-ja="OO高校 (2022.02)">OO고 (2022.02)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="고등학교 입학" data-en="High School Entrance" data-ja="高校入学">고등학교 입학</strong><span class="tr-desc lang-text" data-ko="OO고 (2019.03)" data-en="OO High School (2019.03)" data-ja="OO高校 (2019.03)">OO고 (2019.03)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="OO중학교" data-en="OO Middle School" data-ja="OO中学校">OO중학교</h3><p class="tr-subtitle lang-text" data-ko="재학: 2016.03 ~ 2019.02" data-en="재학: 2016.03 ~ 2019.02" data-ja="재학: 2016.03 ~ 2019.02">재학: 2016.03 ~ 2019.02</p><ul><li><strong class="lang-text" data-ko="중학교 졸업" data-en="Middle School Grad" data-ja="中学校卒業">중학교 졸업</strong><span class="tr-desc lang-text" data-ko="OO중 (2019.02)" data-en="OO Middle (2019.02)" data-ja="OO中学校 (2019.02)">OO중 (2019.02)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="중학교 입학" data-en="Middle School Entrance" data-ja="中学校入学">중학교 입학</strong><span class="tr-desc lang-text" data-ko="OO중 (2016.03)" data-en="OO Middle (2016.03)" data-ja="OO中学校 (2016.03)">OO중 (2016.03)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="OO초등학교" data-en="OO Elementary School" data-ja="OO小学校">OO초등학교</h3><p class="tr-subtitle lang-text" data-ko="재학: 2010.03 ~ 2016.02" data-en="재학: 2010.03 ~ 2016.02" data-ja="재학: 2010.03 ~ 2016.02">재학: 2010.03 ~ 2016.02</p><ul><li><strong class="lang-text" data-ko="초등학교 졸업" data-en="Elem. School Grad" data-ja="小学校卒業">초등학교 졸업</strong><span class="tr-desc lang-text" data-ko="OO초 (2016.02)" data-en="OO Elem. (2016.02)" data-ja="OO小学校 (2016.02)">OO초 (2016.02)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li><li><strong class="lang-text" data-ko="초등학교 입학" data-en="Elem. School Entrance" data-ja="小学校入学">초등학교 입학</strong><span class="tr-desc lang-text" data-ko="OO초 (2010.03)" data-en="OO Elem. (2010.03)" data-ja="OO小学校 (2010.03)">OO초 (2010.03)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section><section class="tr-chapter"><h3 class="lang-text" data-ko="OO시 출생" data-en="Birth in OO City" data-ja="OO市 誕生">OO시 출생</h3><p class="tr-subtitle lang-text" data-ko="2003.09" data-en="2003.09" data-ja="2003.09">2003.09</p><ul><li><strong class="lang-text" data-ko="출생" data-en="Birth" data-ja="誕生">출생</strong><span class="tr-desc lang-text" data-ko="OO시 (2003.09)" data-en="OO City (2003.09)" data-ja="OO市 (2003.09)">OO시 (2003.09)</span> <a href="#" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></li></ul></section> 
-        </div>
-    </div>
-    
     <section class="cover-section" id="cover-section">
         <div class="cover-bg-grid"></div>
         <div class="cover-content">
@@ -230,84 +228,83 @@
         <div class="horizontal-section">
             <div class="ground-area"><div class="ground-grid"></div></div>
             <div class="zone" style="width: 1600px; background-color: #0F172A; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="OO시 출생" data-en="Birth in OO City" data-ja="OO市 誕生" style="position: relative; z-index: 10;">OO시 출생</h2>
-                <p class="zone-subtitle lang-text" data-ko="2003.09" data-en="2003.09" data-ja="2003.09" style="position: relative; z-index: 10;">2003.09</p>
-            </div>
-            
-            <div class="zone" style="width: 1600px; background-color: #1E1B4B; overflow: hidden;">
-                <!-- 생략된 파라락스 배경 컴포넌트 유지 -->
-                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div>
-                <h2 class="zone-title lang-text" data-ko="OO초등학교" data-en="OO Elementary School" data-ja="OO小学校" style="position: relative; z-index: 10;">OO초등학교</h2>
-                <p class="zone-subtitle lang-text" data-ko="재학: 2010.03 ~ 2016.02" data-en="재학: 2010.03 ~ 2016.02" data-ja="재학: 2010.03 ~ 2016.02" style="position: relative; z-index: 10;">재학: 2010.03 ~ 2016.02</p>
-            </div>
-
-            <div class="zone" style="width: 1600px; background-color: #312E81; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="OO중학교" data-en="OO Middle School" data-ja="OO中学校" style="position: relative; z-index: 10;">OO중학교</h2>
-                <p class="zone-subtitle lang-text" data-ko="재학: 2016.03 ~ 2019.02" data-en="재학: 2016.03 ~ 2019.02" data-ja="재학: 2016.03 ~ 2019.02" style="position: relative; z-index: 10;">재학: 2016.03 ~ 2019.02</p>
-            </div>
-
-            <div class="zone" style="width: 1600px; background-color: #4C1D95; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="OO고등학교" data-en="OO High School" data-ja="OO高校" style="position: relative; z-index: 10;">OO고등학교</h2>
-                <p class="zone-subtitle lang-text" data-ko="재학: 2019.03 ~ 2022.02" data-en="재학: 2019.03 ~ 2022.02" data-ja="재학: 2019.03 ~ 2022.02" style="position: relative; z-index: 10;">재학: 2019.03 ~ 2022.02</p>
-            </div>
-
-            <div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="1학년 1학기" data-en="1학년 1학기" data-ja="1학년 1학기" style="position: relative; z-index: 10;">1학년 1학기</h2>
-                <p class="zone-subtitle lang-text" data-ko="OO대학교 AI학부 (2022.03 ~ 2022.06)" data-en="OO University (2022.03 ~ 2022.06)" data-ja="OO大学 (2022.03 ~ 2022.06)" style="position: relative; z-index: 10;">OO대학교 AI학부 (2022.03 ~ 2022.06)</p>
-            </div>
-
-            <div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="1학년 여름방학" data-en="1학년 여름방학" data-ja="1학년 여름방학" style="position: relative; z-index: 10;">1학년 여름방학</h2>
-                <p class="zone-subtitle lang-text" data-ko="2022.06 ~ 2022.08" data-en="2022.06 ~ 2022.08" data-ja="2022.06 ~ 2022.08" style="position: relative; z-index: 10;">2022.06 ~ 2022.08</p>
-            </div>
-
-            <div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="1학년 2학기" data-en="1학년 2학기" data-ja="1학년 2학기" style="position: relative; z-index: 10;">1학년 2학기</h2>
-                <p class="zone-subtitle lang-text" data-ko="2022.09 ~ 2022.12" data-en="2022.09 ~ 2022.12" data-ja="2022.09 ~ 2022.12" style="position: relative; z-index: 10;">2022.09 ~ 2022.12</p>
-            </div>
-
-            <div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="1학년 겨울방학" data-en="1학년 겨울방학" data-ja="1학년 겨울방학" style="position: relative; z-index: 10;">1학년 겨울방학</h2>
-                <p class="zone-subtitle lang-text" data-ko="2022.12 ~ 2023.02" data-en="2022.12 ~ 2023.02" data-ja="2022.12 ~ 2023.02" style="position: relative; z-index: 10;">2022.12 ~ 2023.02</p>
-            </div>
-
-            <div class="zone" style="width: 1400px; background-color: #064E3B; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="2학년 1학기" data-en="2학년 1학기" data-ja="2학년 1학기" style="position: relative; z-index: 10;">2학년 1학기</h2>
-                <p class="zone-subtitle lang-text" data-ko="2023.03 ~ 2023.06 (휴학 전)" data-en="2023.03 ~ 2023.06 (휴학 전)" data-ja="2023.03 ~ 2023.06 (휴학 전)" style="position: relative; z-index: 10;">2023.03 ~ 2023.06 (휴학 전)</p>
-            </div>
-
-            <div class="zone" style="width: 5000px; background-color: #451A03; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="대한민국 국군 병 OOO기" data-en="Military Service" data-ja="兵役" style="position: relative; z-index: 10;">대한민국 국군 병 OOO기</h2>
-                <p class="zone-subtitle lang-text" data-ko="입대: 2023.09 ~ 전역: 2025.06" data-en="입대: 2023.09 ~ 전역: 2025.06" data-ja="입대: 2023.09 ~ 전역: 2025.06" style="position: relative; z-index: 10;">입대: 2023.09 ~ 전역: 2025.06</p>
-            </div>
-
-            <div class="zone" style="width: 1200px; background-color: #1E3A8A; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="2학년 2학기 (복학)" data-en="2학년 2학기 (복학)" data-ja="2학년 2학기 (복학)" style="position: relative; z-index: 10;">2학년 2학기 (복학)</h2>
-                <p class="zone-subtitle lang-text" data-ko="2025.09 ~ 2025.12" data-en="2025.09 ~ 2025.12" data-ja="2025.09 ~ 2025.12" style="position: relative; z-index: 10;">2025.09 ~ 2025.12</p>
-            </div>
-
-            <div class="zone" style="width: 600px; background-color: #172554; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="2학년 겨울방학" data-en="2학년 겨울방학" data-ja="2학년 겨울방학" style="position: relative; z-index: 10;">2학년 겨울방학</h2>
-                <p class="zone-subtitle lang-text" data-ko="2025.12 ~ 2026.02" data-en="2025.12 ~ 2026.02" data-ja="2025.12 ~ 2026.02" style="position: relative; z-index: 10;">2025.12 ~ 2026.02</p>
-            </div>
-
-            <div class="zone" style="width: 2200px; background-color: #1E3A8A; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="3학년 1학기" data-en="3학년 1학기" data-ja="3학년 1학기" style="position: relative; z-index: 10;">3학년 1학기</h2>
-                <p class="zone-subtitle lang-text" data-ko="2026.03 ~ 2026.06" data-en="2026.03 ~ 2026.06" data-ja="2026.03 ~ 2026.06" style="position: relative; z-index: 10;">2026.03 ~ 2026.06</p>
-            </div>
-
-            <div class="zone" style="width: 2000px; background-color: #701A75; overflow: hidden;">
-                <h2 class="zone-title lang-text" data-ko="해외(OO) 인턴십" data-en="Overseas Internship" data-ja="海外インターンシップ" style="position: relative; z-index: 10;">해외(OO) 인턴십</h2>
-                <p class="zone-subtitle lang-text" data-ko="OO시 OOO (2026.06 ~ 2026.08)" data-en="OO City (2026.06 ~ 2026.08)" data-ja="OO (2026.06 ~ 2026.08)" style="position: relative; z-index: 10;">OO시 OOO (2026.06 ~ 2026.08)</p>
-            </div>
-
-            <div class="zone" style="width: 1300px; background-color: transparent; overflow: hidden; border-right: none;">
-                <h2 class="zone-title lang-text" data-ko="계속해서 성장 중..." data-en="계속해서 성장 중..." data-ja="계속해서 성장 중..." style="position: relative; z-index: 10; color: var(--text-sub); margin-top: 100px;">계속해서 성장 중...</h2>
+                
+                <h2 class="zone-title lang-text" data-ko="광주광역시 출생" data-en="Born in Gwangju" data-ja="光州広域市生まれ" style="position: relative; z-index: 10;">광주광역시 출생</h2>
+                <p class="zone-subtitle lang-text" data-ko="2003.09" data-en="Sep 2003" data-ja="2003.09" style="position: relative; z-index: 10;">2003.09</p>
+                
+            </div><div class="zone" style="width: 1600px; background-color: #1E1B4B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="장덕초등학교" data-en="Jangdeok Elementary School" data-ja="チャンドク小学校" style="position: relative; z-index: 10;">장덕초등학교</h2>
+                <p class="zone-subtitle lang-text" data-ko="재학: 2010.03 ~ 2016.02" data-en="Attended: Mar 2010 - Feb 2016" data-ja="在学: 2010.03 ~ 2016.02" style="position: relative; z-index: 10;">재학: 2010.03 ~ 2016.02</p>
+                
+            </div><div class="zone" style="width: 1600px; background-color: #312E81; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="장덕중학교" data-en="Jangdeok Middle School" data-ja="チャンドク中学校" style="position: relative; z-index: 10;">장덕중학교</h2>
+                <p class="zone-subtitle lang-text" data-ko="재학: 2016.03 ~ 2019.02" data-en="Attended: Mar 2016 - Feb 2019" data-ja="在学: 2016.03 ~ 2019.02" style="position: relative; z-index: 10;">재학: 2016.03 ~ 2019.02</p>
+                
+            </div><div class="zone" style="width: 1600px; background-color: #4C1D95; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="광주진흥고등학교" data-en="Gwangju Jinheung High School" data-ja="光州振興高等学校" style="position: relative; z-index: 10;">광주진흥고등학교</h2>
+                <p class="zone-subtitle lang-text" data-ko="재학: 2019.03 ~ 2022.02" data-en="Attended: Mar 2019 - Feb 2022" data-ja="在学: 2019.03 ~ 2022.02" style="position: relative; z-index: 10;">재학: 2019.03 ~ 2022.02</p>
+                
+            </div><div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 1학기" data-en="Freshman - 1st Semester" data-ja="1年生 1学期" style="position: relative; z-index: 10;">1학년 1학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="전남대 인공지능학부 (2022.03 ~ 2022.06)" data-en="Chonnam Nat'l Univ., AI (Mar 2022 - Jun 2022)" data-ja="全南大学 AI学部 (2022.03 ~ 2022.06)" style="position: relative; z-index: 10;">전남대 인공지능학부 (2022.03 ~ 2022.06)</p>
+                
+            </div><div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#6EE7B7;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="300" y="80" width="100" height="50"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#6EE7B7;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="300" y="80" width="100" height="50"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#10B981;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="120" width="1000" height="60"/><rect x="150" y="70" width="200" height="50"/><rect x="600" y="90" width="150" height="30"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#10B981;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="120" width="1000" height="60"/><rect x="150" y="70" width="200" height="50"/><rect x="600" y="90" width="150" height="30"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 여름방학" data-en="Freshman - Summer Vacation" data-ja="1年生 夏休み" style="position: relative; z-index: 10;">1학년 여름방학</h2>
+                <p class="zone-subtitle lang-text" data-ko="2022.06 ~ 2022.08" data-en="Jun 2022 - Aug 2022" data-ja="2022.06 ~ 2022.08" style="position: relative; z-index: 10;">2022.06 ~ 2022.08</p>
+                
+            </div><div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 2학기" data-en="Freshman - 2nd Semester" data-ja="1年生 2学期" style="position: relative; z-index: 10;">1학년 2학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="2022.09 ~ 2022.12" data-en="Sep 2022 - Dec 2022" data-ja="2022.09 ~ 2022.12" style="position: relative; z-index: 10;">2022.09 ~ 2022.12</p>
+                
+            </div><div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#6EE7B7;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="300" y="80" width="100" height="50"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#6EE7B7;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="300" y="80" width="100" height="50"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#10B981;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="120" width="1000" height="60"/><rect x="150" y="70" width="200" height="50"/><rect x="600" y="90" width="150" height="30"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#10B981;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="120" width="1000" height="60"/><rect x="150" y="70" width="200" height="50"/><rect x="600" y="90" width="150" height="30"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 겨울방학" data-en="Freshman - Winter Vacation" data-ja="1年生 冬休み" style="position: relative; z-index: 10;">1학년 겨울방학</h2>
+                <p class="zone-subtitle lang-text" data-ko="2022.12 ~ 2023.02" data-en="Dec 2022 - Feb 2023" data-ja="2022.12 ~ 2023.02" style="position: relative; z-index: 10;">2022.12 ~ 2023.02</p>
+                
+            </div><div class="zone" style="width: 1400px; background-color: #064E3B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1400"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1400"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1400"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="2학년 1학기" data-en="Sophomore - 1st Semester" data-ja="2年生 1学期" style="position: relative; z-index: 10;">2학년 1학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="2023.03 ~ 2023.06 (휴학 전)" data-en="Mar 2023 - Jun 2023 (Before leave)" data-ja="2023.03 ~ 2023.06 (休学前)" style="position: relative; z-index: 10;">2023.03 ~ 2023.06 (휴학 전)</p>
+                
+            </div><div class="zone" style="width: 5000px; background-color: #451A03; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="5000"><svg class="silhouette" style="height:250px; opacity:0.3; fill:#FCD34D;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="850" y="40" width="40" height="40"/></svg><svg class="silhouette" style="height:250px; opacity:0.3; fill:#FCD34D;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="850" y="40" width="40" height="40"/></svg><svg class="silhouette" style="height:250px; opacity:0.3; fill:#FCD34D;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="850" y="40" width="40" height="40"/></svg><svg class="silhouette" style="height:250px; opacity:0.3; fill:#FCD34D;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="850" y="40" width="40" height="40"/></svg><svg class="silhouette" style="height:250px; opacity:0.3; fill:#FCD34D;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="850" y="40" width="40" height="40"/></svg><svg class="silhouette" style="height:250px; opacity:0.3; fill:#FCD34D;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="850" y="40" width="40" height="40"/></svg><svg class="silhouette" style="height:250px; opacity:0.3; fill:#FCD34D;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="850" y="40" width="40" height="40"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="5000"><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg><svg class="silhouette" style="height:200px; opacity:0.4; fill:#B45309;" viewBox="0 0 1000 200" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="100" width="1000" height="100"/><rect x="200" y="50" width="300" height="50"/><rect x="600" y="70" width="200" height="30"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="5000"><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg><svg class="silhouette" style="height:120px; opacity:0.6; fill:#78350F;" viewBox="0 0 1000 120" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="100" height="60"/><rect x="400" y="40" width="150" height="80"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="대한민국 공군 병 851기" data-en="ROK Air Force, 851st" data-ja="大韓民国空軍 兵851期" style="position: relative; z-index: 10;">대한민국 공군 병 851기</h2>
+                <p class="zone-subtitle lang-text" data-ko="입대: 2023.09 ~ 전역: 2025.06" data-en="Enlisted: Sep 2023 - Discharged: Jun 2025" data-ja="入隊: 2023.09 ~ 除隊: 2025.06" style="position: relative; z-index: 10;">입대: 2023.09 ~ 전역: 2025.06</p>
+                
+            </div><div class="zone" style="width: 1200px; background-color: #1E3A8A; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="2학년 2학기 (복학)" data-en="Sophomore - 2nd Semester (Return)" data-ja="2年生 2学期 (復学)" style="position: relative; z-index: 10;">2학년 2학기 (복학)</h2>
+                <p class="zone-subtitle lang-text" data-ko="2025.09 ~ 2025.12" data-en="Sep 2025 - Dec 2025" data-ja="2025.09 ~ 2025.12" style="position: relative; z-index: 10;">2025.09 ~ 2025.12</p>
+                
+            </div><div class="zone" style="width: 600px; background-color: #172554; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#6EE7B7;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="300" y="80" width="100" height="50"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#6EE7B7;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="300" y="80" width="100" height="50"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#10B981;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="120" width="1000" height="60"/><rect x="150" y="70" width="200" height="50"/><rect x="600" y="90" width="150" height="30"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#10B981;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="120" width="1000" height="60"/><rect x="150" y="70" width="200" height="50"/><rect x="600" y="90" width="150" height="30"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#047857;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="40" width="80" height="60"/><rect x="400" y="20" width="120" height="80"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="2학년 겨울방학" data-en="Sophomore - Winter Vacation" data-ja="2年生 冬休み" style="position: relative; z-index: 10;">2학년 겨울방학</h2>
+                <p class="zone-subtitle lang-text" data-ko="2025.12 ~ 2026.02" data-en="Dec 2025 - Feb 2026" data-ja="2025.12 ~ 2026.02" style="position: relative; z-index: 10;">2025.12 ~ 2026.02</p>
+                
+            </div><div class="zone" style="width: 2200px; background-color: #1E3A8A; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="2200"><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg><svg class="silhouette" style="height:250px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 250" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="100" y="50" width="8" height="8"/><rect x="800" y="100" width="8" height="8"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="2200"><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg><svg class="silhouette" style="height:180px; opacity:0.4; fill:#4F46E5;" viewBox="0 0 1000 180" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="80" width="200" height="100"/><rect x="350" y="50" width="150" height="130"/><rect x="700" y="90" width="250" height="90"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="2200"><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.6; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="50" width="1000" height="50"/><rect x="100" y="20" width="50" height="30"/><rect x="800" y="30" width="80" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="3학년 1학기" data-en="Junior - 1st Semester" data-ja="3年生 1学期" style="position: relative; z-index: 10;">3학년 1학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="2026.03 ~ 2026.06" data-en="Mar 2026 - Jun 2026" data-ja="2026.03 ~ 2026.06" style="position: relative; z-index: 10;">2026.03 ~ 2026.06</p>
+                
+            </div><div class="zone" style="width: 2000px; background-color: #701A75; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="2000"><svg class="silhouette" style="height:300px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 300" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="150" y="60" width="6" height="6"/><rect x="700" y="120" width="6" height="6"/></svg><svg class="silhouette" style="height:300px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 300" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="150" y="60" width="6" height="6"/><rect x="700" y="120" width="6" height="6"/></svg><svg class="silhouette" style="height:300px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 300" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="150" y="60" width="6" height="6"/><rect x="700" y="120" width="6" height="6"/></svg><svg class="silhouette" style="height:300px; opacity:0.2; fill:#A5B4FC;" viewBox="0 0 1000 300" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="150" y="60" width="6" height="6"/><rect x="700" y="120" width="6" height="6"/></svg></div><div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="2000"><svg class="silhouette" style="height:220px; opacity:0.4; fill:#6366F1;" viewBox="0 0 1000 220" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="80" height="160"/><rect x="150" y="30" width="120" height="190"/><rect x="400" y="20" width="70" height="200"/><rect x="600" y="100" width="110" height="120"/><rect x="730" y="40" width="140" height="180"/></svg><svg class="silhouette" style="height:220px; opacity:0.4; fill:#6366F1;" viewBox="0 0 1000 220" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="80" height="160"/><rect x="150" y="30" width="120" height="190"/><rect x="400" y="20" width="70" height="200"/><rect x="600" y="100" width="110" height="120"/><rect x="730" y="40" width="140" height="180"/></svg><svg class="silhouette" style="height:220px; opacity:0.4; fill:#6366F1;" viewBox="0 0 1000 220" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="80" height="160"/><rect x="150" y="30" width="120" height="190"/><rect x="400" y="20" width="70" height="200"/><rect x="600" y="100" width="110" height="120"/><rect x="730" y="40" width="140" height="180"/></svg><svg class="silhouette" style="height:220px; opacity:0.4; fill:#6366F1;" viewBox="0 0 1000 220" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="50" y="60" width="80" height="160"/><rect x="150" y="30" width="120" height="190"/><rect x="400" y="20" width="70" height="200"/><rect x="600" y="100" width="110" height="120"/><rect x="730" y="40" width="140" height="180"/></svg></div><div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="2000"><svg class="silhouette" style="height:100px; opacity:0.7; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="60" width="1000" height="40"/><rect x="200" y="30" width="100" height="30"/><rect x="600" y="40" width="150" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.7; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="60" width="1000" height="40"/><rect x="200" y="30" width="100" height="30"/><rect x="600" y="40" width="150" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.7; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="60" width="1000" height="40"/><rect x="200" y="30" width="100" height="30"/><rect x="600" y="40" width="150" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.7; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="60" width="1000" height="40"/><rect x="200" y="30" width="100" height="30"/><rect x="600" y="40" width="150" height="20"/></svg><svg class="silhouette" style="height:100px; opacity:0.7; fill:#312E81;" viewBox="0 0 1000 100" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="0" y="60" width="1000" height="40"/><rect x="200" y="30" width="100" height="30"/><rect x="600" y="40" width="150" height="20"/></svg></div>
+                <h2 class="zone-title lang-text" data-ko="해외(일본) 인턴십" data-en="Global Internship (Japan)" data-ja="海外インターンシップ (日本)" style="position: relative; z-index: 10;">해외(일본) 인턴십</h2>
+                <p class="zone-subtitle lang-text" data-ko="도쿄 시부야 (2026.06 ~ 2026.08)" data-en="Shibuya, Tokyo (Jun 2026 - Aug 2026)" data-ja="東京 渋谷 (2026.06 ~ 2026.08)" style="position: relative; z-index: 10;">도쿄 시부야 (2026.06 ~ 2026.08)</p>
+                
+            </div><div class="zone" style="width: 1300px; background-color: transparent; overflow: hidden; border-right: none;">
+                
+                <h2 class="zone-title lang-text" data-ko="계속해서 성장 중..." data-en="Still Growing..." data-ja="継続的に成長中..." style="position: relative; z-index: 10; color: var(--text-sub); margin-top: 100px;">계속해서 성장 중...</h2>
                 <p class="zone-subtitle lang-text" data-ko="" data-en="" data-ja="" style="position: relative; z-index: 10;"></p>
                 <div class="finale-layer">
-                    <div class="finale-confetti" style="top:-20px; left:0%; background:#22D3EE; animation-duration:2s; animation-delay:0s;"></div>
-                    <div class="finale-caption"><div class="finale-caption-retro">STAGE CLEAR</div></div>
-                </div>
+                <div class="finale-confetti" style="top:-20px; left:0%; background:#22D3EE; animation-duration:2s; animation-delay:0s;"></div><div class="finale-confetti" style="top:-20px; left:53%; background:#FBBF24; animation-duration:2.4s; animation-delay:0.3s;"></div><div class="finale-confetti" style="top:-20px; left:6%; background:#F472B6; animation-duration:2.8s; animation-delay:0.6s;"></div><div class="finale-confetti" style="top:-20px; left:59%; background:#4ADE80; animation-duration:3.2s; animation-delay:0.8999999999999999s;"></div><div class="finale-confetti" style="top:-20px; left:12%; background:#22D3EE; animation-duration:3.6s; animation-delay:1.2s;"></div><div class="finale-confetti" style="top:-20px; left:65%; background:#FBBF24; animation-duration:2s; animation-delay:1.5s;"></div><div class="finale-confetti" style="top:-20px; left:18%; background:#F472B6; animation-duration:2.4s; animation-delay:0s;"></div><div class="finale-confetti" style="top:-20px; left:71%; background:#4ADE80; animation-duration:2.8s; animation-delay:0.3s;"></div><div class="finale-confetti" style="top:-20px; left:24%; background:#22D3EE; animation-duration:3.2s; animation-delay:0.6s;"></div><div class="finale-confetti" style="top:-20px; left:77%; background:#FBBF24; animation-duration:3.6s; animation-delay:0.8999999999999999s;"></div><div class="finale-confetti" style="top:-20px; left:30%; background:#F472B6; animation-duration:2s; animation-delay:1.2s;"></div><div class="finale-confetti" style="top:-20px; left:83%; background:#4ADE80; animation-duration:2.4s; animation-delay:1.5s;"></div><div class="finale-confetti" style="top:-20px; left:36%; background:#22D3EE; animation-duration:2.8s; animation-delay:0s;"></div><div class="finale-confetti" style="top:-20px; left:89%; background:#FBBF24; animation-duration:3.2s; animation-delay:0.3s;"></div><div class="finale-confetti" style="top:-20px; left:42%; background:#F472B6; animation-duration:3.6s; animation-delay:0.6s;"></div><div class="finale-confetti" style="top:-20px; left:95%; background:#4ADE80; animation-duration:2s; animation-delay:0.8999999999999999s;"></div><div class="finale-confetti" style="top:-20px; left:48%; background:#22D3EE; animation-duration:2.4s; animation-delay:1.2s;"></div><div class="finale-confetti" style="top:-20px; left:1%; background:#FBBF24; animation-duration:2.8s; animation-delay:1.5s;"></div>
+                <div class="finale-caption"><div class="finale-caption-retro">STAGE CLEAR</div></div>
+            </div>
             </div>
         </div>
         <div id="sky-overlay"></div>
@@ -319,17 +316,24 @@
     </section>
 
     <section class="dest-section" id="dest-section">
+        <div class="cover-bg-grid"></div>
         <div class="dest-content">
             <p class="dest-eyebrow">MISSION COMPLETE</p>
             <h1 class="dest-title lang-text" data-ko="여정의 끝에 도착했습니다" data-en="Arrived at the End" data-ja="旅の終わりに到着しました">여정의 끝에 도착했습니다</h1>
             <p class="dest-sub lang-text" data-ko="성장은 계속됩니다" data-en="Growth Continues" data-ja="成長は続きます">성장은 계속됩니다</p>
             <div class="stat-grid">
-                <div class="stat-card"><div class="stat-num" data-target="20">0</div><div class="stat-label">Milestones</div></div>
+                <div class="stat-card"><div class="stat-num" data-target="22">0</div><div class="stat-label">Milestones</div></div>
                 <div class="stat-card"><div class="stat-num" data-target="15">0</div><div class="stat-label">Stages</div></div>
                 <div class="stat-card"><div class="stat-num" data-target="6">0</div><div class="stat-label">Certificates</div></div>
             </div>
             <button class="restart-btn lang-text" data-ko="다시 처음으로" data-en="PLAY AGAIN" data-ja="最初に戻る" id="restart-btn">다시 처음으로</button>
         </div>
+    </section>
+
+    <section id="resume-section">
+        <div class="cover-bg-grid"></div>
+        <h1 class="lang-text" data-ko="Career Resume" data-en="Career Resume" data-ja="Career Resume">Career Resume</h1>
+        <section class="tr-chapter"><h3 class="lang-text" data-ko="계속해서 성장 중..." data-en="Still Growing..." data-ja="継続的に成長中...">계속해서 성장 중...</h3><ul><li><div class="tr-item-content"><strong class="lang-text" data-ko="해외 인턴십 시작" data-en="Global Internship Start" data-ja="海外インターン開始">해외 인턴십 시작</strong><span class="tr-desc lang-text" data-ko="Global Innovation Handle (2026.06)" data-en="Global Innovation Handle (June 2026)" data-ja="グローバルイノベーションハンドル（2026年6月）">Global Innovation Handle (2026.06)</span></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="Blind Walker" data-en="Blind Walker (VR)" data-ja="Blind Walker">Blind Walker</strong><span class="tr-desc lang-text" data-ko="유니티 VR 프로젝트" data-en="Unity VR Project" data-ja="Unity VR プロジェクト">유니티 VR 프로젝트</span></div><div class="tr-item-media tr-item-link"><a href="https://github.com/Devleu0/BlindWalker" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="ADsP 합격" data-en="ADsP Passed" data-ja="ADsP 合格">ADsP 합격</strong><span class="tr-desc lang-text" data-ko="데이터분석 준전문가 (2026.06)" data-en="Associate Data Analyst (2026.06)" data-ja="データ分析準専門家 (2026.06)">데이터분석 준전문가 (2026.06)</span></div><div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="TOEIC 780점" data-en="TOEIC 780" data-ja="TOEIC 780点">TOEIC 780점</strong><span class="tr-desc lang-text" data-ko="ETS (2026.04)" data-en="ETS (April 2026)" data-ja="ETS (2026年4月)">ETS (2026.04)</span></div><div class="tr-item-media tr-item-link"><a href="https://exam.toeic.co.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="부전공" data-en="부전공" data-ja="부전공">부전공</strong><span class="tr-desc lang-text" data-ko="일어일문학 부전공  (2026.03~)" data-en="일어일문학 부전공  (2026.03~)" data-ja="일어일문학 부전공  (2026.03~)">일어일문학 부전공  (2026.03~)</span></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="SQL개발자(SQLD)" data-en="SQL Developer (SQLD)" data-ja="SQL開発者(SQLD)">SQL개발자(SQLD)</strong><span class="tr-desc lang-text" data-ko="한국데이터산업진흥원 (2026.03)" data-en="Korea Data Agency (March 2026)" data-ja="韓国データ産業振興院 (2026.03)">한국데이터산업진흥원 (2026.03)</span></div><div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="만기 전역" data-en="Discharged" data-ja="満期除隊">만기 전역</strong><span class="tr-desc lang-text" data-ko="공군 병 851기 병장 (2025.06)" data-en="Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)" data-ja="韓国空軍兵長 (851期, 2025年6月)">공군 병 851기 병장 (2025.06)</span></div><div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="JLPT N1 취득" data-en="JLPT N1" data-ja="JLPT N1 取得">JLPT N1 취득</strong><span class="tr-desc lang-text" data-ko="군 복무 중 달성 (2025.01)" data-en="Achieved during military service (Jan 2025)" data-ja="兵役中に達成 (2025年1月)">군 복무 중 달성 (2025.01)</span></div><div class="tr-item-media tr-item-link"><a href="https://www.jlpt.or.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="병장 진급" data-en="Promoted to Sergeant" data-ja="兵長 進級">병장 진급</strong><span class="tr-desc lang-text" data-ko="(2024.11)" data-en="(November 2024)" data-ja="(2024年11月)">(2024.11)</span></div><div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="상병 진급" data-en="Promoted to Corporal" data-ja="上等兵 進級">상병 진급</strong><span class="tr-desc lang-text" data-ko="(2024.05)" data-en="(May 2024)" data-ja="(2024年5月)">(2024.05)</span></div><div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="일병 진급" data-en="Promoted to PFC" data-ja="一等兵 進級">일병 진급</strong><span class="tr-desc lang-text" data-ko="(2023.11)" data-en="(November 2023)" data-ja="(2023年11月)">(2023.11)</span></div><div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="공군 입대 (이병)" data-en="Air Force (Private)" data-ja="空軍入隊 (二等兵)">공군 입대 (이병)</strong><span class="tr-desc lang-text" data-ko="방공포 보직 (2023.09)" data-en="Air Defense Artillery Assignment (Sep 2023)" data-ja="防空砲兵の役職 (2023年9月)">방공포 보직 (2023.09)</span></div><div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="ISTQB CTFL 취득" data-en="ISTQB CTFL" data-ja="ISTQB CTFL取得">ISTQB CTFL 취득</strong><span class="tr-desc lang-text" data-ko="KSTQB (2023.06)" data-en="KSTQB (June 2023)" data-ja="KSTQB (2023年6月)">KSTQB (2023.06)</span></div><div class="tr-item-media tr-item-link"><a href="https://www.kstqb.org/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="한국사 3급 취득" data-en="Korean History Lvl 3" data-ja="韓国史3級取得">한국사 3급 취득</strong><span class="tr-desc lang-text" data-ko="국사편찬위원회 (2022.08)" data-en="National Institute of Korean History (August 2022)" data-ja="国史編纂委員会 (2022年8月)">국사편찬위원회 (2022.08)</span></div><div class="tr-item-media tr-item-link"><a href="https://www.historyexam.go.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="대학교 입학" data-en="대학교 입학" data-ja="대학교 입학">대학교 입학</strong><span class="tr-desc lang-text" data-ko="전남대학교 인공지능학부 (2022.03)" data-en="전남대학교 인공지능학부 (2022.03)" data-ja="전남대학교 인공지능학부 (2022.03)">전남대학교 인공지능학부 (2022.03)</span></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="고등학교 졸업" data-en="High School Grad" data-ja="高校卒業">고등학교 졸업</strong><span class="tr-desc lang-text" data-ko="광주진흥고 (2022.02)" data-en="Gwangju Jinheung High School (Feb 2022)" data-ja="光州進興高校 (2022年2月)">광주진흥고 (2022.02)</span></div><div class="tr-item-media tr-item-link"><a href="http://jinheung.gen.hs.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="고등학교 입학" data-en="High School Entrance" data-ja="高校入学">고등학교 입학</strong><span class="tr-desc lang-text" data-ko="광주진흥고 (2019.03)" data-en="Gwangju Jinheung High School (Mar 2019)" data-ja="光州進興高校 (2019年3月)">광주진흥고 (2019.03)</span></div><div class="tr-item-media tr-item-link"><a href="http://jinheung.gen.hs.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="중학교 졸업" data-en="Middle School Grad" data-ja="中学校卒業">중학교 졸업</strong><span class="tr-desc lang-text" data-ko="장덕중 (2019.02)" data-en="Jangdeok Middle School (Feb 2019)" data-ja="長徳中学校 (2019年2月)">장덕중 (2019.02)</span></div><div class="tr-item-media tr-item-link"><a href="http://jangdeok.gen.ms.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="중학교 입학" data-en="Middle School Entrance" data-ja="中学校入学">중학교 입학</strong><span class="tr-desc lang-text" data-ko="장덕중 (2016.03)" data-en="Jangdeok Middle School (Mar 2016)" data-ja="長徳中学校 (2016年3月)">장덕중 (2016.03)</span></div><div class="tr-item-media tr-item-link"><a href="http://jangdeok.gen.ms.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="초등학교 졸업" data-en="Elem. School Grad" data-ja="小学校卒業">초등학교 졸업</strong><span class="tr-desc lang-text" data-ko="장덕초 (2016.02)" data-en="Jangdeok Elementary School (Feb 2016)" data-ja="長徳小学校 (2016年2月)">장덕초 (2016.02)</span></div><div class="tr-item-media tr-item-link"><a href="http://jangdeok.gen.es.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li><li><div class="tr-item-content"><strong class="lang-text" data-ko="초등학교 입학" data-en="Elem. School Entrance" data-ja="小学校入学">초등학교 입학</strong><span class="tr-desc lang-text" data-ko="장덕초 (2010.03)" data-en="Jangdeok Elementary School (Mar 2010)" data-ja="長徳小学校 (2010年3月)">장덕초 (2010.03)</span></div><div class="tr-item-media tr-item-link"><a href="http://jangdeok.gen.es.kr/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div></li></ul></section>
     </section>
 
     <div class="keyboard-guide hidden-mobile">
@@ -349,20 +353,37 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+        const escapeHtml = (str) => String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const buildLangAttrs = (obj) => {
+            if (!obj) return 'data-ko="" data-en="" data-ja=""';
+            if (typeof obj === 'string') return 'data-ko="' + escapeHtml(obj) + '" data-en="' + escapeHtml(obj) + '" data-ja="' + escapeHtml(obj) + '"';
+            return 'data-ko="' + escapeHtml(obj.ko || '') + '" data-en="' + escapeHtml(obj.en || obj.ko || '') + '" data-ja="' + escapeHtml(obj.ja || obj.ko || '') + '"';
+        };
         var THEME = 'retro';
+        var currentLang = 'ko';
 
         function updateLanguage(lang) {
+            currentLang = lang;
             document.querySelectorAll('.lang-text').forEach(function(el) {
                 var newText = el.getAttribute('data-' + lang) || el.getAttribute('data-ko') || '';
                 if(newText) el.innerHTML = newText;
             });
-            var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 20개의 기록이 발견되었습니다.' :
-                                lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 20 RECORDS FOUND.' :
-                                '> プロフィールデータを読み込み中... OK\n> 시스템 준비 완료.\n> 20個の記録が見つかりました。';
+            var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 22개의 기록이 발견되었습니다.' :
+                                lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 22 RECORDS FOUND.' :
+                                '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 22個の記録が見つかりました。';
             window._termTypedText = termTypedText; 
+            
+            // Also update the skip button text immediately
+            var skipBtn = document.getElementById('skip-game-btn');
+            if (skipBtn && window.isScrolledToEnd) {
+                skipBtn.innerHTML = skipBtn.getAttribute('data-' + lang + '-return') || skipBtn.getAttribute('data-ko-return');
+            } else if (skipBtn) {
+                skipBtn.innerHTML = skipBtn.getAttribute('data-' + lang) || skipBtn.getAttribute('data-ko');
+            }
         }
 
         var langSelector = document.getElementById('lang-selector');
@@ -392,91 +413,182 @@
         
         var playerInner = document.createElement('div');
         playerInner.style.cssText = 'width:100%; height:100%; transform-origin:bottom center; color:var(--accent); filter:drop-shadow(0 0 8px rgba(56,189,248,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.5));';
-        playerInner.innerHTML = `<svg viewBox="0 0 16 16" width="100%" height="100%" style="display:block; shape-rendering: crispEdges;"><rect x="5" y="2" width="6" height="6" fill="currentColor"/><rect x="6" y="8" width="4" height="4" fill="currentColor"/><rect x="4" y="8" width="2" height="3" fill="currentColor"/><rect x="10" y="8" width="2" height="3" fill="currentColor"/><rect x="6" y="12" width="2" height="3" fill="currentColor"/><rect x="8" y="12" width="2" height="3" fill="currentColor"/></svg>`;
+        playerInner.innerHTML = '<svg viewBox="0 0 16 16" width="100%" height="100%" style="display:block; shape-rendering: crispEdges;"><rect x="5" y="2" width="6" height="6" fill="currentColor"/><rect x="6" y="8" width="4" height="4" fill="currentColor"/><rect x="4" y="8" width="2" height="3" fill="currentColor"/><rect x="10" y="8" width="2" height="3" fill="currentColor"/><rect x="6" y="12" width="2" height="3" fill="currentColor"/><rect x="8" y="12" width="2" height="3" fill="currentColor"/></svg>';
         
         playerWrapper.appendChild(playerInner); player.appendChild(playerWrapper); gameContainer.appendChild(player);
 
         var LAST_ZONE_START = 22400;
         var posHistory = [];
         var ghostEls = [];
+        if (THEME === 'minimal') {
+            var ghostSvg = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block; overflow:visible;"><circle cx="50" cy="30" r="16" fill="currentColor" opacity="0.6"/><rect x="34" y="46" width="32" height="34" rx="12" fill="currentColor"/><rect x="24" y="48" width="12" height="26" rx="6" fill="currentColor"/><rect x="64" y="48" width="12" height="26" rx="6" fill="currentColor"/></svg>`;
+            for (var gi = 0; gi < 3; gi++) {
+                var ghost = document.createElement('div');
+                ghost.className = 'finale-ghost';
+                ghost.innerHTML = ghostSvg;
+                gameContainer.appendChild(ghost);
+                ghostEls.push(ghost);
+            }
+        }
 
         var obstaclesData = [
           {
                     "id": 1,
-                    "pos": 320,
-                    "elevation": 0,
-                    "title": { "ko": "출생", "en": "Birth", "ja": "誕生" },
-                    "desc": { "ko": "OO시 (2003.09)" },
+                    "pos": 300,
+                    "elevation": -19,
+                    "title": {
+                              "ko": "출생",
+                              "en": "Birth",
+                              "ja": "誕生"
+                    },
+                    "desc": {
+                              "ko": "광주광역시 (2003.09)",
+                              "en": "Gwangju Metropolitan City (Sep 2003)",
+                              "ja": "光州広域市 (2003年9月)"
+                    },
                     "color": "#38BDF8",
                     "category": "birth",
-                    "link": "#"
+                    "link": "https://www.gwangju.go.kr/",
+                    "hidden": false
           },
           {
                     "id": 2,
                     "pos": 1736,
                     "elevation": 0,
-                    "title": { "ko": "초등학교 입학", "en": "Elem. School Entrance", "ja": "小学校入学" },
-                    "desc": { "ko": "OO초 (2010.03)" },
+                    "title": {
+                              "ko": "초등학교 입학",
+                              "en": "Elem. School Entrance",
+                              "ja": "小学校入学"
+                    },
+                    "desc": {
+                              "ko": "장덕초 (2010.03)",
+                              "en": "Jangdeok Elementary School (Mar 2010)",
+                              "ja": "長徳小学校 (2010年3月)"
+                    },
                     "color": "#38BDF8",
                     "category": "enrollment",
-                    "link": "#"
+                    "link": "http://jangdeok.gen.es.kr/"
           },
           {
                     "id": 3,
                     "pos": 3064,
                     "elevation": 120,
-                    "title": { "ko": "초등학교 졸업", "en": "Elem. School Grad", "ja": "小学校卒業" },
-                    "desc": { "ko": "OO초 (2016.02)" },
+                    "title": {
+                              "ko": "초등학교 졸업",
+                              "en": "Elem. School Grad",
+                              "ja": "小学校卒業"
+                    },
+                    "desc": {
+                              "ko": "장덕초 (2016.02)",
+                              "en": "Jangdeok Elementary School (Feb 2016)",
+                              "ja": "長徳小学校 (2016年2月)"
+                    },
                     "color": "#38BDF8",
                     "category": "graduation",
-                    "link": "#"
+                    "link": "http://jangdeok.gen.es.kr/"
           },
           {
                     "id": 4,
                     "pos": 3322,
                     "elevation": 0,
-                    "title": { "ko": "중학교 입학", "en": "Middle School Entrance", "ja": "中学校入学" },
-                    "desc": { "ko": "OO중 (2016.03)" },
+                    "title": {
+                              "ko": "중학교 입학",
+                              "en": "Middle School Entrance",
+                              "ja": "中学校入学"
+                    },
+                    "desc": {
+                              "ko": "장덕중 (2016.03)",
+                              "en": "Jangdeok Middle School (Mar 2016)",
+                              "ja": "長徳中学校 (2016年3月)"
+                    },
                     "color": "#38BDF8",
                     "category": "enrollment",
-                    "link": "#"
+                    "link": "http://jangdeok.gen.ms.kr/"
           },
           {
                     "id": 5,
                     "pos": 4682,
                     "elevation": 200,
-                    "title": { "ko": "중학교 졸업", "en": "Middle School Grad", "ja": "中学校卒業" },
-                    "desc": { "ko": "OO중 (2019.02)" },
+                    "title": {
+                              "ko": "중학교 졸업",
+                              "en": "Middle School Grad",
+                              "ja": "中学校卒業"
+                    },
+                    "desc": {
+                              "ko": "장덕중 (2019.02)",
+                              "en": "Jangdeok Middle School (Feb 2019)",
+                              "ja": "長徳中学校 (2019年2月)"
+                    },
                     "color": "#38BDF8",
                     "category": "graduation",
-                    "link": "#"
+                    "link": "http://jangdeok.gen.ms.kr/"
           },
           {
                     "id": 6,
                     "pos": 4904,
                     "elevation": 0,
-                    "title": { "ko": "고등학교 입학", "en": "High School Entrance", "ja": "高校入学" },
-                    "desc": { "ko": "OO고 (2019.03)" },
+                    "title": {
+                              "ko": "고등학교 입학",
+                              "en": "High School Entrance",
+                              "ja": "高校入学"
+                    },
+                    "desc": {
+                              "ko": "광주진흥고 (2019.03)",
+                              "en": "Gwangju Jinheung High School (Mar 2019)",
+                              "ja": "光州進興高校 (2019年3月)"
+                    },
                     "color": "#38BDF8",
                     "category": "enrollment",
-                    "link": "#"
+                    "link": "http://jinheung.gen.hs.kr/"
           },
           {
                     "id": 7,
                     "pos": 6296,
                     "elevation": 180,
-                    "title": { "ko": "고등학교 졸업", "en": "High School Grad", "ja": "高校卒業" },
-                    "desc": { "ko": "OO고 (2022.02)" },
+                    "title": {
+                              "ko": "고등학교 졸업",
+                              "en": "High School Grad",
+                              "ja": "高校卒業"
+                    },
+                    "desc": {
+                              "ko": "광주진흥고 (2022.02)",
+                              "en": "Gwangju Jinheung High School (Feb 2022)",
+                              "ja": "光州進興高校 (2022年2月)"
+                    },
                     "color": "#38BDF8",
                     "category": "graduation",
-                    "link": "#"
+                    "link": "http://jinheung.gen.hs.kr/"
+          },
+          {
+                    "id": 21,
+                    "pos": 6696,
+                    "elevation": 0,
+                    "color": "#38BDF8",
+                    "category": "other",
+                    "title": {
+                              "ko": "대학교 입학"
+                    },
+                    "desc": {
+                              "ko": "전남대학교 인공지능학부 (2022.03)"
+                    },
+                    "inProgress": true,
+                    "customIcon": null,
+                    "link": ""
           },
           {
                     "id": 8,
                     "pos": 7900,
                     "elevation": 150,
-                    "title": { "ko": "한국사 3급 취득", "en": "Korean History Lvl 3", "ja": "韓国史3級取得" },
-                    "desc": { "ko": "국사편찬위원회 (2022.08)" },
+                    "title": {
+                              "ko": "한국사 3급 취득",
+                              "en": "Korean History Lvl 3",
+                              "ja": "韓国史3級取得"
+                    },
+                    "desc": {
+                              "ko": "국사편찬위원회 (2022.08)",
+                              "en": "National Institute of Korean History (August 2022)",
+                              "ja": "国史編纂委員会 (2022年8月)"
+                    },
                     "color": "#38BDF8",
                     "category": "certificate",
                     "link": "https://www.historyexam.go.kr/"
@@ -485,8 +597,16 @@
                     "id": 9,
                     "pos": 10300,
                     "elevation": 200,
-                    "title": { "ko": "ISTQB CTFL 취득", "en": "ISTQB CTFL", "ja": "ISTQB CTFL取得" },
-                    "desc": { "ko": "KSTQB (2023.06)" },
+                    "title": {
+                              "ko": "ISTQB CTFL 취득",
+                              "en": "ISTQB CTFL",
+                              "ja": "ISTQB CTFL取得"
+                    },
+                    "desc": {
+                              "ko": "KSTQB (2023.06)",
+                              "en": "KSTQB (June 2023)",
+                              "ja": "KSTQB (2023年6月)"
+                    },
                     "color": "#38BDF8",
                     "category": "certificate",
                     "link": "https://www.kstqb.org/"
@@ -495,48 +615,88 @@
                     "id": 10,
                     "pos": 11650,
                     "elevation": 0,
-                    "title": { "ko": "입대 (이병)", "en": "Enlistment (Private)", "ja": "入隊 (二等兵)" },
-                    "desc": { "ko": "특기 보직 (2023.09)" },
+                    "title": {
+                              "ko": "공군 입대 (이병)",
+                              "en": "Air Force (Private)",
+                              "ja": "空軍入隊 (二等兵)"
+                    },
+                    "desc": {
+                              "ko": "방공포 보직 (2023.09)",
+                              "en": "Air Defense Artillery Assignment (Sep 2023)",
+                              "ja": "防空砲兵の役職 (2023年9月)"
+                    },
                     "color": "#38BDF8",
                     "category": "military",
-                    "link": "#"
+                    "link": "https://rokaf.mil.kr/"
           },
           {
                     "id": 11,
                     "pos": 12316,
                     "elevation": 80,
-                    "title": { "ko": "일병 진급", "en": "Promoted to PFC", "ja": "一等兵 進級" },
-                    "desc": { "ko": "(2023.11)" },
+                    "title": {
+                              "ko": "일병 진급",
+                              "en": "Promoted to PFC",
+                              "ja": "一等兵 進級"
+                    },
+                    "desc": {
+                              "ko": "(2023.11)",
+                              "en": "(November 2023)",
+                              "ja": "(2023年11月)"
+                    },
                     "color": "#38BDF8",
                     "category": "military",
-                    "link": "#"
+                    "link": "https://rokaf.mil.kr/"
           },
           {
                     "id": 12,
                     "pos": 13316,
                     "elevation": 160,
-                    "title": { "ko": "상병 진급", "en": "Promoted to Corporal", "ja": "上等兵 進級" },
-                    "desc": { "ko": "(2024.05)" },
+                    "title": {
+                              "ko": "상병 진급",
+                              "en": "Promoted to Corporal",
+                              "ja": "上等兵 進級"
+                    },
+                    "desc": {
+                              "ko": "(2024.05)",
+                              "en": "(May 2024)",
+                              "ja": "(2024年5月)"
+                    },
                     "color": "#38BDF8",
                     "category": "military",
-                    "link": "#"
+                    "link": "https://rokaf.mil.kr/"
           },
           {
                     "id": 13,
                     "pos": 14316,
                     "elevation": 180,
-                    "title": { "ko": "병장 진급", "en": "Promoted to Sergeant", "ja": "兵長 進級" },
-                    "desc": { "ko": "(2024.11)" },
+                    "title": {
+                              "ko": "병장 진급",
+                              "en": "Promoted to Sergeant",
+                              "ja": "兵長 進級"
+                    },
+                    "desc": {
+                              "ko": "(2024.11)",
+                              "en": "(November 2024)",
+                              "ja": "(2024年11月)"
+                    },
                     "color": "#38BDF8",
                     "category": "military",
-                    "link": "#"
+                    "link": "https://rokaf.mil.kr/"
           },
           {
                     "id": 14,
                     "pos": 15316,
                     "elevation": 200,
-                    "title": { "ko": "JLPT N1 취득", "en": "JLPT N1", "ja": "JLPT N1 取得" },
-                    "desc": { "ko": "군 복무 중 달성 (2025.01)" },
+                    "title": {
+                              "ko": "JLPT N1 취득",
+                              "en": "JLPT N1",
+                              "ja": "JLPT N1 取得"
+                    },
+                    "desc": {
+                              "ko": "군 복무 중 달성 (2025.01)",
+                              "en": "Achieved during military service (Jan 2025)",
+                              "ja": "兵役中に達成 (2025年1月)"
+                    },
                     "color": "#38BDF8",
                     "category": "certificate",
                     "link": "https://www.jlpt.or.kr/"
@@ -545,28 +705,68 @@
                     "id": 15,
                     "pos": 16150,
                     "elevation": 0,
-                    "title": { "ko": "만기 전역", "en": "Discharged", "ja": "満期除隊" },
-                    "desc": { "ko": "병장 만기전역 (2025.06)" },
+                    "title": {
+                              "ko": "만기 전역",
+                              "en": "Discharged",
+                              "ja": "満期除隊"
+                    },
+                    "desc": {
+                              "ko": "공군 병 851기 병장 (2025.06)",
+                              "en": "Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)",
+                              "ja": "韓国空軍兵長 (851期, 2025年6月)"
+                    },
                     "color": "#38BDF8",
                     "category": "military",
-                    "link": "#"
+                    "link": "https://rokaf.mil.kr/"
           },
           {
                     "id": 16,
                     "pos": 17900,
                     "elevation": 150,
-                    "title": { "ko": "SQL개발자(SQLD)", "en": "SQL Developer (SQLD)", "ja": "SQL開発者(SQLD)" },
-                    "desc": { "ko": "한국데이터산업진흥원 (2026.03)" },
+                    "title": {
+                              "ko": "SQL개발자(SQLD)",
+                              "en": "SQL Developer (SQLD)",
+                              "ja": "SQL開発者(SQLD)"
+                    },
+                    "desc": {
+                              "ko": "한국데이터산업진흥원 (2026.03)",
+                              "en": "Korea Data Agency (March 2026)",
+                              "ja": "韓国データ産業振興院 (2026.03)"
+                    },
                     "color": "#38BDF8",
                     "category": "certificate",
                     "link": "https://www.dataq.or.kr/"
           },
           {
+                    "id": 22,
+                    "pos": 18300,
+                    "elevation": 0,
+                    "color": "#38BDF8",
+                    "category": "other",
+                    "title": {
+                              "ko": "부전공"
+                    },
+                    "desc": {
+                              "ko": "일어일문학 부전공  (2026.03~)"
+                    },
+                    "inProgress": true,
+                    "customIcon": null,
+                    "link": ""
+          },
+          {
                     "id": 17,
                     "pos": 18934,
                     "elevation": 180,
-                    "title": { "ko": "TOEIC 780점", "en": "TOEIC 780", "ja": "TOEIC 780点" },
-                    "desc": { "ko": "ETS (2026.04)" },
+                    "title": {
+                              "ko": "TOEIC 780점",
+                              "en": "TOEIC 780",
+                              "ja": "TOEIC 780点"
+                    },
+                    "desc": {
+                              "ko": "ETS (2026.04)",
+                              "en": "ETS (April 2026)",
+                              "ja": "ETS (2026年4月)"
+                    },
                     "color": "#38BDF8",
                     "category": "certificate",
                     "link": "https://exam.toeic.co.kr/"
@@ -575,8 +775,16 @@
                     "id": 18,
                     "pos": 19422,
                     "elevation": 120,
-                    "title": { "ko": "ADsP 합격", "en": "ADsP Passed", "ja": "ADsP 合格" },
-                    "desc": { "ko": "데이터분석 준전문가 (2026.06)" },
+                    "title": {
+                              "ko": "ADsP 합격",
+                              "en": "ADsP Passed",
+                              "ja": "ADsP 合格"
+                    },
+                    "desc": {
+                              "ko": "데이터분석 준전문가 (2026.06)",
+                              "en": "Associate Data Analyst (2026.06)",
+                              "ja": "データ分析準専門家 (2026.06)"
+                    },
                     "color": "#38BDF8",
                     "category": "certificate",
                     "link": "https://www.dataq.or.kr/"
@@ -585,20 +793,35 @@
                     "id": 20,
                     "pos": 20034,
                     "elevation": 200,
-                    "title": { "ko": "Sample Project", "en": "Sample Project (VR)", "ja": "サンプルプロジェクト" },
-                    "desc": { "ko": "유니티 프로젝트 샘플" },
+                    "title": {
+                              "ko": "Blind Walker",
+                              "en": "Blind Walker (VR)",
+                              "ja": "Blind Walker"
+                    },
+                    "desc": {
+                              "ko": "유니티 VR 프로젝트",
+                              "en": "Unity VR Project",
+                              "ja": "Unity VR プロジェクト"
+                    },
                     "color": "#38BDF8",
                     "category": "project",
                     "inProgress": false,
-                    "link": "https://github.com/",
-                    "customIcon": ""
+                    "link": "https://github.com/Devleu0/BlindWalker"
           },
           {
                     "id": 19,
                     "pos": 20510,
                     "elevation": 0,
-                    "title": { "ko": "해외 인턴십 시작", "en": "Global Internship Start", "ja": "海外インターン開始" },
-                    "desc": { "ko": "Global Innovation Handle (2026.06)" },
+                    "title": {
+                              "ko": "해외 인턴십 시작",
+                              "en": "Global Internship Start",
+                              "ja": "海外インターン開始"
+                    },
+                    "desc": {
+                              "ko": "Global Innovation Handle (2026.06)",
+                              "en": "Global Innovation Handle (June 2026)",
+                              "ja": "グローバルイノベーションハンドル（2026年6月）"
+                    },
                     "color": "#38BDF8",
                     "category": "internship",
                     "link": "",
@@ -613,7 +836,7 @@
 
         function createObstacle(data, fallbackId) {
             var hasImg = !!data.customIcon;
-            var size = hasImg ? 96 : 64;
+            var size = hasImg ? (THEME === 'minimal' ? 100 : 96) : (THEME === 'minimal' ? 70 : 64);
             var iconSize = 32;
             var elevation = data.elevation || 0;
             var bottomStyle = 'calc(35vh + ' + elevation + 'px)';
@@ -643,24 +866,25 @@
             obstacle.className = 'obstacle-badge' + (data.inProgress ? ' is-inprogress' : '');
             obstacle.style.width = data.customIcon ? '86px' : '100%'; 
             obstacle.style.height = data.customIcon ? '64px' : '100%'; 
-            obstacle.style.borderRadius = data.customIcon ? '8px' : '0';
+            obstacle.style.borderRadius = data.customIcon ? '8px' : (THEME === 'minimal' ? '50%' : '0');
             obstacle.style.position = 'relative'; 
             obstacle.style.left = data.customIcon ? '-8px' : '0';
-            obstacle.style.background = data.color || '#22D3EE';
 
-            var strokeColor = '#020617';
+            if(THEME === 'minimal' && !data.customIcon) { obstacle.style.background = 'rgba(30,41,59,0.8)'; obstacle.style.backdropFilter = 'blur(8px)'; }
+            else if (!data.customIcon) { obstacle.style.background = data.color || '#22D3EE'; }
+
+            var strokeColor = THEME === 'minimal' ? (data.color || 'var(--accent)') : '#020617';
             if (data.customIcon) {
-                obstacle.innerHTML = '<img src="' + data.customIcon + '" style="width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />';
+                obstacle.innerHTML = '<img src="' + data.customIcon + '" style="width:100%; height:100%; object-fit:cover; image-rendering:'+(THEME==='minimal'?'auto':'pixelated')+';" />';
             } else {
                 obstacle.innerHTML = '<svg width="' + iconSize + '" height="' + iconSize + '" viewBox="0 0 24 24" fill="none" stroke="'+strokeColor+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[data.category] || ICONS.other) + '</svg>';
             }
             wrapper.appendChild(obstacle);
 
             var tag = document.createElement('div');
-            tag.className = 'info-tag'; 
-            var tKo = getStr(data.title, 'ko').replace(/"/g, '&quot;'); var dKo = getStr(data.desc, 'ko').replace(/"/g, '&quot;'); 
+            tag.className = 'info-tag';
             var catName = (data.category || 'milestone').toUpperCase();
-            tag.innerHTML = '<div class="cat-badge">[' + catName + ']</div><div class="title lang-text" data-ko="'+tKo+'">' + tKo + '</div><div class="desc lang-text" data-ko="'+dKo+'">' + dKo + '</div>';
+            tag.innerHTML = `<div class="cat-badge">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
             wrapper.appendChild(tag);
             
             gameContainer.appendChild(wrapper); return wrapper;
@@ -669,21 +893,42 @@
         obstaclesData.forEach(function (data, index) { obstacleElements.push(createObstacle(data, index + 1000)); });
         updateLanguage('ko');
 
-        var SKY_STOPS = ['#0F172A', '#1E1B4B', '#4C1D95', '#701A75'];
+        var SKY_STOPS = THEME === 'minimal' ? ['#020617', '#0F172A', '#1E293B', '#0F172A'] : ['#0F172A', '#1E1B4B', '#4C1D95', '#701A75'];
         function hexToRgb(hex) { var h = hex.replace('#', ''); return [parseInt(h.substring(0, 2), 16), parseInt(h.substring(2, 4), 16), parseInt(h.substring(4, 6), 16)]; }
         function lerp(a, b, t) { return a + (b - a) * t; }
         function mixColors(hexA, hexB, t) { var c1 = hexToRgb(hexA), c2 = hexToRgb(hexB); return 'rgb(' + Math.round(lerp(c1[0], c2[0], t)) + ', ' + Math.round(lerp(c1[1], c2[1], t)) + ', ' + Math.round(lerp(c1[2], c2[2], t)) + ')'; }
         function getSkyColor(progress) { var segCount = SKY_STOPS.length - 1; var segment = Math.min(Math.floor(progress * segCount), segCount - 1); var localT = progress * segCount - segment; return mixColors(SKY_STOPS[segment], SKY_STOPS[segment + 1], localT); }
 
+        var currentFinaleP = 0;
+        var isScrolledToEnd = false;
         var skyOverlay = document.getElementById('sky-overlay'); var sun = document.getElementById('sun'); var progressBarWrap = document.getElementById('progress-bar-wrap'); var progressFill = document.getElementById('progress-fill'); var finaleFlash = document.getElementById('finale-flash');
+        var skipGameBtn = document.getElementById('skip-game-btn');
         
         gsap.to(horizontalSection, { x: () => -(horizontalSection.scrollWidth - window.innerWidth) + "px", ease: "none",
             scrollTrigger: { trigger: ".horizontal-container", pin: true, scrub: 1, end: () => "+=" + horizontalSection.scrollWidth,
                 onUpdate: function (self) {
-                    var p = self.progress; skyOverlay.style.background = 'linear-gradient(to bottom, ' + getSkyColor(p) + 'D0 0%, transparent 90%)';
+                    var p = self.progress; 
+                    isScrolledToEnd = p > 0.998;
+                    
+                    if (skipGameBtn) {
+                        var currentText = skipGameBtn.innerHTML;
+                        var newText;
+                        if (isScrolledToEnd) {
+                            newText = skipGameBtn.getAttribute('data-' + currentLang + '-return') || skipGameBtn.getAttribute('data-ko-return');
+                        } else {
+                            newText = skipGameBtn.getAttribute('data-' + currentLang) || skipGameBtn.getAttribute('data-ko');
+                        }
+                        if (currentText !== newText) {
+                            skipGameBtn.innerHTML = newText;
+                        }
+                    }
+
+                    skyOverlay.style.background = 'linear-gradient(to bottom, ' + getSkyColor(p) + (THEME==='minimal'?'FF':'D0') + ' 0%, transparent 90%)';
                     sun.style.transform = 'translate(' + (p * (window.innerWidth - 56)) + 'px, ' + (40 + (1 - Math.sin(p * (Math.PI / 2))) * 140) + 'px)';
                     progressFill.style.width = (p * 100) + '%';
-                    progressFill.style.boxShadow = p >= 0.999 ? '0 0 20px #22D3EE, 0 0 36px #22D3EE' : '0 0 10px var(--accent)';
+                    progressFill.style.boxShadow = p >= 0.999
+                        ? (THEME === 'minimal' ? '0 0 20px rgba(56,189,248,0.85), 0 0 36px rgba(56,189,248,0.5)' : '0 0 20px #22D3EE, 0 0 36px #22D3EE')
+                        : (THEME === 'minimal' ? '0 0 10px rgba(56,189,248,0.8)' : '0 0 10px var(--accent)');
 
                     var maxTranslate = Math.max(1, horizontalSection.scrollWidth - window.innerWidth);
                     var zoneStartFraction = Math.min(0.98, LAST_ZONE_START / maxTranslate);
@@ -692,10 +937,13 @@
                     var flashP = finaleP > 0 ? Math.max(0, 1 - finaleP / 0.12) : 0;
                     document.documentElement.style.setProperty('--finale-p', finaleP.toFixed(3));
                     finaleFlash.style.opacity = flashP.toFixed(3);
+                    currentFinaleP = finaleP;
 
-                    var active = finaleP > 0.05;
-                    playerWrapper.classList.toggle('player-victory-cycle', active);
-                    playerWrapper.classList.toggle('player-finale-bounce', active);
+                    if (THEME !== 'minimal') {
+                        var active = finaleP > 0.05;
+                        playerWrapper.classList.toggle('player-victory-cycle', active);
+                        playerWrapper.classList.toggle('player-finale-bounce', active);
+                    }
                 },
                 onEnter: function () { progressBarWrap.style.opacity = '1'; }, onLeave: function () { progressBarWrap.style.opacity = '0'; }, onLeaveBack: function () { progressBarWrap.style.opacity = '0'; }
             }
@@ -709,9 +957,9 @@
         gsap.to(player, { x: () => horizontalSection.scrollWidth - window.innerWidth - parseInt(player.style.left), ease: "none", scrollTrigger: { trigger: ".horizontal-container", start: "top top", end: () => "+=" + horizontalSection.scrollWidth, scrub: 1 } });
 
         var keys = { left: false, right: false }; var isJumping = false, isDucking = false;
-        var jumpEase = "power1.out";
+        var jumpEase = THEME === 'minimal' ? "power2.out" : "power1.out";
         var jumpHeight = -250;
-        var duckScale = 0.5;
+        var duckScale = THEME === 'minimal' ? 0.6 : 0.5;
 
         window.addEventListener('keydown', (e) => {
             const k = e.key.toLowerCase(); if (['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)) e.preventDefault();
@@ -748,7 +996,7 @@
         }
 
         gsap.ticker.add(() => {
-            if (keys.right) window.scrollBy({ top: scrollSpeed, left: 0 }); if (keys.left) window.scrollBy({ top: -scrollSpeed, left: 0 });
+            if (keys.right) window.scrollBy({ top: scrollSpeed, left: 0, behavior: 'instant' }); if (keys.left) window.scrollBy({ top: -scrollSpeed, left: 0, behavior: 'instant' });
             if (keys.right) playerInner.style.setProperty('--facing', '1'); else if (keys.left) playerInner.style.setProperty('--facing', '-1');
             playerInner.style.transform = 'scaleX(var(--facing, 1))';
             if (keys.right || keys.left) playerInner.classList.add('player-running'); else playerInner.classList.remove('player-running');
@@ -774,8 +1022,33 @@
                 }
             });
 
-            playerInner.style.color = isColliding ? '#fff' : '#22D3EE'; 
-            playerInner.style.filter = isColliding ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
+            if(THEME === 'minimal') {
+                playerInner.style.filter = isColliding ? 'drop-shadow(0 0 16px rgba(56,189,248,1)) brightness(1.2)' : 'drop-shadow(0 0 8px rgba(56,189,248,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))';
+            } else {
+                playerInner.style.color = isColliding ? '#fff' : '#22D3EE'; 
+                playerInner.style.filter = isColliding ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
+            }
+
+            if (THEME === 'minimal') {
+                var px = gsap.getProperty(player, 'x') || 0;
+                var py = gsap.getProperty(player, 'y') || 0;
+                posHistory.push({ x: px, y: py });
+                if (posHistory.length > 30) posHistory.shift();
+
+                var finaleP = currentFinaleP;
+                ghostEls.forEach(function (g, i) {
+                    if (finaleP > 0.05) {
+                        var delay = (i + 1) * 7;
+                        var hist = posHistory[posHistory.length - 1 - delay];
+                        if (hist) {
+                            g.style.opacity = String(0.22 - i * 0.06);
+                            g.style.transform = 'translate(' + hist.x + 'px, ' + hist.y + 'px)';
+                        }
+                    } else {
+                        g.style.opacity = '0';
+                    }
+                });
+            }
         });
 
         var termTyped = document.getElementById('term-typed');
@@ -807,38 +1080,47 @@
 
         var restartBtn = document.getElementById('restart-btn');
         if (restartBtn) {
-            restartBtn.addEventListener('click', function () { 
-                locallyCollected.clear();
-                collectedIds.clear();
-                obstacleElements.forEach(function(el) { el.classList.remove('collected'); });
-                updateCounter();
-                window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            restartBtn.addEventListener('click', function () {
+                gsap.to(window, {
+                    scrollTo: 0,
+                    duration: 1.5,
+                    ease: 'power2.inOut',
+                    onComplete: function() {
+                        locallyCollected.clear();
+                        collectedIds.clear();
+                        obstacleElements.forEach(function(el) { el.classList.remove('collected'); });
+                        updateCounter();
+                    }
+                });
             });
         }
 
-        var skipGameBtn = document.getElementById('skip-game-btn');
         var destSection = document.getElementById('dest-section');
         if (skipGameBtn && destSection) {
             skipGameBtn.addEventListener('click', function () {
-                obstacleElements.forEach(function(obs) {
-                    var dataId = parseInt(obs.getAttribute('data-id'), 10);
-                    if (dataId) {
-                        locallyCollected.add(dataId);
-                        collectedIds.add(dataId);
-                        obs.classList.add('collected');
-                    }
-                });
-                updateCounter();
-                destSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (isScrolledToEnd) {
+                    gsap.to(window, { scrollTo: 0, duration: 1.5, ease: 'power2.inOut' });
+                } else {
+                    obstacleElements.forEach(function(obs) {
+                        var dataId = parseInt(obs.getAttribute('data-id'), 10);
+                        if (dataId) {
+                            locallyCollected.add(dataId);
+                            collectedIds.add(dataId);
+                            obs.classList.add('collected');
+                        }
+                    });
+                    updateCounter();
+                    gsap.to(window, { scrollTo: destSection, duration: 1.5, ease: 'power2.inOut' });
+                }
             });
         }
 
-        var textResumeBtn = document.getElementById('text-resume-btn'); var textResumeOverlay = document.getElementById('text-resume-overlay'); var textResumeCloseBtn = document.getElementById('text-resume-close-btn');
-        function openTextResume() { textResumeOverlay.classList.add('is-open'); textResumeBtn.setAttribute('aria-expanded', 'true'); textResumeCloseBtn.focus(); }
-        function closeTextResume() { textResumeOverlay.classList.remove('is-open'); textResumeBtn.setAttribute('aria-expanded', 'false'); textResumeBtn.focus(); }
-        if (textResumeBtn && textResumeOverlay && textResumeCloseBtn) {
-            textResumeBtn.addEventListener('click', openTextResume); textResumeCloseBtn.addEventListener('click', closeTextResume);
-            window.addEventListener('keydown', function (e) { if (e.key === 'Escape' && textResumeOverlay.classList.contains('is-open')) closeTextResume(); });
+        var resumeLink = document.querySelector('a[href="#resume-section"]');
+        if(resumeLink) {
+            resumeLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                gsap.to(window, { scrollTo: '#resume-section', duration: 1.5, ease: 'power2.inOut' });
+            });
         }
         window.addEventListener('resize', function () { ScrollTrigger.refresh(); });
     </script>
