@@ -59,31 +59,48 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            padding-top: 100px;
+            margin-top: 20px;
+            padding-top: 80px;
             box-sizing: border-box;
             border-right: 4px dashed var(--zone-border);
         }
 
         .zone-title {
+            position: relative;
+            z-index: 10;
             font-family: var(--font-title);
             font-size: 3rem;
             font-weight: normal;
             letter-spacing: normal;
             padding-left: 50px;
-            margin: 0;
+            margin: 0 0 0;
             text-shadow: 4px 4px 0 var(--shadow);
             color: var(--text-main);
         }
 
         .zone-subtitle {
+            position: relative;
+            z-index: 10;
             font-family: var(--font-mono);
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-sub);
-            padding-left: 50px;
+            padding-left: 55px;
             text-shadow: 2px 2px 0 var(--shadow);
             line-height: 1.5;
             margin-top: 10px;
+        }
+
+        .zone-flavor-text {
+            position: relative;
+            z-index: 31;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--sun-color);
+            padding-left: 55px;
+            text-shadow: 1px 1px 0 var(--shadow);
+            line-height: 1.4;
         }
 
         .obstacle-badge {
@@ -195,7 +212,7 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 33vh;
+            bottom: 35vh;
             pointer-events: none;
             background-repeat: no-repeat;
             background-position: center bottom;
@@ -295,7 +312,6 @@
             background-repeat: repeat-x;
             background-position: left bottom;
             background-size: auto 300px;
-            position: relative;
         }
 
         /* clouds removed per request */
@@ -504,10 +520,13 @@
             position: absolute;
             top: 0;
             left: 0;
-            background-image: linear-gradient(rgba(34, 211, 238, 0.25) 2px, transparent 2px), linear-gradient(90deg, rgba(34, 211, 238, 0.25) 2px, transparent 2px);
+            background-image: linear-gradient(rgba(34, 211, 238, 0.25) 2px, transparent 3px), linear-gradient(90deg, rgba(34, 211, 238, 0.25) 2px, transparent 3px);
             background-size: 64px 64px;
             transform: perspective(500px) rotateX(60deg);
             transform-origin: top center;
+            image-rendering: auto;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
         }
 
         #sky-overlay {
@@ -2383,6 +2402,7 @@
                 style="position: relative; z-index: 10;">1학년 여름방학</h2>
             <p class="zone-subtitle lang-text" data-ko="2022.06 ~ 2022.08" data-en="Jun 2022 - Aug 2022"
                 data-ja="2022.06 ~ 2022.08" style="position: relative; z-index: 10;">2022.06 ~ 2022.08</p>
+            <p class="zone-flavor-text lang-text" data-ko="경험치 파밍 중..." data-en="Farming EXP..." data-ja="経験値稼ぎ中...">경험치 파밍 중...</p>
 
         </div>
         <div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
@@ -2484,6 +2504,7 @@
                 style="position: relative; z-index: 10;">1학년 겨울방학</h2>
             <p class="zone-subtitle lang-text" data-ko="2022.12 ~ 2023.02" data-en="Dec 2022 - Feb 2023"
                 data-ja="2022.12 ~ 2023.02" style="position: relative; z-index: 10;">2022.12 ~ 2023.02</p>
+            <p class="zone-flavor-text lang-text" data-ko="서브 퀘스트 진행 중: [새로운 언어 마스터하기]" data-en="Side Quest in Progress: [Mastering a New Language]" data-ja="サブクエスト進行中：[新しい言語のマスター]">서브 퀘스트 진행 중: [새로운 언어 마스터하기]</p>
 
         </div>
         <div class="zone" style="width: 1400px; background-color: #064E3B; overflow: hidden;">
@@ -2670,6 +2691,9 @@
             <p class="zone-subtitle lang-text" data-ko="입대: 2023.09 ~ 전역: 2025.06"
                 data-en="Enlisted: Sep 2023 - Discharged: Jun 2025" data-ja="入隊: 2023.09 ~ 除隊: 2025.06"
                 style="position: relative; z-index: 10;">입대: 2023.09 ~ 전역: 2025.06</p>
+            <p class="zone-flavor-text lang-text" data-ko="히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)"
+                data-en="Hidden Stage: National Defense Duty Quest Cleared (Acquired JLPT N1!)"
+                data-ja="隠しステージ：国防の義務クエストクリア（JLPT N1獲得！）">히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)</p>
 
         </div>
         <div class="zone" style="width: 1200px; background-color: #1E3A8A; overflow: hidden;">
@@ -2730,6 +2754,7 @@
                 data-ja="2年生 2学期 (復学)" style="position: relative; z-index: 10;">2학년 2학기 (복학)</h2>
             <p class="zone-subtitle lang-text" data-ko="2025.09 ~ 2025.12" data-en="Sep 2025 - Dec 2025"
                 data-ja="2025.09 ~ 2025.12" style="position: relative; z-index: 10;">2025.09 ~ 2025.12</p>
+            <p class="zone-flavor-text lang-text" data-ko="메인 퀘스트 Part 2 시작!" data-en="Main Quest Part 2 Start!" data-ja="メインクエスト Part 2 開始！">메인 퀘스트 Part 2 시작!</p>
 
         </div>
         <div class="zone" style="width: 600px; background-color: #172554; overflow: hidden;">
@@ -2771,6 +2796,7 @@
                 style="position: relative; z-index: 10;">2학년 겨울방학</h2>
             <p class="zone-subtitle lang-text" data-ko="2025.12 ~ 2026.02" data-en="Dec 2025 - Feb 2026"
                 data-ja="2025.12 ~ 2026.02" style="position: relative; z-index: 10;">2025.12 ~ 2026.02</p>
+            <p class="zone-flavor-text lang-text" data-ko="세이브 포인트 도달 ☕ (HP/MP 회복 및 다음 학기 로딩 중)" data-en="Save Point Reached ☕ (Restoring HP/MP &amp; Loading Next Semester)" data-ja="セーブポイント到達 ☕ (HP/MP回復＆次学期ローディング中)">세이브 포인트 도달 ☕ (HP/MP 회복 및 다음 학기 로딩 중)</p>
 
         </div>
         <div class="zone" style="width: 2200px; background-color: #1E3A8A; overflow: hidden;">
@@ -2933,12 +2959,13 @@
             <p class="zone-subtitle lang-text" data-ko="도쿄 시부야 (2026.06 ~ 2026.08)"
                 data-en="Shibuya, Tokyo (Jun 2026 - Aug 2026)" data-ja="東京 渋谷 (2026.06 ~ 2026.08)"
                 style="position: relative; z-index: 10;">도쿄 시부야 (2026.06 ~ 2026.08)</p>
+            <p class="zone-flavor-text lang-text" data-ko="글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)" data-en="Playing the Global Expansion Pack (Location: Shibuya, Tokyo)" data-ja="グローバル拡張パックプレイ中 (場所: 東京・渋谷)">글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)</p>
 
         </div>
         <div class="zone" style="width: 1300px; background-color: transparent; overflow: hidden; border-right: none;">
 
             <h2 class="zone-title lang-text" data-ko="계속해서 성장 중..." data-en="Still Growing..." data-ja="継続的に成長中..."
-                style="position: relative; z-index: 10; color: var(--text-sub); margin-top: 100px;">계속해서 성장 중...
+                style="position: relative; z-index: 10; color: var(--text-sub);">계속해서 성장 중...
             </h2>
             <p class="zone-subtitle lang-text" data-ko="" data-en="" data-ja=""
                 style="position: relative; z-index: 10;"></p>
@@ -3018,9 +3045,8 @@
     <div class="cover-bg-grid"></div>
     <div class="dest-content">
         <p class="dest-eyebrow">MISSION COMPLETE</p>
-        <h1 class="dest-title lang-text" data-ko="여정의 끝에 도착했습니다" data-en="Arrived at the End" data-ja="旅の終わりに到着しました">여정의
-            끝에 도착했습니다</h1>
-        <p class="dest-sub lang-text" data-ko="성장은 계속됩니다" data-en="Growth Continues" data-ja="成長は続きます">성장은 계속됩니다</p>
+        <h1 class="dest-title lang-text" data-ko="TUTORIAL CLEARED!" data-en="TUTORIAL CLEARED!" data-ja="TUTORIAL CLEARED!">TUTORIAL CLEARED!</h1>
+        <p class="dest-sub lang-text" data-ko="지금까지는 튜토리얼이었습니다. 위정우의 진짜 '메인 퀘스트'는 이제부터 시작됩니다." data-en="This was just a tutorial. Wi Jungwoo's real 'main quest' begins now." data-ja="これまではチュートリアルでした。ウィ・ジョンウの本当の「メインクエスト」はここから始まります。">지금까지는 튜토리얼이었습니다. 위정우의 진짜 '메인 퀘스트'는 이제부터 시작됩니다.</p>
         <div class="stat-grid">
             <div class="stat-card">
                 <div class="stat-num" data-target="23">0</div>
