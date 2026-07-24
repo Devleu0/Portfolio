@@ -1147,6 +1147,230 @@
 </head>
 
 <body>
+    <style>
+        #about-section {
+            position: relative;
+            z-index: 40;
+            padding: 100px 5vw;
+            max-width: 900px;
+            margin: 0 auto;
+            font-family: 'Pretendard', sans-serif;
+            border-bottom: 4px dashed var(--zone-border);
+            text-align: center;
+            background-color: var(--bg-color);
+        }
+
+        #about-section h2 {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            text-shadow: 3px 3px 0 var(--shadow);
+        }
+
+        #about-section .about-intro {
+            font-size: 1rem;
+            color: var(--text-sub);
+            line-height: 1.8;
+            max-width: 650px;
+            margin: 0 auto 60px;
+        }
+
+        .skills-bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(120px, auto);
+            gap: 16px;
+            text-align: left;
+        }
+
+        .skill-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--zone-border);
+            padding: 24px;
+            box-shadow: 4px 4px 0 var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0 var(--accent);
+            border-color: var(--accent);
+        }
+
+        .skill-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 8px 8px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .skill-card h3 {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: var(--accent);
+            margin: 0 0 16px 0;
+            font-weight: 700;
+        }
+
+        .skill-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .skill-card li {
+            font-family: 'Pretendard', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .card-wide { grid-column: span 2; }
+        .card-tall { grid-row: span 2; }
+        .card-large { grid-column: span 2; grid-row: span 2; }
+
+        @media (max-width: 768px) {
+            .skills-bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .card-wide, .card-tall, .card-large {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+        }
+    </style>
+    <section id="about-section">
+        <div class="about-content" lang="ko">
+            <h2 class="reveal-on-scroll">자기소개</h2>
+            <p class="about-intro reveal-on-scroll">안녕하세요! 저는 게임의 세계에 생명을 불어넣는 것을 꿈꾸는 게임 개발자 지망생입니다. 새로운 기술을 배우고 직접 프로그램을 만드는 것을 즐깁니다. 현재는 대학에서 소프트웨어 공학을 전공하며 재미있고 독창적인 게임을 만들기 위해 끊임없이 아이디어를 탐구하고 기술을 연마하고 있습니다.</p>
+            <h2 class="reveal-on-scroll">기술 스택</h2>
+            <div class="skills-bento-grid">
+                <div class="skill-card card-large reveal-on-scroll">
+                    <h3>Game Engine &amp; Graphics</h3>
+                    <ul>
+                        <li>Unity</li>
+                        <li>HLSL</li>
+                        <li>ShaderLab</li>
+                        <li>DirectX 11</li>
+                    </ul>
+                </div>
+                <div class="skill-card card-tall reveal-on-scroll">
+                    <h3>Languages</h3>
+                    <ul>
+                        <li>C#</li>
+                        <li>C++</li>
+                        <li>Python</li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Web / Backend</h3>
+                    <ul><li>Node.js</li></ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Database</h3>
+                    <ul><li>MySQL</li></ul>
+                </div>
+                <div class="skill-card card-wide reveal-on-scroll">
+                    <h3>Tools &amp; Collaboration</h3>
+                    <ul>
+                        <li>Git, Visual Studio Code</li>
+                        <li>Jira, Slack, Notion</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-content" lang="en" style="display:none;">
+            <h2 class="reveal-on-scroll">About Me</h2>
+            <p class="about-intro reveal-on-scroll">Hello! I am a passionate aspiring game developer who dreams of bringing virtual worlds to life. I enjoy learning new technologies and creating highly interactive experiences. Currently, I am studying computer science at university, constantly exploring ideas and honing my skills to build fun and original games.</p>
+            <h2 class="reveal-on-scroll">Skills</h2>
+            <div class="skills-bento-grid">
+                <div class="skill-card card-large reveal-on-scroll">
+                    <h3>Game Engine &amp; Graphics</h3>
+                    <ul>
+                        <li>Unity</li>
+                        <li>HLSL</li>
+                        <li>ShaderLab</li>
+                        <li>DirectX 11</li>
+                    </ul>
+                </div>
+                <div class="skill-card card-tall reveal-on-scroll">
+                    <h3>Languages</h3>
+                    <ul>
+                        <li>C#</li>
+                        <li>C++</li>
+                        <li>Python</li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Web / Backend</h3>
+                    <ul><li>Node.js</li></ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Database</h3>
+                    <ul><li>MySQL</li></ul>
+                </div>
+                <div class="skill-card card-wide reveal-on-scroll">
+                    <h3>Tools &amp; Collaboration</h3>
+                    <ul>
+                        <li>Git, Visual Studio Code</li>
+                        <li>Jira, Slack, Notion</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-content" lang="ja" style="display:none;">
+            <h2 class="reveal-on-scroll">自己紹介</h2>
+            <p class="about-intro reveal-on-scroll">こんにちは！ゲームの世界に命を吹き込むことを夢見る、情熱的なゲーム開発者志望です。新しい技術を学び、インタラクティブな体験を創り出すことを楽しんでいます。現在、大学でコンピューターサイエンスを専攻しながら、面白くて独創的なゲームを作るために、絶えずアイデアを探求し、技術を磨いています。</p>
+            <h2 class="reveal-on-scroll">スキル</h2>
+            <div class="skills-bento-grid">
+                <div class="skill-card card-large reveal-on-scroll">
+                    <h3>ゲームエンジン &amp; グラフィックス</h3>
+                    <ul>
+                        <li>Unity</li>
+                        <li>HLSL</li>
+                        <li>ShaderLab</li>
+                        <li>DirectX 11</li>
+                    </ul>
+                </div>
+                <div class="skill-card card-tall reveal-on-scroll">
+                    <h3>言語</h3>
+                    <ul>
+                        <li>C#</li>
+                        <li>C++</li>
+                        <li>Python</li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>ウェブ・バックエンド</h3>
+                    <ul><li>Node.js</li></ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>データベース</h3>
+                    <ul><li>MySQL</li></ul>
+                </div>
+                <div class="skill-card card-wide reveal-on-scroll">
+                    <h3>ツール &amp; コラボレーション</h3>
+                    <ul>
+                        <li>Git, Visual Studio Code</li>
+                        <li>Jira, Slack, Notion</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
     <header id="top-header" class="top-header">
         <div>
             <h1 class="header-title">WI JEONGWOO</h1>
@@ -1183,7 +1407,7 @@
                     <div class="term-typed" id="term-typed"></div>
                 </div>
             </div>
-            <h1 class="cover-title">TIMELINE <span class="grad-text">RUNNER</span></h1>
+            <h1 class="cover-title">LIFE <span class="grad-text">RUNNER</span></h1>
             <p class="cover-subtitle lang-text" data-ko="여정의 시작" data-en="Start a Journey" data-ja="旅の始まり">
                 여정의 시작</p>
             <p class="cover-keys"><span class="key">A</span><span class="key">D</span> MOVE &nbsp;&nbsp; <span
@@ -2216,8 +2440,8 @@
                             data-ja="日本語日本文 副専攻  (2026.03~)">일어일문학 부전공 (2026.03~)</span></div>
                 </li>
                 <li>
-                    <div class="tr-item-content"><strong class="lang-text" data-ko="SQL개발자(SQLD)"
-                            data-en="SQL Developer " data-ja="SQL開発者(SQLD)">SQL개발자(SQLD)</strong><span
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="SQL개발자"
+                            data-en="SQL Developer " data-ja="SQL開発者">SQL개발자</strong><span
                             class="tr-desc lang-text" data-ko="한국데이터산업진흥원 (2026.03)"
                             data-en="Korea Data Agency (March 2026)" data-ja="韓国データ産業振興院 (2026.03)">한국데이터산업진흥원
                             (2026.03)</span></div>
@@ -2246,7 +2470,7 @@
                 </li>
                 <li>
                     <div class="tr-item-content"><strong class="lang-text" data-ko="공군 입대" data-en="Air Force "
-                            data-ja="空軍入隊 ">공군 입대</strong><span class="tr-desc lang-text" data-ko="방공포 보직 (2023.09)"
+                            data-ja="空軍入隊 ">공군 입대</strong><span class="tr-desc lang-text" data-ko="방공포병 (2023.09)"
                             data-en="Air Defense Artillery Assignment (Sep 2023)" data-ja="防空砲兵の役職 (2023年9月)">방공포 보직
                             (2023.09)</span></div>
                     <div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank"
@@ -2281,7 +2505,7 @@
                 <li>
                     <div class="tr-item-content"><strong class="lang-text" data-ko="대학교 입학" data-en="대학교 입학"
                             data-ja="大学入学">대학교 입학</strong><span class="tr-desc lang-text"
-                            data-ko="전남대학교 인공지능학부 (2022.03)" data-en="전남대학교 인공지능학부 (2022.03)"
+                            data-ko="전남대학교 인공지능학부 (2022.03~)" data-en="전남대학교 인공지능학부 (2022.03)"
                             data-ja="全南大学 人工知能学科 (2022.03)">전남대학교 인공지능학부 (2022.03)</span></div>
                 </li>
                 <li>
@@ -2351,6 +2575,15 @@
                 var newText = el.getAttribute('data-' + lang) || el.getAttribute('data-ko') || '';
                 if (newText) el.innerHTML = newText;
             });
+            
+            document.querySelectorAll('.about-content').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            const activeAboutContent = document.querySelector('.about-content[lang="' + lang + '"]');
+            if (activeAboutContent) {
+                activeAboutContent.style.display = 'block';
+            }
+
             var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 23개의 기록이 발견되었습니다.' :
                 lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 23 RECORDS FOUND.' :
                     '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 23個の記録が見つかりました。';
@@ -2367,6 +2600,9 @@
 
         var langSelector = document.getElementById('lang-selector');
         if (langSelector) langSelector.addEventListener('change', function (e) {updateLanguage(e.target.value);});
+
+        // Set initial state for about contents
+        updateLanguage(langSelector.value);
 
         var ICONS = {
             birth: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
@@ -2781,9 +3017,9 @@
                 "pos": 19422,
                 "elevation": 120,
                 "title": {
-                    "ko": "ADsP 합격",
-                    "en": "ADsP Passed",
-                    "ja": "ADsP 合格"
+                    "ko": "ADsP",
+                    "en": "ADsP",
+                    "ja": "ADsP"
                 },
                 "desc": {
                     "ko": "데이터분석 준전문가 (2026.06)",
@@ -3130,6 +3366,22 @@
             });
         }
         window.addEventListener('resize', function () {ScrollTrigger.refresh();});
+
+        // Animation for About section
+        gsap.utils.toArray('#about-section .reveal-on-scroll').forEach(function(elem) {
+            gsap.from(elem, {
+                scrollTrigger: {
+                    trigger: elem,
+                    start: 'top 85%',
+                    end: 'bottom 15%',
+                    toggleActions: 'play none none none'
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                ease: 'power3.out'
+            });
+        });
     </script>
 </body>
 
