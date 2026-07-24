@@ -92,7 +92,7 @@
             box-sizing: border-box;
             overflow: hidden;
             border: 4px solid var(--shadow);
-            box-shadow: inset -4px -4px 0px rgba(0, 0, 0, 0.25), inset 4px 4px 0px rgba(255, 255, 255, 0.4);
+            box-shadow: inset 4px 4px 0px rgba(255,255,255,0.4), inset -4px -4px 0px rgba(0,0,0,0.4);
             transition: transform 0.2s ease-in-out;
             z-index: 50;
         }
@@ -326,6 +326,7 @@
             pointer-events: none;
             z-index: 3;
             mix-blend-mode: overlay;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
         }
 
         #sun {
@@ -656,6 +657,7 @@
             color: var(--accent);
             min-height: 92px;
             font-weight: 500;
+            text-shadow: 0.5px 0px rgba(255, 0, 0, 0.4), -0.5px 0px rgba(0, 255, 255, 0.4);
         }
 
         .term-prompt {
@@ -1146,12 +1148,27 @@
         }
     </style>
 </head>
+</section>
 
-<body>
-    <style>
-        #about-section {
-            position: relative;
-            z-index: 40;
+<section style="height: 120px; background-color: var(--bg-color); position: relative; margin-top: -1px;">
+    <div style="
+        background: var(--bg-color);
+        height: 60px;
+        width: 100%;
+        position: absolute;
+        top: -59px;
+        left: 0;
+        mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0,10 Q2,0 4,10 T8,10 T12,10 T16,10 T20,10 T24,10 T28,10 T32,10 T36,10 T40,10 T44,10 T48,10 T52,10 T56,10 T60,10 T64,10 T68,10 T72,10 T76,10 T80,10 T84,10 T88,10 T92,10 T96,10 T100,10" fill="white"/></svg>');
+        mask-size: 100% 100%;
+        mask-repeat: no-repeat;
+        mask-position: bottom;
+    "></div>
+</section>
+
+<style>
+    #about-section {
+        position: relative;
+        z-index: 40;
             padding: 100px 5vw;
             max-width: 900px;
             margin: 0 auto;
@@ -1287,6 +1304,8 @@
             height: 100%;
             background: linear-gradient(90deg, #22D3EE, #FDE047);
             box-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+            width: 0;
+            transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
         }
         
         .card-wide { grid-column: span 2; }
@@ -1311,7 +1330,7 @@
             <div class="skills-bento-grid">
                 <!-- 
                     개발자 참고: 
-                    스킬 레벨을 수정하려면 각 'li' 항목 아래의 '.xp-bar'의 style="width: XX%" 값과
+                    스킬 레벨을 수정하려면 각 'li' 항목 아래의 '.xp-bar'의 data-width="XX%" 값과
                     '.skill-level'의 텍스트를 수정하세요.
                 -->
                 <div class="skill-card card-large reveal-on-scroll">
@@ -1321,22 +1340,22 @@
                         <li>
                             <span class="skill-name">Unity</span>
                             <span class="skill-level">Lv. 90</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="90%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">HLSL</span>
                             <span class="skill-level">Lv. 75</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="75%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">ShaderLab</span>
                             <span class="skill-level">Lv. 75</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="75%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">DirectX 11</span>
                             <span class="skill-level">Lv. 60</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="60%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1347,17 +1366,17 @@
                         <li>
                             <span class="skill-name">C#</span>
                             <span class="skill-level">Lv. 95</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 95%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="95%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">C++</span>
                             <span class="skill-level">Lv. 80</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 80%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="80%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">Python</span>
                             <span class="skill-level">Lv. 70</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 70%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="70%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1368,7 +1387,7 @@
                         <li>
                             <span class="skill-name">Node.js</span>
                             <span class="skill-level">Lv. 50</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 50%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="50%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1379,7 +1398,7 @@
                         <li>
                             <span class="skill-name">MySQL</span>
                             <span class="skill-level">Lv. 60</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="60%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1390,12 +1409,12 @@
                         <li>
                             <span class="skill-name">Git, VS Code</span>
                             <span class="skill-level">Lv. 90</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="90%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">Jira, Slack, Notion</span>
                             <span class="skill-level">Lv. 85</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 85%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="85%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1409,7 +1428,7 @@
             <div class="skills-bento-grid">
                 <!-- 
                     Developer Note: 
-                    To edit skill levels, modify the style="width: XX%" of the '.xp-bar' and the text of '.skill-level' under each 'li' item.
+                    To edit skill levels, modify the data-width="XX%" of the '.xp-bar' and the text of '.skill-level' under each 'li' item.
                 -->
                 <div class="skill-card card-large reveal-on-scroll">
                     <h3>Game Engine &amp; Graphics</h3>
@@ -1418,22 +1437,22 @@
                         <li>
                             <span class="skill-name">Unity</span>
                             <span class="skill-level">Lv. 90</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="90%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">HLSL</span>
                             <span class="skill-level">Lv. 75</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="75%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">ShaderLab</span>
                             <span class="skill-level">Lv. 75</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="75%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">DirectX 11</span>
                             <span class="skill-level">Lv. 60</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="60%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1444,17 +1463,17 @@
                         <li>
                             <span class="skill-name">C#</span>
                             <span class="skill-level">Lv. 95</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 95%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="95%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">C++</span>
                             <span class="skill-level">Lv. 80</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 80%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="80%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">Python</span>
                             <span class="skill-level">Lv. 70</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 70%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="70%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1465,7 +1484,7 @@
                         <li>
                             <span class="skill-name">Node.js</span>
                             <span class="skill-level">Lv. 50</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 50%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="50%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1476,7 +1495,7 @@
                         <li>
                             <span class="skill-name">MySQL</span>
                             <span class="skill-level">Lv. 60</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="60%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1487,12 +1506,12 @@
                         <li>
                             <span class="skill-name">Git, VS Code</span>
                             <span class="skill-level">Lv. 90</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="90%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">Jira, Slack, Notion</span>
                             <span class="skill-level">Lv. 85</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 85%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="85%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1506,7 +1525,7 @@
             <div class="skills-bento-grid">
                 <!-- 
                     開発者メモ:
-                    スキルレベルを編集するには、各'li'項目の下にある'.xp-bar'のstyle="width: XX%"の値と
+                    スキルレベルを編集するには、各'li'項目の下にある'.xp-bar'のdata-width="XX%"の値と
                     '.skill-level'のテキストを修正してください。
                 -->
                 <div class="skill-card card-large reveal-on-scroll">
@@ -1516,22 +1535,22 @@
                         <li>
                             <span class="skill-name">Unity</span>
                             <span class="skill-level">Lv. 90</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="90%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">HLSL</span>
                             <span class="skill-level">Lv. 75</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="75%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">ShaderLab</span>
                             <span class="skill-level">Lv. 75</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 75%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="75%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">DirectX 11</span>
                             <span class="skill-level">Lv. 60</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="60%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1542,17 +1561,17 @@
                         <li>
                             <span class="skill-name">C#</span>
                             <span class="skill-level">Lv. 95</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 95%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="95%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">C++</span>
                             <span class="skill-level">Lv. 80</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 80%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="80%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">Python</span>
                             <span class="skill-level">Lv. 70</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 70%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="70%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1563,7 +1582,7 @@
                         <li>
                             <span class="skill-name">Node.js</span>
                             <span class="skill-level">Lv. 50</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 50%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="50%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1574,7 +1593,7 @@
                         <li>
                             <span class="skill-name">MySQL</span>
                             <span class="skill-level">Lv. 60</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 60%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="60%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -1585,12 +1604,12 @@
                         <li>
                             <span class="skill-name">Git, VS Code</span>
                             <span class="skill-level">Lv. 90</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 90%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="90%"></div></div>
                         </li>
                         <li>
                             <span class="skill-name">Jira, Slack, Notion</span>
                             <span class="skill-level">Lv. 85</span>
-                            <div class="xp-bar-container"><div class="xp-bar" style="width: 85%;"></div></div>
+                            <div class="xp-bar-container"><div class="xp-bar" data-width="85%"></div></div>
                         </li>
                     </ul>
                 </div>
@@ -3684,6 +3703,25 @@
             });
         }
         window.addEventListener('resize', function () {ScrollTrigger.refresh();});
+
+        // Animation for Bento Grid Skill Bars
+        gsap.utils.toArray('.skill-card').forEach(function(card) {
+            ScrollTrigger.create({
+                trigger: card,
+                start: 'top 80%',
+                once: true,
+                onEnter: function() {
+                    gsap.to(card.querySelectorAll('.xp-bar'), {
+                        width: function(index, bar) {
+                            return bar.getAttribute('data-width');
+                        },
+                        duration: 1,
+                        ease: 'cubic-bezier(0.23, 1, 0.32, 1)',
+                        stagger: 0.1
+                    });
+                }
+            });
+        });
 
         // Animation for About section
         gsap.utils.toArray('#about-section .reveal-on-scroll').forEach(function(elem) {
