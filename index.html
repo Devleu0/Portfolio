@@ -126,6 +126,34 @@
             display: flex;
             width: max-content;
             pointer-events: none;
+            overflow: visible;
+        }
+
+        /* Hide old inline placeholder SVGs (kept in the DOM for safety) and use CSS backgrounds instead */
+        .parallax-bg .silhouette { display: none; }
+
+        .parallax-bg-far {
+            height: 300px;
+            background-image: url('./images/parallax-far.svg');
+            background-repeat: repeat-x;
+            background-position: bottom left;
+            background-size: auto 300px;
+        }
+
+        .parallax-bg-mid {
+            height: 180px;
+            background-image: url('./images/parallax-mid.svg');
+            background-repeat: repeat-x;
+            background-position: bottom left;
+            background-size: auto 180px;
+        }
+
+        .parallax-bg-near {
+            height: 100px;
+            background-image: url('./images/parallax-near.svg');
+            background-repeat: repeat-x;
+            background-position: bottom left;
+            background-size: auto 100px;
         }
 
         .silhouette {
