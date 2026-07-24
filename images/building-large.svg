@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200">
+  <rect width="100%" height="100%" fill="transparent" />
+  <g fill="#7c3aed">
+    <rect x="40" y="30" width="240" height="150" rx="6" />
+  </g>
+  <g fill="#fde68a" opacity="0.95">
+    <!-- many windows -->
+    <g>
+      <rect x="60" y="50" width="18" height="16" rx="2" />
+      <rect x="88" y="50" width="18" height="16" rx="2" />
+      <rect x="116" y="50" width="18" height="16" rx="2" />
+      <rect x="144" y="50" width="18" height="16" rx="2" />
+      <rect x="172" y="50" width="18" height="16" rx="2" />
+      <rect x="200" y="50" width="18" height="16" rx="2" />
+    </g>
+    <g>
+      <rect x="60" y="78" width="18" height="16" rx="2" />
+      <rect x="88" y="78" width="18" height="16" rx="2" />
+      <rect x="116" y="78" width="18" height="16" rx="2" />
+      <rect x="144" y="78" width="18" height="16" rx="2" />
+      <rect x="172" y="78" width="18" height="16" rx="2" />
+      <rect x="200" y="78" width="18" height="16" rx="2" />
+    </g>
+  </g>
+  <rect x="0" y="178" width="320" height="10" fill="#4c1d95" opacity="0.6" />
+</svg>
