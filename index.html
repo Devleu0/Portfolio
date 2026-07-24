@@ -1147,9 +1147,37 @@
             transform: translateY(4px);
             color: var(--accent);
         }
-    </style>
-</head>
-</section>
+
+                /* Parallax: use local tileable SVG assets and hide inline placeholders */
+                .parallax-bg { background-repeat: repeat-x; background-position: left bottom; background-size: auto 100%; }
+                .parallax-bg .silhouette { display: none !important; }
+                .parallax-bg-far { background-image: url('./images/parallax-far.svg'); background-size: auto 250px; }
+                .parallax-bg-mid { background-image: url('./images/parallax-mid.svg'); background-size: auto 180px; }
+                .parallax-bg-near { background-image: url('./images/parallax-near.svg'); background-size: auto 120px; }
+
+                /* Mobile controls and HUD overlay */
+                #mobile-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 80; }
+                #hud-overlay { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index:85; }
+                #hud-overlay img { width: min(560px, 88vw); height: auto; image-rendering: pixelated; }
+                #controls { position: fixed; bottom: 12px; left: 12px; display:flex; gap:12px; pointer-events: auto; align-items: center; z-index:85; }
+                .dpad-btn img, .action-buttons img { width: 96px; height: 96px; image-rendering: pixelated; display:block; }
+                .action-buttons { display:flex; flex-direction:column; gap:8px; position: fixed; right: 12px; bottom: 12px; pointer-events:auto; z-index:85; }
+                button.action { background:none; border:none; padding:0; cursor:pointer; }
+
+                /* D-Pad container + action areas */
+                .dpad-container { position:relative; width:140px; height:96px; display:flex; align-items:center; justify-content:center; }
+                .dpad-container .dpad-img { width:140px; height:96px; display:block; image-rendering:pixelated; }
+                .dpad-action { position:absolute; top:0; height:100%; width:44%; background: rgba(255,255,255,0.02); border-radius:8px; border:1px solid transparent; cursor:pointer; }
+                .dpad-action.left { left:0; }
+                .dpad-action.right { right:0; }
+                .dpad-action:hover, .dpad-action:active { background: rgba(255,255,255,0.06); }
+
+                /* Show controls on desktop as well */
+                .mobile-controls-left, .mobile-controls-right { display:flex !important; }
+
+            </style>
+        </head>
+        </section>
 
 <section style="height: 120px; background-color: var(--bg-color); position: relative; margin-top: -1px;">
     <div style="
@@ -2800,11 +2828,11 @@
     </div>
 
     <div class="mobile-controls-left">
-        <div class="dpad-container" style="position:relative; width:96px; height:96px; display:flex; align-items:center; justify-content:center;">
-            <img src="./images/dpad.svg" alt="D-Pad" style="width:96px;height:96px;display:block;image-rendering:pixelated;"/>
-            <!-- left/right invisible buttons positioned outside the D-Pad image so visual remains single image -->
-            <button id="btn-left" class="dpad-action" aria-label="Left" style="position:absolute; left:-52px; top:50%; transform:translateY(-50%); width:48px; height:48px; background:none; border:none; cursor:pointer; pointer-events:auto;"></button>
-            <button id="btn-right" class="dpad-action" aria-label="Right" style="position:absolute; right:-52px; top:50%; transform:translateY(-50%); width:48px; height:48px; background:none; border:none; cursor:pointer; pointer-events:auto;"></button>
+        <div class="dpad-container">
+            <img src="./images/dpad.svg" alt="D-Pad" class="dpad-img" />
+            <!-- left/right action areas sit over the left/right halves of the image -->
+            <button id="btn-left" class="dpad-action left" aria-label="Left"></button>
+            <button id="btn-right" class="dpad-action right" aria-label="Right"></button>
         </div>
     </div>
     <div class="mobile-controls-right">
