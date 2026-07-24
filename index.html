@@ -156,6 +156,7 @@
         .zone-building--medium { width: 200px; height: 140px; background-image: url('./images/building-medium.svg'); }
         .zone-building--large { width: 340px; height: 220px; background-image: url('./images/building-large.svg'); }
         .zone-building--tower { width: 420px; height: 300px; background-image: url('./images/building-tower.svg'); }
+        .zone-building--university { width: 520px; height: 380px; background-image: url('./images/building-university.svg'); }
 
         /* scramble crossing overlay for Shibuya internship zone */
         .zone-overlay--scramble { position: absolute; left: 50%; transform: translateX(-50%); bottom: 6vh; width: 420px; height: 220px; background-image: url('./images/scramble-crossing.svg'); background-repeat: no-repeat; background-size: contain; z-index: 21; opacity: 0.95; pointer-events: none; }
@@ -166,75 +167,22 @@
             .zone-building--medium { width: 140px; height: 96px; bottom: 16vh; }
             .zone-building--large { width: 200px; height: 140px; bottom: 20vh; }
             .zone-building--tower { width: 260px; height: 200px; bottom: 24vh; }
+            .zone-building--university { width: 320px; height: 240px; bottom: 28vh; }
             .zone-overlay--scramble { width: 260px; height: 140px; bottom: 10vh; }
         }
 
         .parallax-bg-far {
             height: 300px;
-            /* moon (no-repeat, positioned) + cloud band (repeat-x & animating) + starfield (repeat-x) */
-            background-image: url('./images/parallax-clouds.svg'), url('./images/parallax-far.svg');
-            background-repeat: repeat-x, repeat-x;
-            background-position: 0 40px, 0 0;
-            background-size: auto 120px, auto 300px;
+            /* far starfield / skyline layer only (clouds removed) */
+            background-image: url('./images/parallax-far.svg');
+            background-repeat: repeat-x;
+            background-position: left bottom;
+            background-size: auto 300px;
             position: relative;
         }
 
-        .parallax-bg-far::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 40px; /* cloud vertical offset inside far layer */
-            right: 0;
-            height: 120px;
-            pointer-events: none;
-            background-image: url('./images/parallax-clouds.svg');
-            background-repeat: repeat-x;
-            background-size: auto 120px;
-            animation: cloudFlow 48s linear infinite;
-            opacity: 0.9;
-        }
+        /* clouds removed per request */
 
-        @keyframes cloudFlow {
-            from { background-position: 0 0; }
-            to { background-position: -1000px 0; }
-        }
-
-        /* Fallback moving layer for clouds: visible and animating */
-        .global-clouds {
-            position: fixed;
-            left: 0;
-            top: 16vh;
-            width: 200%; /* wide so animation loop is smooth */
-            height: 120px;
-            pointer-events: none;
-            z-index: 3;
-            background-image: url('./images/parallax-clouds.svg');
-            background-repeat: repeat-x;
-            background-size: auto 120px;
-            opacity: 0.92;
-            animation: cloudMove 60s linear infinite;
-            filter: blur(0.2px);
-        }
-
-        @keyframes cloudMove { from { transform: translateX(0);} to { transform: translateX(-50%);} }
-
-.parallax-moon {
-            position: fixed;
-            left: 10%;
-            top: 8vh;
-            width: 120px;
-            height: 120px;
-            background-image: none;
-            background-size: contain;
-            background-repeat: no-repeat;
-            pointer-events: none;
-            z-index: 5;
-            transform-origin: center;
-            animation: moonBob 6s ease-in-out infinite;
-            filter: drop-shadow(0 0 10px rgba(255,220,130,0.25));
-        }
-
-        @keyframes moonBob { 0% { transform: translateY(0);} 50% { transform: translateY(-6px);} 100% { transform: translateY(0);} }
 
         .parallax-bg-mid {
             height: 180px;
@@ -3828,7 +3776,7 @@
                 {k: '장덕초등학교', cls: 'zone-building--small'},
                 {k: '장덕중학교', cls: 'zone-building--medium'},
                 {k: '광주진흥고등학교', cls: 'zone-building--large'},
-                {k: '대학교', cls: 'zone-building--large'},
+                {k: '대학교', cls: 'zone-building--university'},
                 {k: '해외(일본) 인턴십', cls: 'zone-building--tower', overlay: 'zone-overlay--scramble'}
             ];
 
@@ -3838,7 +3786,7 @@
                 const text = (title.textContent || '').trim();
                 // Treat sections that contain '학년' or '학기' as university-level (larger building)
                 if (/학년|학기/.test(text)) {
-                    const b = document.createElement('div'); b.className = 'zone-building zone-building--large'; zone.appendChild(b);
+                                    const b = document.createElement('div'); b.className = 'zone-building zone-building--university'; zone.appendChild(b);
                     return;
                 }
                 mapping.forEach(function(m) {
