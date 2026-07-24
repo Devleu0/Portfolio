@@ -136,6 +136,19 @@
         /* ensure parallax-mid neon shapes glow a bit */
         .parallax-bg-mid { filter: drop-shadow(0 0 8px rgba(124,58,237,0.22)) drop-shadow(0 0 6px rgba(255,107,214,0.08)); }
 
+        /* zone variations: slight tint/offset changes per zone to give distinct feeling */
+        .zone:nth-of-type(1) .parallax-bg-mid { filter: hue-rotate(0deg) brightness(1.02) saturate(1.05); }
+        .zone:nth-of-type(2) .parallax-bg-mid { filter: hue-rotate(-8deg) brightness(0.95) saturate(1.1); }
+        .zone:nth-of-type(3) .parallax-bg-mid { filter: hue-rotate(10deg) brightness(1.0) saturate(1.0); }
+        .zone:nth-of-type(4) .parallax-bg-mid { filter: hue-rotate(-18deg) brightness(0.92) saturate(1.2); }
+        .zone:nth-of-type(5) .parallax-bg-mid { filter: hue-rotate(6deg) brightness(1.04) saturate(1.08); }
+
+        .zone:nth-of-type(1) .parallax-bg-near { opacity: 0.96; }
+        .zone:nth-of-type(2) .parallax-bg-near { opacity: 0.85; }
+        .zone:nth-of-type(3) .parallax-bg-near { opacity: 0.92; }
+        .zone:nth-of-type(4) .parallax-bg-near { opacity: 0.88; }
+        .zone:nth-of-type(5) .parallax-bg-near { opacity: 0.95; }
+
         .parallax-bg-far {
             height: 300px;
             /* moon (no-repeat, positioned) + cloud band (repeat-x & animating) + starfield (repeat-x) */
@@ -166,17 +179,36 @@
             to { background-position: -1000px 0; }
         }
 
+        /* Fallback moving layer for clouds: visible and animating */
+        .global-clouds {
+            position: fixed;
+            left: 0;
+            top: 16vh;
+            width: 200%; /* wide so animation loop is smooth */
+            height: 120px;
+            pointer-events: none;
+            z-index: 3;
+            background-image: url('./images/parallax-clouds.svg');
+            background-repeat: repeat-x;
+            background-size: auto 120px;
+            opacity: 0.92;
+            animation: cloudMove 60s linear infinite;
+            filter: blur(0.2px);
+        }
+
+        @keyframes cloudMove { from { transform: translateX(0);} to { transform: translateX(-50%);} }
+
         .parallax-moon {
             position: fixed;
             left: 10%;
-            top: 10%;
+            top: 8vh;
             width: 120px;
             height: 120px;
             background-image: url('./images/moon.svg');
             background-size: contain;
             background-repeat: no-repeat;
             pointer-events: none;
-            z-index: 4;
+            z-index: 5;
             transform-origin: center;
             animation: moonBob 6s ease-in-out infinite;
             filter: drop-shadow(0 0 10px rgba(255,220,130,0.25));
@@ -2706,6 +2738,8 @@
         </div>
         <div id="sky-overlay"></div>
         <div id="sun"></div>
+        <div class="parallax-moon" aria-hidden="true"></div>
+        <div class="global-clouds" aria-hidden="true"></div>
         <div id="finale-flash"></div>
         <div id="progress-bar-wrap">
             <div id="progress-bar">
