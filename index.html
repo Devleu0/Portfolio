@@ -1612,6 +1612,7 @@
                 <option value="en" style="color:#000">ENG</option>
                 <option value="ja" style="color:#000">JPN</option>
             </select>
+            <button id="sound-toggle-btn" class="header-btn">SOUND ON</button>
             <button class="header-btn lang-text" data-ko="SKIP" data-en="SKIP" data-ja="SKIP" data-ko-return="RETURN"
                 data-en-return="RETURN" data-ja-return="RETURN" id="skip-game-btn">SKIP</button>
             <a href="#resume-section" class="header-btn primary lang-text" data-ko="RESUME" data-en="RESUME"
@@ -2613,6 +2614,13 @@
         </div>
     </section>
 
+    <!-- Dossier Divider -->
+    <section style="padding: 100px 20px; background-color: var(--bg-color); text-align: center; display: none;" id="dossier-divider-section">
+        <h2 class="lang-text" data-ko="PLAYER DOSSIER" data-en="PLAYER DOSSIER" data-ja="PLAYER DOSSIER" style="font-family: var(--font-mono); font-size: 2rem; color: var(--accent); text-shadow: 4px 4px 0 var(--shadow); margin-bottom: 8px;">PLAYER DOSSIER</h2>
+        <p class="lang-text" data-ko="(상세 이력)" data-en="(Detailed Dossier)" data-ja="(詳細記録)" style="font-family: var(--font-title); font-size: 1.2rem; color: var(--text-sub); margin-top: 0; margin-bottom: 32px; text-shadow: 2px 2px 0 var(--shadow);">(상세 이력)</p>
+        <div style="height: 4px; width: 80px; background-color: var(--zone-border); margin: 0 auto;"></div>
+    </section>
+
     <section id="resume-section">
         <div class="cover-bg-grid"></div>
         <h1 class="lang-text" data-ko="Career Resume" data-en="Career Resume" data-ja="Career Resume">Career Resume</h1>
@@ -2786,6 +2794,76 @@
 
     <script>
         gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // --- Sound Engine ---
+        let audioCtx;
+        let isMuted = true; // Initially muted
+        let jumpBuffer = null;
+        let coinBuffer = null;
+
+        async function setupAudio() {
+            if (window.AudioContext || window.webkitAudioContext) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                // Resume context on user interaction
+                const resumeAudio = () => {
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                    document.body.removeEventListener('click', resumeAudio);
+                    document.body.removeEventListener('keydown', resumeAudio);
+                };
+                document.body.addEventListener('click', resumeAudio);
+                document.body.addEventListener('keydown', resumeAudio);
+
+                jumpBuffer = await loadSound('./audio/jump.mp3');
+                coinBuffer = await loadSound('./audio/coin.mp3');
+            }
+        }
+
+        async function loadSound(url) {
+            if (!audioCtx) return null;
+            try {
+                const response = await fetch(url);
+                const arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                return audioBuffer;
+            } catch (error) {
+                console.error(`Error loading sound: ${url}`, error);
+                return null;
+            }
+        }
+
+        function playSound(buffer) {
+            if (isMuted || !buffer || !audioCtx || audioCtx.state !== 'running') return;
+            const source = audioCtx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioCtx.destination);
+            source.start(0);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const soundBtn = document.getElementById('sound-toggle-btn');
+            if (soundBtn) {
+                soundBtn.textContent = 'SOUND OFF'; // Initial state
+                soundBtn.addEventListener('click', () => {
+                    if (!audioCtx) {
+                       setupAudio().then(() => {
+                           isMuted = !isMuted;
+                           soundBtn.textContent = isMuted ? 'SOUND OFF' : 'SOUND ON';
+                           if (!isMuted) playSound(coinBuffer); // Play a sound on first unmute
+                       });
+                    } else {
+                        if (audioCtx.state === 'suspended') {
+                            audioCtx.resume();
+                        }
+                        isMuted = !isMuted;
+                        soundBtn.textContent = isMuted ? 'SOUND OFF' : 'SOUND ON';
+                    }
+                });
+            }
+        });
+        // --- End Sound Engine ---
+
         const escapeHtml = (str) => String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const buildLangAttrs = (obj) => {
             if (!obj) return 'data-ko="" data-en="" data-ja=""';
@@ -3433,7 +3511,7 @@
         window.addEventListener('keydown', (e) => {
             const k = e.key.toLowerCase(); if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) e.preventDefault();
             if (k === 'd' || k === 'arrowright') keys.right = true; if (k === 'a' || k === 'arrowleft') keys.left = true;
-            if ((k === 'w' || k === 'arrowup') && !isJumping && !isDucking) {isJumping = true; gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => isJumping = false});}
+            if ((k === 'w' || k === 'arrowup') && !isJumping && !isDucking) {isJumping = true; playSound(jumpBuffer); gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => isJumping = false});}
             if ((k === 's' || k === 'arrowdown') && !isJumping && !isDucking) {isDucking = true; gsap.to(player, {scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1});}
         });
         window.addEventListener('keyup', (e) => {
@@ -3445,7 +3523,7 @@
         function attachTouch(id, onDown, onUp) {var btn = document.getElementById(id); if (!btn) return; btn.addEventListener('pointerdown', onDown); btn.addEventListener('pointerup', onUp); btn.addEventListener('pointerleave', onUp);}
         attachTouch('btn-left', function (e) {e.preventDefault(); keys.left = true;}, function (e) {e.preventDefault(); keys.left = false;});
         attachTouch('btn-right', function (e) {e.preventDefault(); keys.right = true;}, function (e) {e.preventDefault(); keys.right = false;});
-        attachTouch('btn-jump', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {isJumping = true; gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => isJumping = false});} }, function (e) {e.preventDefault();});
+        attachTouch('btn-jump', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {isJumping = true; playSound(jumpBuffer); gsap.to(player, {y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => isJumping = false});} }, function (e) {e.preventDefault();});
         attachTouch('btn-duck', function (e) {e.preventDefault(); if (!isJumping && !isDucking) {isDucking = true; gsap.to(player, {scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1});} }, function (e) {e.preventDefault(); gsap.to(player, {scaleY: 1, duration: 0.1, onComplete: () => isDucking = false});});
 
         var scrollSpeed = 24;
@@ -3481,7 +3559,10 @@
                 var isPassed = (playerRect.left > obsRect.right + 20);
 
                 if (isOverlapping || isPassed) {
-                    if (!locallyCollected.has(dataId)) triggerCollectEffect(obstacle);
+                    if (!locallyCollected.has(dataId)) {
+                        triggerCollectEffect(obstacle);
+                        playSound(coinBuffer);
+                    }
                     isColliding = isColliding || isOverlapping;
                     locallyCollected.add(dataId);
                     collectedIds.add(dataId);
@@ -3541,6 +3622,17 @@
                             var target = parseInt(el.getAttribute('data-target'), 10) || 0; var current = 0; var stepTime = Math.max(16, 900 / Math.max(target, 1));
                             var timer = setInterval(function () {current++; el.textContent = current; if (current >= target) clearInterval(timer);}, stepTime);
                         });
+
+                        var dossierDivider = document.getElementById('dossier-divider-section');
+                        if (dossierDivider) {
+                            dossierDivider.style.display = 'block';
+                            gsap.from(dossierDivider, {
+                                opacity: 0,
+                                y: 50,
+                                duration: 0.8,
+                                ease: 'power3.out'
+                            });
+                        }
                     }
                 });
             }, {threshold: 0.4});
