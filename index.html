@@ -149,6 +149,26 @@
         .zone:nth-of-type(4) .parallax-bg-near { opacity: 0.88; }
         .zone:nth-of-type(5) .parallax-bg-near { opacity: 0.95; }
 
+        /* zone-building overlays: centered buildings that scale by level */
+        .zone { position: relative; }
+        .zone-building { position: absolute; left: 50%; transform: translateX(-50%); bottom: 8vh; pointer-events: none; background-repeat: no-repeat; background-position: center bottom; background-size: contain; z-index: 20; }
+        .zone-building--small { width: 120px; height: 96px; background-image: url('./images/building-small.svg'); }
+        .zone-building--medium { width: 180px; height: 120px; background-image: url('./images/building-medium.svg'); }
+        .zone-building--large { width: 260px; height: 160px; background-image: url('./images/building-large.svg'); }
+        .zone-building--tower { width: 320px; height: 240px; background-image: url('./images/building-tower.svg'); }
+
+        /* scramble crossing overlay for Shibuya internship zone */
+        .zone-overlay--scramble { position: absolute; left: 50%; transform: translateX(-50%); bottom: 6vh; width: 420px; height: 220px; background-image: url('./images/scramble-crossing.svg'); background-repeat: no-repeat; background-size: contain; z-index: 21; opacity: 0.95; pointer-events: none; }
+
+        /* small responsiveness tweaks */
+        @media (max-width: 600px) {
+            .zone-building--small { width: 88px; height: 72px; bottom: 10vh; }
+            .zone-building--medium { width: 120px; height: 84px; bottom: 10vh; }
+            .zone-building--large { width: 160px; height: 100px; bottom: 12vh; }
+            .zone-building--tower { width: 200px; height: 160px; bottom: 14vh; }
+            .zone-overlay--scramble { width: 260px; height: 140px; bottom: 10vh; }
+        }
+
         .parallax-bg-far {
             height: 300px;
             /* moon (no-repeat, positioned) + cloud band (repeat-x & animating) + starfield (repeat-x) */
@@ -1878,6 +1898,7 @@
                     </svg></div>
                 <h2 class="zone-title lang-text" data-ko="장덕초등학교" data-en="Jangdeok Elementary School"
                     data-ja="チャンドク小学校" style="position: relative; z-index: 10;">장덕초등학교</h2>
+                                <div class="zone-building zone-building--small" aria-hidden="true"></div>
                 <p class="zone-subtitle lang-text" data-ko="재학: 2010.03 ~ 2016.02"
                     data-en="Attended: Mar 2010 - Feb 2016" data-ja="在学: 2010.03 ~ 2016.02"
                     style="position: relative; z-index: 10;">재학: 2010.03 ~ 2016.02</p>
@@ -1944,6 +1965,7 @@
                     </svg></div>
                 <h2 class="zone-title lang-text" data-ko="장덕중학교" data-en="Jangdeok Middle School" data-ja="チャンドク中学校"
                     style="position: relative; z-index: 10;">장덕중학교</h2>
+                                <div class="zone-building zone-building--medium" aria-hidden="true"></div>
                 <p class="zone-subtitle lang-text" data-ko="재학: 2016.03 ~ 2019.02"
                     data-en="Attended: Mar 2016 - Feb 2019" data-ja="在学: 2016.03 ~ 2019.02"
                     style="position: relative; z-index: 10;">재학: 2016.03 ~ 2019.02</p>
@@ -2010,6 +2032,7 @@
                     </svg></div>
                 <h2 class="zone-title lang-text" data-ko="광주진흥고등학교" data-en="Gwangju Jinheung High School"
                     data-ja="光州振興高等学校" style="position: relative; z-index: 10;">광주진흥고등학교</h2>
+                                <div class="zone-building zone-building--large" aria-hidden="true"></div>
                 <p class="zone-subtitle lang-text" data-ko="재학: 2019.03 ~ 2022.02"
                     data-en="Attended: Mar 2019 - Feb 2022" data-ja="在学: 2019.03 ~ 2022.02"
                     style="position: relative; z-index: 10;">재학: 2019.03 ~ 2022.02</p>
@@ -3744,6 +3767,35 @@
             if (keys.right) window.scrollBy({top: scrollSpeed, left: 0, behavior: 'instant'}); if (keys.left) window.scrollBy({top: -scrollSpeed, left: 0, behavior: 'instant'});
             if (keys.right) playerInner.style.setProperty('--facing', '1'); else if (keys.left) playerInner.style.setProperty('--facing', '-1');
             playerInner.style.transform = 'scaleX(var(--facing, 1))';
+        });
+
+        // Insert zone-specific building overlays (run after DOM ready)
+        document.addEventListener('DOMContentLoaded', function() {
+            const mapping = [
+                {k: '장덕초등학교', cls: 'zone-building--small'},
+                {k: '장덕중학교', cls: 'zone-building--medium'},
+                {k: '광주진흥고등학교', cls: 'zone-building--large'},
+                // university: look for h2 containing '대학교' or '대학'
+                {k: '대학교', cls: 'zone-building--medium'},
+                {k: '해외(일본) 인턴십', cls: 'zone-building--tower', overlay: 'zone-overlay--scramble'}
+            ];
+
+            document.querySelectorAll('.zone').forEach(function(zone) {
+                const title = zone.querySelector('.zone-title');
+                if (!title) return;
+                const text = (title.textContent || '').trim();
+                mapping.forEach(function(m) {
+                    if (m.k === '대학교') {
+                        if (text.indexOf('대학') !== -1 || text.indexOf('대학교') !== -1) {
+                            const b = document.createElement('div'); b.className = 'zone-building ' + m.cls; zone.appendChild(b);
+                        }
+                    } else if (text.indexOf(m.k) !== -1) {
+                        const b = document.createElement('div'); b.className = 'zone-building ' + m.cls; zone.appendChild(b);
+                        if (m.overlay) { const o = document.createElement('div'); o.className = 'zone-overlay ' + m.overlay; zone.appendChild(o);} 
+                    }
+                });
+            });
+        });
             if (keys.right || keys.left) playerInner.classList.add('player-running'); else playerInner.classList.remove('player-running');
 
             const playerRect = player.getBoundingClientRect(); let isColliding = false;
