@@ -501,6 +501,13 @@
             margin-top: 4px;
         }
 
+        .info-tag-divider {
+            width: 80%;
+            height: 2px;
+            background-color: var(--zone-border);
+            margin: 8px auto;
+        }
+
         .ground-area {
             position: absolute;
             left: 0;
@@ -582,7 +589,7 @@
         }
 
         .obstacle-wrapper.collected {
-            opacity: 0.65;
+            opacity: 0.85;
             filter: grayscale(100%);
             transition: all 0.3s ease;
         }
@@ -3939,7 +3946,7 @@
         var tag = document.createElement('div');
         tag.className = 'info-tag';
         var catName = (data.category || 'milestone').toUpperCase();
-        tag.innerHTML = `<div class="cat-badge">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
+        tag.innerHTML = `<div class="cat-badge">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="info-tag-divider"></div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
         wrapper.appendChild(tag);
 
         gameContainer.appendChild(wrapper); return wrapper;
