@@ -351,7 +351,7 @@
         }
 
         .obstacle-wrapper:hover .obstacle-badge {
-            transform: scale(4);
+            transform: scale(2);
             z-index: 150;
         }
 
@@ -501,6 +501,13 @@
             margin-top: 4px;
         }
 
+        .info-tag-divider {
+            width: 80%;
+            height: 2px;
+            background-color: var(--zone-border);
+            margin: 8px auto;
+        }
+
         .ground-area {
             position: absolute;
             left: 0;
@@ -540,7 +547,7 @@
 
         #sun {
             position: fixed;
-            top: 0;
+            top: 40px;
             left: 0;
             width: 48px;
             height: 48px;
@@ -549,7 +556,8 @@
             border: 4px solid #fff;
             box-shadow: 0 0 20px rgba(253, 224, 71, 0.5);
             pointer-events: none;
-            z-index: 3;
+            opacity: 0.6;
+            z-index: 0;
         }
 
         #progress-bar-wrap {
@@ -582,7 +590,7 @@
         }
 
         .obstacle-wrapper.collected {
-            opacity: 0.65;
+            opacity: 0.85;
             filter: grayscale(100%);
             transition: all 0.3s ease;
         }
@@ -1105,7 +1113,9 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-main);
-            margin: 0 0 8px;
+            margin: 0 0 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
         }
 
         .tr-subtitle {
@@ -1219,6 +1229,7 @@
             font-size: 10px;
             color: var(--accent);
             margin-top: 4px;
+            margin-left: 2px;
         }
 
         .header-controls {
@@ -2084,12 +2095,12 @@
 <header id="top-header" class="top-header">
     <div>
         <h1 class="header-title">WI JEONGWOO</h1>
-        <div class="header-sub">DEVELOPER</div>
+        <div class="header-sub">SOFTWARE ENGINEERING | GAME DEVELOPER</div>
     </div>
     <div class="header-controls">
         <div class="counter-display hidden-mobile">
             <span class="dot"></span>
-            <span id="counter-current">0</span> / 23
+            <span id="counter-current">0</span> / 24
         </div>
         <select id="lang-selector" class="header-btn">
             <option value="ko" style="color:#000">KOR</option>
@@ -2099,6 +2110,7 @@
         <button id="sound-toggle-btn" class="header-btn">SOUND ON</button>
         <button class="header-btn lang-text" data-ko="SKIP" data-en="SKIP" data-ja="SKIP" data-ko-return="RETURN"
             data-en-return="RETURN" data-ja-return="RETURN" id="skip-game-btn">SKIP</button>
+        <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
         <a href="#resume-section" class="header-btn primary lang-text" data-ko="RESUME" data-en="RESUME"
             data-ja="RESUME">RESUME</a>
     </div>
@@ -3082,16 +3094,8 @@
     <div class="cover-bg-grid"></div>
     <h1 class="lang-text" data-ko="Career Resume" data-en="Career Resume" data-ja="Career Resume">Career Resume</h1>
     <section class="tr-chapter">
-        <h3 class="lang-text" data-ko="계속해서 성장 중..." data-en="Still Growing..." data-ja="継続的に成長中...">계속해서 성장 중...
-        </h3>
+        <h3 class="lang-text" data-ko="포트폴리오" data-en="Portfolio" data-ja="ポートフォリオ">포트폴리오</h3>
         <ul>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="해외 인턴십 시작"
-                        data-en="Global Internship Start" data-ja="海外インターン開始">해외 인턴십 시작</strong><span
-                        class="tr-desc lang-text" data-ko="Global Innovation Handle (2026.06)"
-                        data-en="Global Innovation Handle (June 2026)" data-ja="グローバルイノベーションハンドル（2026年6月）">Global
-                        Innovation Handle (2026.06)</span></div>
-            </li>
             <li>
                 <div class="tr-item-content">
                     <strong class="lang-text" data-ko="Blind Walker" data-en="Blind Walker (VR)"
@@ -3106,6 +3110,25 @@
                     </a>
                 </div>
             </li>
+            <li>
+                <div class="tr-item-content">
+                    <strong class="lang-text" data-ko="Little Atelier" data-en="Little Atelier"
+                        data-ja="Little Atelier">Little Atelier</strong>
+                    <span class="tr-desc lang-text" data-ko="유니티 Interaction 프로젝트" data-en="Unity Interaction Project"
+                        data-ja="Unity インタラクション プロジェクト">유니티 Interaction 프로젝트</span>
+                </div>
+                <div class="tr-item-media tr-item-link">
+                    <a href="https://devleu.tistory.com/43" target="_blank" rel="noopener noreferrer">
+                        <img src="./images/little_atelier.png" alt="little_atelier"
+                            style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <section class="tr-chapter">
+        <h3 class="lang-text" data-ko="자격증" data-en="Certifications" data-ja="資格">자격증</h3>
+        <ul>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="ADsP" data-en="ADsP"
                         data-ja="ADsP">ADsP</strong><span class="tr-desc lang-text" data-ko="데이터분석 준전문가 (2026.06)"
@@ -3125,26 +3148,11 @@
                         style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
             </li>
             <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="부전공" data-en="minor"
-                        data-ja="副専攻">부전공</strong><span class="tr-desc lang-text" data-ko="일어일문학 부전공  (2026.03~)"
-                        data-en="Minor in Japanese Language and Literature  (2026.03~)"
-                        data-ja="日本語日本文 副専攻  (2026.03~)">일어일문학 부전공 (2026.03~)</span></div>
-            </li>
-            <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="SQL개발자" data-en="SQL Developer "
                         data-ja="SQL開発者">SQL개발자</strong><span class="tr-desc lang-text" data-ko="한국데이터산업진흥원 (2026.03)"
                         data-en="Korea Data Agency (March 2026)" data-ja="韓国データ産業振興院 (2026.03)">한국데이터산업진흥원
                         (2026.03)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="만기 전역" data-en="Discharged"
-                        data-ja="満期除隊">만기 전역</strong><span class="tr-desc lang-text" data-ko="공군 병 851기 병장 (2025.06)"
-                        data-en="Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)"
-                        data-ja="韓国空軍兵長 (851期, 2025年6月)">공군 병 851기 병장 (2025.06)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank"
                         rel="noopener noreferrer"
                         style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
             </li>
@@ -3158,15 +3166,6 @@
                         style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
             </li>
             <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="공군 입대" data-en="Air Force "
-                        data-ja="空軍入隊 ">공군 입대</strong><span class="tr-desc lang-text" data-ko="방공포병 (2023.09)"
-                        data-en="Air Defense Artillery Assignment (Sep 2023)" data-ja="防空砲兵の役職 (2023年9月)">방공포 보직
-                        (2023.09)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
-            </li>
-            <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="ISTQB CTFL" data-en="ISTQB CTFL"
                         data-ja="ISTQB CTFL">ISTQB CTFL</strong><span class="tr-desc lang-text"
                         data-ko="KSTQB (2023.06)" data-en="KSTQB (June 2023)" data-ja="KSTQB (2023年6月)">KSTQB
@@ -3174,12 +3173,6 @@
                 <div class="tr-item-media tr-item-link"><a href="https://www.kstqb.org/" target="_blank"
                         rel="noopener noreferrer"
                         style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="복수전공" data-en="double major"
-                        data-ja="複数専攻">복수전공</strong><span class="tr-desc lang-text" data-ko="지능실감미디어융합 (2023.03~)"
-                        data-en="Intelligent Media Engineering (2023.03~)" data-ja="知能メディア工学 (2023.03~)">지능실감미디어융합
-                        (2023.03~)</span></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="한국사 3급"
@@ -3190,6 +3183,48 @@
                 <div class="tr-item-media tr-item-link"><a href="https://www.historyexam.go.kr/" target="_blank"
                         rel="noopener noreferrer"
                         style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+            </li>
+        </ul>
+    </section>
+    <section class="tr-chapter">
+        <h3 class="lang-text" data-ko="주요 이력" data-en="Key Experience" data-ja="主な経歴">주요 이력</h3>
+        <ul>
+            <li>
+                <div class="tr-item-content"><strong class="lang-text" data-ko="해외 인턴십 시작"
+                        data-en="Global Internship Start" data-ja="海外インターン開始">해외 인턴십 시작</strong><span
+                        class="tr-desc lang-text" data-ko="Global Innovation Handle (2026.06)"
+                        data-en="Global Innovation Handle (June 2026)" data-ja="グローバルイノベーションハンドル（2026年6月）">Global
+                        Innovation Handle (2026.06)</span></div>
+            </li>
+            <li>
+                <div class="tr-item-content"><strong class="lang-text" data-ko="부전공" data-en="minor"
+                        data-ja="副専攻">부전공</strong><span class="tr-desc lang-text" data-ko="일어일문학 부전공  (2026.03~)"
+                        data-en="Minor in Japanese Language and Literature  (2026.03~)"
+                        data-ja="日本語日本文 副専攻  (2026.03~)">일어일문학 부전공 (2026.03~)</span></div>
+            </li>
+            <li>
+                <div class="tr-item-content"><strong class="lang-text" data-ko="만기 전역" data-en="Discharged"
+                        data-ja="満期除隊">만기 전역</strong><span class="tr-desc lang-text" data-ko="공군 병 851기 병장 (2025.06)"
+                        data-en="Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)"
+                        data-ja="韓国空軍兵長 (851期, 2025年6月)">공군 병 851기 병장 (2025.06)</span></div>
+                <div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+            </li>
+            <li>
+                <div class="tr-item-content"><strong class="lang-text" data-ko="공군 입대" data-en="Air Force "
+                        data-ja="空軍入隊 ">공군 입대</strong><span class="tr-desc lang-text" data-ko="방공포병 (2023.09)"
+                        data-en="Air Defense Artillery Assignment (Sep 2023)" data-ja="防空砲兵の役職 (2023年9月)">방공포 보직
+                        (2023.09)</span></div>
+                <div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+            </li>
+            <li>
+                <div class="tr-item-content"><strong class="lang-text" data-ko="복수전공" data-en="double major"
+                        data-ja="複数専攻">복수전공</strong><span class="tr-desc lang-text" data-ko="지능실감미디어융합 (2023.03~)"
+                        data-en="Intelligent Media Engineering (2023.03~)" data-ja="知能メディア工学 (2023.03~)">지능실감미디어융합
+                        (2023.03~)</span></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="대학교 입학" data-en="대학교 입학"
@@ -3352,9 +3387,9 @@
             activeAboutContent.style.display = 'block';
         }
 
-        var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 23개의 기록이 발견되었습니다.' :
-            lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 23 RECORDS FOUND.' :
-                '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 23個の記録が見つかりました。';
+        var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 24개의 기록이 발견되었습니다.' :
+            lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 24 RECORDS FOUND.' :
+                '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 24個の記録が見つかりました。';
         window._termTypedText = termTypedText;
 
         // Also update the skip button text immediately
@@ -3724,6 +3759,25 @@
             "category": "military",
             "link": "https://rokaf.mil.kr/"
         },
+                {
+            "id": 24,
+            "pos": 17300,
+            "elevation": 100,
+            "title": {
+                "ko": "Little Atelier",
+                "en": "Little Atelier",
+                "ja": "Little Atelier"
+            },
+            "desc": {
+                "ko": "유니티 Interaction 프로젝트",
+                "en": "Unity Interaction Project",
+                "ja": "Unity インタラクション プロジェクト"
+            },
+            "color": "#38BDF8",
+            "category": "project",
+            "inProgress": false,
+            "link": "https://devleu.tistory.com/43"
+        },
         {
             "id": 16,
             "pos": 17900,
@@ -3893,7 +3947,7 @@
         var tag = document.createElement('div');
         tag.className = 'info-tag';
         var catName = (data.category || 'milestone').toUpperCase();
-        tag.innerHTML = `<div class="cat-badge">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
+        tag.innerHTML = `<div class="cat-badge">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="info-tag-divider"></div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
         wrapper.appendChild(tag);
 
         gameContainer.appendChild(wrapper); return wrapper;
