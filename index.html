@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Interactive Resume Portfolio</title>
+    <title>Resume Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
@@ -4414,11 +4414,14 @@
         });
     }
 
-    // 2. Mode Switch Logic
+    // 2. Mode Switch & HUD Logic
     document.addEventListener('DOMContentLoaded', () => {
         const gameModeBtn = document.getElementById('game-mode-btn');
         const resumeModeBtn = document.getElementById('resume-mode-btn');
+        const hudOverlay = document.getElementById('hud-overlay');
+        const topHeader = document.getElementById('top-header');
 
+        // Mode Switch
         if (gameModeBtn && resumeModeBtn) {
             resumeModeBtn.addEventListener('click', () => {
                 gsap.to(window, { scrollTo: '#resume-section', duration: 1.5, ease: 'power2.inOut' });
@@ -4427,14 +4430,34 @@
             });
 
             gameModeBtn.addEventListener('click', () => {
-                // Use the existing function to smoothly scroll to the top
                 resetAndGoToTop();
                 resumeModeBtn.classList.remove('active');
                 gameModeBtn.classList.add('active');
             });
         }
 
-        // Call the function to create markers after a short delay to ensure layout is calculated
+        // HUD Visibility & Positioning
+        if (hudOverlay && topHeader) {
+            // Adjust top position to be below the header
+            const headerHeight = topHeader.offsetHeight;
+            hudOverlay.style.top = `${headerHeight + 12}px`; // 12px margin below header
+
+            // Initially hide the HUD
+            gsap.set(hudOverlay, { autoAlpha: 0 });
+
+            // Use ScrollTrigger to show HUD only in the game section
+            ScrollTrigger.create({
+                trigger: ".horizontal-container",
+                start: "top top",
+                end: () => "+=" + (document.querySelector('.horizontal-container').scrollWidth - window.innerWidth), // End after the entire horizontal scroll
+                onEnter: () => gsap.to(hudOverlay, { autoAlpha: 1, duration: 0.3 }),
+                onLeave: () => gsap.to(hudOverlay, { autoAlpha: 0, duration: 0.3 }),
+                onEnterBack: () => gsap.to(hudOverlay, { autoAlpha: 1, duration: 0.3 }),
+                onLeaveBack: () => gsap.to(hudOverlay, { autoAlpha: 0, duration: 0.3 }),
+            });
+        }
+
+        // Call the function to create progress markers
         setTimeout(createProgressMarkers, 500);
     });
 </script>
