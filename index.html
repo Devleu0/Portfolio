@@ -4078,6 +4078,7 @@
     attachTouch('btn-duck', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { isJumping = true; playSound(jumpBuffer); createJumpDust(); gsap.to(player, { y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { isJumping = false; createJumpDust(); } }); } }, function (e) { e.preventDefault(); });
 
     var scrollSpeed = 24;
+
     const locallyCollected = new Set();
 
     function triggerCollectEffect(obstacleEl) {
