@@ -93,15 +93,11 @@ function updateLanguage(lang) {
         activeAboutContent.style.display = 'block';
     }
 
-    var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK
-> 시스템 준비 완료.
-> 24개의 기록이 발견되었습니다.' :
-        lang === 'en' ? '> LOADING PROFILE DATA... OK
-> SYSTEM READY.
-> 24 RECORDS FOUND.' :
-            '> プロフィールデータを読み込み中... OK
-> システム準備完了。
-> 24個の記録が見つかりました。';
+    var termTypedText = lang === 'ko'
+        ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 24개의 기록이 발견되었습니다.'
+        : lang === 'en'
+            ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 24 RECORDS FOUND.'
+            : '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 24個の記録が見つかりました。';
     window._termTypedText = termTypedText;
 
     // Also update the skip button text immediately
@@ -905,9 +901,16 @@ if (termTyped) {
     var ti = 0;
     (function typeChar() {
         var text = window._termTypedText;
-        if (ti <= text.length) { termTyped.innerHTML = text.slice(0, ti).replace(/
-/g, '<br>') + '<span class="term-cursor" id="term-cursor">█</span>'; ti++; setTimeout(typeChar, 30); }
-        else { setTimeout(function () { ti = 0; typeChar(); }, 4000); }
+        if (ti <= text.length) {
+            termTyped.innerHTML = text.slice(0, ti).replace(/\n/g, '<br>') + '<span class="term-cursor" id="term-cursor">█</span>';
+            ti++;
+            setTimeout(typeChar, 30);
+        } else {
+            setTimeout(function () {
+                ti = 0;
+                typeChar();
+            }, 4000);
+        }
     })();
 }
 
