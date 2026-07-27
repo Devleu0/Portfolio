@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Interactive Resume Portfolio</title>
+    <title>Resume Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
@@ -523,13 +523,13 @@
 
         .ground-grid {
             width: 100%;
-            height: 200%;
+            height: 400%;
             position: absolute;
             top: 0;
             left: 0;
             background-image: linear-gradient(rgba(34, 211, 238, 0.25) 2px, transparent 3px), linear-gradient(90deg, rgba(34, 211, 238, 0.25) 2px, transparent 3px);
             background-size: 64px 64px;
-            transform: perspective(500px) rotateX(60deg);
+            transform: perspective(2000px) rotateX(60deg);
             transform-origin: top center;
             image-rendering: auto;
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
@@ -546,8 +546,8 @@
         }
 
         #sun {
-            position: fixed;
-            top: 40px;
+            position: absolute;
+            top: 15vh;
             left: 0;
             width: 48px;
             height: 48px;
@@ -587,6 +587,61 @@
             width: 0%;
             background: var(--accent);
             box-shadow: 0 0 10px var(--accent);
+        }
+
+        .progress-marker {
+            position: absolute;
+            top: -2px;
+            width: 4px;
+            height: 16px;
+            background: #FDE047;
+            border: 1px solid #020617;
+            z-index: 2;
+        }
+
+        .progress-marker:hover .progress-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .progress-tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #020617;
+            color: #FDE047;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 3;
+        }
+
+        .mode-switch {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border: 2px solid #F8FAFC;
+            box-shadow: 2px 2px 0 var(--shadow);
+            border-radius: 0;
+            overflow: hidden;
+            /* margin-right: 16px; This is now handled by the grid layout */
+        }
+        .mode-switch .header-btn {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            margin: 0;
+            padding: 6px 12px;
+        }
+        .mode-switch .header-btn.active {
+            background: var(--accent);
+            color: #020617;
         }
 
         .obstacle-wrapper.collected {
@@ -1074,7 +1129,6 @@
 
         .restart-btn:hover {
             transform: translateY(-2px);
-            box-shadow: ;
         }
 
         .restart-btn:active {
@@ -1205,8 +1259,8 @@
             left: 0;
             width: 100%;
             z-index: 50;
-            display: flex;
-            justify-content: space-between;
+            display: grid; /* Changed to grid */
+            grid-template-columns: 1fr auto 1fr; /* Left, Center, Right */
             align-items: center;
             padding: 16px 24px;
             background: rgba(2, 6, 23, 0.85);
@@ -1214,6 +1268,32 @@
             border-bottom: 4px solid var(--accent);
             box-sizing: border-box;
         }
+
+        .top-header > div:first-child { /* Target the logo/title div */
+            grid-column: 1 / 2;
+            justify-self: start;
+        }
+
+        /* The mode-switch will be moved to be a direct child of top-header */
+        .mode-switch {
+            grid-column: 2 / 3;
+            justify-self: center;
+        }
+        
+        /* The header-controls will remain, but positioned in the grid */
+        .header-controls {
+            grid-column: 3 / 4;
+            justify-self: end;
+            display: flex; /* Keep flex for its internal items */
+            gap: 16px;
+            align-items: center;
+        }
+
+
+
+
+
+
 
         .header-title {
             font-family: var(--font-title);
@@ -1232,11 +1312,7 @@
             margin-left: 2px;
         }
 
-        .header-controls {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
+
 
         .header-btn {
             background: transparent;
@@ -1704,9 +1780,14 @@
         }
     </style>
 </head>
-</section>
 
 <section style="height: 120px; background-color: var(--bg-color); position: relative; margin-top: -1px;">
+    <div id="hud-overlay">
+        <div class="counter-display">
+            <span class="dot"></span>
+            <span id="counter-current">0</span> / 24
+        </div>
+    </div>
     <div style="
         background: var(--bg-color);
         height: 60px;
@@ -2097,22 +2178,20 @@
         <h1 class="header-title">WI JEONGWOO</h1>
         <div class="header-sub">SOFTWARE ENGINEERING | GAME DEVELOPER</div>
     </div>
+    <div class="mode-switch">
+        <button id="game-mode-btn" class="header-btn active">🎮 GAME MODE</button>
+        <button id="resume-mode-btn" class="header-btn">📄 RESUME MODE</button>
+    </div>
     <div class="header-controls">
-        <div class="counter-display hidden-mobile">
-            <span class="dot"></span>
-            <span id="counter-current">0</span> / 24
-        </div>
         <select id="lang-selector" class="header-btn">
             <option value="ko" style="color:#000">KOR</option>
             <option value="en" style="color:#000">ENG</option>
             <option value="ja" style="color:#000">JPN</option>
         </select>
         <button id="sound-toggle-btn" class="header-btn">SOUND ON</button>
-        <button class="header-btn lang-text" data-ko="SKIP" data-en="SKIP" data-ja="SKIP" data-ko-return="RETURN"
-            data-en-return="RETURN" data-ja-return="RETURN" id="skip-game-btn">SKIP</button>
+
         <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
-        <a href="#resume-section" class="header-btn primary lang-text" data-ko="RESUME" data-en="RESUME"
-            data-ja="RESUME">RESUME</a>
+
     </div>
 </header>
 
@@ -2808,7 +2887,7 @@
                 style="position: relative; z-index: 10;">2학년 겨울방학</h2>
             <p class="zone-subtitle lang-text" data-ko="2025.12 ~ 2026.02" data-en="Dec 2025 - Feb 2026"
                 data-ja="2025.12 ~ 2026.02" style="position: relative; z-index: 10;">2025.12 ~ 2026.02</p>
-            <p class="zone-flavor-text lang-text" data-ko="세이브 포인트 도달 ☕ (HP/MP 회복 및 다음 학기 로딩 중)" data-en="Save Point Reached ☕ (Restoring HP/MP &amp; Loading Next Semester)" data-ja="セーブポイント到達 ☕ (HP/MP回復＆次学期ローディング中)">세이브 포인트 도달 ☕ (HP/MP 회복 및 다음 학기 로딩 중)</p>
+            <p class="zone-flavor-text lang-text" data-ko="세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)" data-en="Save Point Reached (Restoring HP/MP &amp; Loading Next Semester)" data-ja="セーブポイント到達 (HP/MP回復＆次学期ローディング中)">세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)</p>
 
         </div>
         <div class="zone" style="width: 2200px; background-color: #1E3A8A; overflow: hidden;">
@@ -3136,7 +3215,7 @@
                         (2026.06)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="TOEIC 780점" data-en="TOEIC 780"
@@ -3145,7 +3224,7 @@
                         (2026.04)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://exam.toeic.co.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="SQL개발자" data-en="SQL Developer "
@@ -3154,7 +3233,7 @@
                         (2026.03)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="JLPT N1" data-en="JLPT N1"
@@ -3163,7 +3242,7 @@
                         data-ja="兵役中に達成 (2025年1月)">군 복무 중 달성 (2025.01)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://www.jlpt.or.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="ISTQB CTFL" data-en="ISTQB CTFL"
@@ -3172,17 +3251,17 @@
                         (2023.06)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://www.kstqb.org/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="한국사 3급"
-                        data-en="Korean History Lv3" data-ja="韓国史3級">한국사능력검정시험 3급</strong><span
+                <div class="tr-item-content"><strong class="lang-text" data-ko="한국사능력검정시험 3급"
+                        data-en="Korean History Proficiency Test Lv.3" data-ja="韓国史能力検定試験 3級">한국사능력검정시험 3급</strong><span
                         class="tr-desc lang-text" data-ko="국사편찬위원회 (2022.08)"
                         data-en="National Institute of Korean History (August 2022)" data-ja="国史編纂委員会 (2022年8月)">국사편찬위원회
                         (2022.08)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://www.historyexam.go.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
         </ul>
     </section>
@@ -3209,7 +3288,7 @@
                         data-ja="韓国空軍兵長 (851期, 2025年6月)">공군 병 851기 병장 (2025.06)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="공군 입대" data-en="Air Force "
@@ -3218,7 +3297,7 @@
                         (2023.09)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="https://rokaf.mil.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="복수전공" data-en="double major"
@@ -3227,9 +3306,9 @@
                         (2023.03~)</span></div>
             </li>
             <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="대학교 입학" data-en="대학교 입학"
+                <div class="tr-item-content"><strong class="lang-text" data-ko="대학교 입학" data-en="University Entrance"
                         data-ja="大学入学">대학교 입학</strong><span class="tr-desc lang-text" data-ko="전남대학교 인공지능학부 (2022.03~)"
-                        data-en="전남대학교 인공지능학부 (2022.03)" data-ja="全南大学 人工知能学科 (2022.03)">전남대학교 인공지능학부 (2022.03)</span>
+                        data-en="Chonnam National University, School of Artificial Intelligence (2022.03~)" data-ja="全南大学 人工知能学科 (2022.03~)">전남대학교 인공지능학부 (2022.03~)</span>
                 </div>
             </li>
             <li>
@@ -3239,7 +3318,7 @@
                         (2022.02)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="http://jinheung.gen.hs.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="중학교 졸업" data-en="Middle School Grad"
@@ -3248,7 +3327,7 @@
                 </div>
                 <div class="tr-item-media tr-item-link"><a href="http://jangdeok.gen.ms.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
             <li>
                 <div class="tr-item-content"><strong class="lang-text" data-ko="초등학교 졸업" data-en="Elem. School Grad"
@@ -3257,7 +3336,7 @@
                         (2016.02)</span></div>
                 <div class="tr-item-media tr-item-link"><a href="http://jangdeok.gen.es.kr/" target="_blank"
                         rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;">[링크]</a></div>
+                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
             </li>
         </ul>
     </section>
@@ -3585,11 +3664,13 @@
             "category": "other",
             "title": {
                 "ko": "대학교 입학",
+                "en": "University Entrance",
                 "ja": "大学入学"
             },
             "desc": {
-                "ko": "전남대학교 인공지능학부 (2022.03)",
-                "ja": "全南大学 人工知能学科 (2022.03)"
+                "ko": "전남대학교 인공지능학부 (2022.03~)",
+                "en": "Chonnam National University, School of AI (2022.03~)",
+                "ja": "全南大学 人工知能学科 (2022.03~)"
             },
             "inProgress": true,
             "customIcon": null,
@@ -4078,6 +4159,7 @@
     attachTouch('btn-duck', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { isJumping = true; playSound(jumpBuffer); createJumpDust(); gsap.to(player, { y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { isJumping = false; createJumpDust(); } }); } }, function (e) { e.preventDefault(); });
 
     var scrollSpeed = 24;
+
     const locallyCollected = new Set();
 
     function triggerCollectEffect(obstacleEl) {
@@ -4304,6 +4386,79 @@
             duration: 0.8,
             ease: 'power3.out'
         });
+    });
+
+    // --- UX Features for Recruiters ---
+    
+    // 1. Create Progress Bar Markers
+    function createProgressMarkers() {
+        const progressBar = document.getElementById('progress-bar');
+        if (!progressBar || !window.obstaclesData) return;
+
+        const totalWidth = horizontalSection.scrollWidth - window.innerWidth;
+
+        obstaclesData.forEach(obstacle => {
+            const marker = document.createElement('div');
+            marker.className = 'progress-marker';
+            // Calculate position as a percentage
+            const position = (obstacle.pos / totalWidth) * 100;
+            marker.style.left = `${position}%`;
+
+            // Create and append tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'progress-tooltip';
+            tooltip.textContent = getStr(obstacle.title, currentLang); // Use existing getStr function for localization
+            marker.appendChild(tooltip);
+
+            progressBar.appendChild(marker);
+        });
+    }
+
+    // 2. Mode Switch & HUD Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const gameModeBtn = document.getElementById('game-mode-btn');
+        const resumeModeBtn = document.getElementById('resume-mode-btn');
+        const hudOverlay = document.getElementById('hud-overlay');
+        const topHeader = document.getElementById('top-header');
+
+        // Mode Switch
+        if (gameModeBtn && resumeModeBtn) {
+            resumeModeBtn.addEventListener('click', () => {
+                gsap.to(window, { scrollTo: '#resume-section', duration: 1.5, ease: 'power2.inOut' });
+                gameModeBtn.classList.remove('active');
+                resumeModeBtn.classList.add('active');
+            });
+
+            gameModeBtn.addEventListener('click', () => {
+                resetAndGoToTop();
+                resumeModeBtn.classList.remove('active');
+                gameModeBtn.classList.add('active');
+            });
+        }
+
+        // HUD Visibility & Positioning
+        if (hudOverlay && topHeader) {
+            // Adjust top position to be below the header
+            const headerHeight = topHeader.offsetHeight;
+            hudOverlay.style.top = `${headerHeight + 12}px`; // 12px margin below header
+
+            // Initially hide the HUD
+            gsap.set(hudOverlay, { autoAlpha: 0 });
+
+            // Use ScrollTrigger to show HUD only in the game section
+            ScrollTrigger.create({
+                trigger: ".horizontal-container",
+                start: "top top",
+                end: () => "+=" + (document.querySelector('.horizontal-container').scrollWidth - window.innerWidth), // End after the entire horizontal scroll
+                onEnter: () => gsap.to(hudOverlay, { autoAlpha: 1, duration: 0.3 }),
+                onLeave: () => gsap.to(hudOverlay, { autoAlpha: 0, duration: 0.3 }),
+                onEnterBack: () => gsap.to(hudOverlay, { autoAlpha: 1, duration: 0.3 }),
+                onLeaveBack: () => gsap.to(hudOverlay, { autoAlpha: 0, duration: 0.3 }),
+            });
+        }
+
+        // Call the function to create progress markers
+        setTimeout(createProgressMarkers, 500);
     });
 </script>
 </body>
