@@ -589,6 +589,61 @@
             box-shadow: 0 0 10px var(--accent);
         }
 
+        .progress-marker {
+            position: absolute;
+            top: -2px;
+            width: 4px;
+            height: 16px;
+            background: #FDE047;
+            border: 1px solid #020617;
+            z-index: 2;
+        }
+
+        .progress-marker:hover .progress-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .progress-tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #020617;
+            color: #FDE047;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 3;
+        }
+
+        .mode-switch {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border: 2px solid #F8FAFC;
+            box-shadow: 2px 2px 0 var(--shadow);
+            border-radius: 0;
+            overflow: hidden;
+            /* margin-right: 16px; This is now handled by the grid layout */
+        }
+        .mode-switch .header-btn {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            margin: 0;
+            padding: 6px 12px;
+        }
+        .mode-switch .header-btn.active {
+            background: var(--accent);
+            color: #020617;
+        }
+
         .obstacle-wrapper.collected {
             opacity: 0.85;
             filter: grayscale(100%);
@@ -1204,8 +1259,8 @@
             left: 0;
             width: 100%;
             z-index: 50;
-            display: flex;
-            justify-content: space-between;
+            display: grid; /* Changed to grid */
+            grid-template-columns: 1fr auto 1fr; /* Left, Center, Right */
             align-items: center;
             padding: 16px 24px;
             background: rgba(2, 6, 23, 0.85);
@@ -1213,6 +1268,32 @@
             border-bottom: 4px solid var(--accent);
             box-sizing: border-box;
         }
+
+        .top-header > div:first-child { /* Target the logo/title div */
+            grid-column: 1 / 2;
+            justify-self: start;
+        }
+
+        /* The mode-switch will be moved to be a direct child of top-header */
+        .mode-switch {
+            grid-column: 2 / 3;
+            justify-self: center;
+        }
+        
+        /* The header-controls will remain, but positioned in the grid */
+        .header-controls {
+            grid-column: 3 / 4;
+            justify-self: end;
+            display: flex; /* Keep flex for its internal items */
+            gap: 16px;
+            align-items: center;
+        }
+
+
+
+
+
+
 
         .header-title {
             font-family: var(--font-title);
@@ -1231,11 +1312,7 @@
             margin-left: 2px;
         }
 
-        .header-controls {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
+
 
         .header-btn {
             background: transparent;
@@ -1705,6 +1782,12 @@
 </head>
 
 <section style="height: 120px; background-color: var(--bg-color); position: relative; margin-top: -1px;">
+    <div id="hud-overlay">
+        <div class="counter-display">
+            <span class="dot"></span>
+            <span id="counter-current">0</span> / 24
+        </div>
+    </div>
     <div style="
         background: var(--bg-color);
         height: 60px;
@@ -2095,22 +2178,20 @@
         <h1 class="header-title">WI JEONGWOO</h1>
         <div class="header-sub">SOFTWARE ENGINEERING | GAME DEVELOPER</div>
     </div>
+    <div class="mode-switch">
+        <button id="game-mode-btn" class="header-btn active">🎮 GAME MODE</button>
+        <button id="resume-mode-btn" class="header-btn">📄 RESUME MODE</button>
+    </div>
     <div class="header-controls">
-        <div class="counter-display hidden-mobile">
-            <span class="dot"></span>
-            <span id="counter-current">0</span> / 24
-        </div>
         <select id="lang-selector" class="header-btn">
             <option value="ko" style="color:#000">KOR</option>
             <option value="en" style="color:#000">ENG</option>
             <option value="ja" style="color:#000">JPN</option>
         </select>
         <button id="sound-toggle-btn" class="header-btn">SOUND ON</button>
-        <button class="header-btn lang-text" data-ko="SKIP" data-en="SKIP" data-ja="SKIP" data-ko-return="RETURN"
-            data-en-return="RETURN" data-ja-return="RETURN" id="skip-game-btn">SKIP</button>
+
         <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
-        <a href="#resume-section" class="header-btn primary lang-text" data-ko="RESUME" data-en="RESUME"
-            data-ja="RESUME">RESUME</a>
+
     </div>
 </header>
 
@@ -4305,6 +4386,56 @@
             duration: 0.8,
             ease: 'power3.out'
         });
+    });
+
+    // --- UX Features for Recruiters ---
+    
+    // 1. Create Progress Bar Markers
+    function createProgressMarkers() {
+        const progressBar = document.getElementById('progress-bar');
+        if (!progressBar || !window.obstaclesData) return;
+
+        const totalWidth = horizontalSection.scrollWidth - window.innerWidth;
+
+        obstaclesData.forEach(obstacle => {
+            const marker = document.createElement('div');
+            marker.className = 'progress-marker';
+            // Calculate position as a percentage
+            const position = (obstacle.pos / totalWidth) * 100;
+            marker.style.left = `${position}%`;
+
+            // Create and append tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'progress-tooltip';
+            tooltip.textContent = getStr(obstacle.title, currentLang); // Use existing getStr function for localization
+            marker.appendChild(tooltip);
+
+            progressBar.appendChild(marker);
+        });
+    }
+
+    // 2. Mode Switch Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const gameModeBtn = document.getElementById('game-mode-btn');
+        const resumeModeBtn = document.getElementById('resume-mode-btn');
+
+        if (gameModeBtn && resumeModeBtn) {
+            resumeModeBtn.addEventListener('click', () => {
+                gsap.to(window, { scrollTo: '#resume-section', duration: 1.5, ease: 'power2.inOut' });
+                gameModeBtn.classList.remove('active');
+                resumeModeBtn.classList.add('active');
+            });
+
+            gameModeBtn.addEventListener('click', () => {
+                // Use the existing function to smoothly scroll to the top
+                resetAndGoToTop();
+                resumeModeBtn.classList.remove('active');
+                gameModeBtn.classList.add('active');
+            });
+        }
+
+        // Call the function to create markers after a short delay to ensure layout is calculated
+        setTimeout(createProgressMarkers, 500);
     });
 </script>
 </body>
