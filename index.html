@@ -19,7 +19,7 @@
     <div id="hud-overlay">
         <div class="counter-display">
             <span class="dot"></span>
-            <span id="counter-current">0</span> / 24
+            <span id="counter-current">0</span> / 25
         </div>
     </div>
     <div style="
@@ -1381,7 +1381,7 @@
             data-ja="これまではチュートリアルでした。本当の「メインクエスト」はここから始まります。">지금까지는 튜토리얼이었습니다. '메인 퀘스트'는 이제부터 시작됩니다.</p>
         <div class="stat-grid">
             <div class="stat-card">
-                <div class="stat-num" data-target="23">0</div>
+                <div class="stat-num" data-target="24">0</div>
                 <div class="stat-label">Milestones</div>
             </div>
             <div class="stat-card">
@@ -1426,6 +1426,20 @@
                 <div class="tr-item-media tr-item-link">
                     <a href="https://devleu.tistory.com/42" target="_blank" rel="noopener noreferrer">
                         <img src="./images/blind_walker.png" alt="blind_walker"
+                            style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
+                    </a>
+                </div>
+            </li>
+            <li>
+                <div class="tr-item-content">
+                    <strong class="lang-text" data-ko="VidHub" data-en="VidHub"
+                        data-ja="VidHub">VidHub</strong>
+                    <span class="tr-desc lang-text" data-ko="안드로이드 동영상 플랫폼 (2026.05)" data-en="Android Video Platform (2026.05)"
+                        data-ja="Android 動画プラットフォーム (2026.05)">안드로이드 동영상 플랫폼 (2026.05)</span>
+                </div>
+                <div class="tr-item-media tr-item-link">
+                    <a href="https://devleu.tistory.com/44" target="_blank" rel="noopener noreferrer">
+                        <img src="./images/vidhub.png" alt="vidhub"
                             style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
                     </a>
                 </div>
@@ -1719,9 +1733,9 @@
             activeAboutContent.style.display = 'block';
         }
 
-        var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 24개의 기록이 발견되었습니다.' :
-            lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 24 RECORDS FOUND.' :
-                '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 24個の記録が見つかりました。';
+        var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 25개의 기록이 발견되었습니다.' :
+            lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 25 RECORDS FOUND.' :
+                '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 25個の記録が見つかりました。';
         window._termTypedText = termTypedText;
 
         // Also update the skip button text immediately
@@ -2111,6 +2125,25 @@
             "category": "project",
             "inProgress": false,
             "link": "https://devleu.tistory.com/43"
+        },
+        {
+            "id": 25,
+            "pos": 19800,
+            "elevation": 100,
+            "title": {
+                "ko": "VidHub",
+                "en": "VidHub",
+                "ja": "VidHub"
+            },
+            "desc": {
+                "ko": "안드로이드 동영상 플랫폼",
+                "en": "Android Video Platform",
+                "ja": "Android 動画プラットフォーム"
+            },
+            "color": "#38BDF8",
+            "category": "project",
+            "inProgress": false,
+            "link": "https://devleu.tistory.com/44"
         },
         {
             "id": 16,
