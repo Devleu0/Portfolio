@@ -10,9 +10,10 @@
         - favicon.ico 파일을 준비하여 root에 두거나 경로를 수정해주세요.
     -->
     <meta name="description" content="게임 컨셉의 인터랙티브 웹 포트폴리오. 개발자의 프로젝트, 기술 스택, 성장 과정.">
-    <meta name="keywords" content="포트폴리오, 이력서, 게임 개발자, 웹 개발자, 인터랙티브, Wi Jeongwoo, Portfolio, Resume, Game Developer, Web Developer, Interactive">
+    <meta name="keywords"
+        content="포트폴리오, 이력서, 게임 개발자, 웹 개발자, 인터랙티브, Wi Jeongwoo, Portfolio, Resume, Game Developer, Web Developer, Interactive">
     <meta name="author" content="Wi Jeongwoo">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://devleu0.github.io/Portfolio/">
@@ -38,27 +39,28 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    
+
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800;900&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@latest/neodgm/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
     <link rel="stylesheet" href="css/style.css">
-    
+
     <script src="js/main.js" defer></script>
 </head>
+
 <body>
-<section style="height: 120px; background-color: var(--bg-color); position: relative; margin-top: -1px;">
-    <div id="hud-overlay">
-        <div class="counter-display">
-            <span class="dot"></span>
-            <span id="counter-current">0</span> / 27
+    <section style="height: 120px; background-color: var(--bg-color); position: relative; margin-top: -1px;">
+        <div id="hud-overlay">
+            <div class="counter-display">
+                <span class="dot"></span>
+                <span id="counter-current">0</span> / 27
+            </div>
+            <div class="score-display">
+                SCORE <span id="score-current">0</span>
+            </div>
         </div>
-        <div class="score-display">
-            SCORE <span id="score-current">0</span>
-        </div>
-    </div>
-    <div style="
+        <div style="
         background: var(--bg-color);
         height: 60px;
         width: 100%;
@@ -66,952 +68,980 @@
         top: -59px;
         left: 0;
         mask-image: url('data:image/svg+xml;utf8,<svg xmlns=" http://www.w3.org/2000/svg" viewBox="0 0 100 10"
-        preserveAspectRatio="none">
-        <path
-            d="M0,10 Q2,0 4,10 T8,10 T12,10 T16,10 T20,10 T24,10 T28,10 T32,10 T36,10 T40,10 T44,10 T48,10 T52,10 T56,10 T60,10 T64,10 T68,10 T72,10 T76,10 T80,10 T84,10 T88,10 T92,10 T96,10 T100,10"
-            fill="white" /></svg>');
-        mask-size: 100% 100%;
-        mask-repeat: no-repeat;
-        mask-position: bottom;
-        ">
-    </div>
-</section>
+            preserveAspectRatio="none">
+            <path
+                d="M0,10 Q2,0 4,10 T8,10 T12,10 T16,10 T20,10 T24,10 T28,10 T32,10 T36,10 T40,10 T44,10 T48,10 T52,10 T56,10 T60,10 T64,10 T68,10 T72,10 T76,10 T80,10 T84,10 T88,10 T92,10 T96,10 T100,10"
+                fill="white" /></svg>');
+            mask-size: 100% 100%;
+            mask-repeat: no-repeat;
+            mask-position: bottom;
+            ">
+        </div>
+    </section>
 
-<section id="about-section">
-    <div class="about-content" lang="ko">
-        <h2 class="reveal-on-scroll">자기소개</h2>
-        <p class="about-intro reveal-on-scroll">소프트웨어를 전공하며 C# 기반의 Unity 엔진을 통해 게임 개발 능력을 다져왔습니다. 플레이어가 몰입할 수 있는 매끄러운 시스템과 완성도 높은 로직을 구현하는 데 즐거움을 느낍니다. 꾸준한 배움과 문제 해결로  가치를 더하는 개발자가 되겠습니다.</p>
-        <h2 class="reveal-on-scroll">기술 스택</h2>
-        <div class="skills-bento-grid">
-            <div class="skill-card card-large reveal-on-scroll">
-                <h3>Game Engine &amp; Graphics</h3>
-                <span class="exp-popup">+25 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Unity</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="90%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">HLSL</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="75%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">ShaderLab</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="75%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">DirectX 11</span>
-                        <span class="skill-level">Lv. 6</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="60%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card card-tall reveal-on-scroll">
-                <h3>Languages</h3>
-                <span class="exp-popup">+15 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">C#</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="95%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">C++</span>
-                        <span class="skill-level">Lv. 8</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="80%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">Python</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="70%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card reveal-on-scroll">
-                <h3>Web / Backend</h3>
-                <span class="exp-popup">+5 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Node.js</span>
-                        <span class="skill-level">Lv. 5</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="50%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card reveal-on-scroll">
-                <h3>Database</h3>
-                <span class="exp-popup">+5 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">MySQL</span>
-                        <span class="skill-level">Lv. 6</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="60%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card card-wide reveal-on-scroll">
-                <h3>Tools &amp; Collaboration</h3>
-                <span class="exp-popup">+10 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Git, VS Code</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="90%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">Jira, Slack, Notion</span>
-                        <span class="skill-level">Lv. 8</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="85%"></div>
-                        </div>
-                    </li>
-                </ul>
+    <section id="about-section">
+        <div class="about-content" lang="ko">
+            <h2 class="reveal-on-scroll">자기소개</h2>
+            <p class="about-intro reveal-on-scroll">소프트웨어를 전공하며 C# 기반의 Unity 엔진을 통해 게임 개발 능력을 다져왔습니다. 플레이어가 몰입할 수 있는
+                매끄러운 시스템과 완성도 높은 로직을 구현하는 데 즐거움을 느낍니다. 꾸준한 배움과 문제 해결로 가치를 더하는 개발자가 되겠습니다.</p>
+            <h2 class="reveal-on-scroll">기술 스택</h2>
+            <div class="skills-bento-grid">
+                <div class="skill-card card-large reveal-on-scroll">
+                    <h3>Game Engine &amp; Graphics</h3>
+                    <span class="exp-popup">+25 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Unity</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="90%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">HLSL</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="75%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">ShaderLab</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="75%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">DirectX 11</span>
+                            <span class="skill-level">Lv. 6</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="60%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card card-tall reveal-on-scroll">
+                    <h3>Languages</h3>
+                    <span class="exp-popup">+15 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">C#</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="95%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">C++</span>
+                            <span class="skill-level">Lv. 8</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="80%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Python</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="70%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Web / Backend</h3>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Node.js</span>
+                            <span class="skill-level">Lv. 5</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="50%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Database</h3>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">MySQL</span>
+                            <span class="skill-level">Lv. 6</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="60%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card card-wide reveal-on-scroll">
+                    <h3>Tools &amp; Collaboration</h3>
+                    <span class="exp-popup">+10 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Git, VS Code</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="90%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Jira, Slack, Notion</span>
+                            <span class="skill-level">Lv. 8</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="85%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="about-content" lang="en" style="display:none;">
-        <h2 class="reveal-on-scroll">About Me</h2>
-        <p class="about-intro reveal-on-scroll">As a Software Engineering major, I have built a solid foundation in game development through practical experience with Unity and C#. I find deep satisfaction in crafting seamless systems and robust logic that deliver truly immersive player experiences. Dedicated to continuous learning and persistent problem-solving, I aim to bring tangible value to every team and project I join.</p>
-        <h2 class="reveal-on-scroll">Skills</h2>
-        <div class="skills-bento-grid">
-            <div class="skill-card card-large reveal-on-scroll">
-                <h3>Game Engine &amp; Graphics</h3>
-                <span class="exp-popup">+25 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Unity</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="90%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">HLSL</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="75%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">ShaderLab</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="75%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">DirectX 11</span>
-                        <span class="skill-level">Lv. 6</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="60%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card card-tall reveal-on-scroll">
-                <h3>Languages</h3>
-                <span class="exp-popup">+15 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">C#</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="95%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">C++</span>
-                        <span class="skill-level">Lv. 8</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="80%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">Python</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="70%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card reveal-on-scroll">
-                <h3>Web / Backend</h3>
-                <span class="exp-popup">+5 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Node.js</span>
-                        <span class="skill-level">Lv. 5</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="50%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card reveal-on-scroll">
-                <h3>Database</h3>
-                <span class="exp-popup">+5 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">MySQL</span>
-                        <span class="skill-level">Lv. 6</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="60%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card card-wide reveal-on-scroll">
-                <h3>Tools &amp; Collaboration</h3>
-                <span class="exp-popup">+10 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Git, VS Code</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="90%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">Jira, Slack, Notion</span>
-                        <span class="skill-level">Lv. 8</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="85%"></div>
-                        </div>
-                    </li>
-                </ul>
+        <div class="about-content" lang="en" style="display:none;">
+            <h2 class="reveal-on-scroll">About Me</h2>
+            <p class="about-intro reveal-on-scroll">As a Software Engineering major, I have built a solid foundation in
+                game development through practical experience with Unity and C#. I find deep satisfaction in crafting
+                seamless systems and robust logic that deliver truly immersive player experiences. Dedicated to
+                continuous learning and persistent problem-solving, I aim to bring tangible value to every team and
+                project I join.</p>
+            <h2 class="reveal-on-scroll">Skills</h2>
+            <div class="skills-bento-grid">
+                <div class="skill-card card-large reveal-on-scroll">
+                    <h3>Game Engine &amp; Graphics</h3>
+                    <span class="exp-popup">+25 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Unity</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="90%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">HLSL</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="75%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">ShaderLab</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="75%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">DirectX 11</span>
+                            <span class="skill-level">Lv. 6</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="60%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card card-tall reveal-on-scroll">
+                    <h3>Languages</h3>
+                    <span class="exp-popup">+15 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">C#</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="95%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">C++</span>
+                            <span class="skill-level">Lv. 8</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="80%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Python</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="70%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Web / Backend</h3>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Node.js</span>
+                            <span class="skill-level">Lv. 5</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="50%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>Database</h3>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">MySQL</span>
+                            <span class="skill-level">Lv. 6</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="60%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card card-wide reveal-on-scroll">
+                    <h3>Tools &amp; Collaboration</h3>
+                    <span class="exp-popup">+10 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Git, VS Code</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="90%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Jira, Slack, Notion</span>
+                            <span class="skill-level">Lv. 8</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="85%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="about-content" lang="ja" style="display:none;">
-        <h2 class="reveal-on-scroll">自己紹介</h2>
-        <p class="about-intro reveal-on-scroll">
-            大学ではソフトウェア工学を専攻し、C#を用いたUnityでのゲーム開発について、基礎から実践までしっかりと身につけてきました。
-プレイヤーが深く没入できるスムーズなシステムや、完成度の高いロジックを実装することに大きなやりがいを感じています。
-        </p>
-        <h2 class="reveal-on-scroll">スキル</h2>
-        <div class="skills-bento-grid">
-            <div class="skill-card card-large reveal-on-scroll">
-                <h3>ゲームエンジン &amp; グラフィックス</h3>
-                <span class="exp-popup">+25 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Unity</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="90%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">HLSL</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="75%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">ShaderLab</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="75%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">DirectX 11</span>
-                        <span class="skill-level">Lv. 6</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="60%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card card-tall reveal-on-scroll">
-                <h3>言語</h3>
-                <span class="exp-popup">+15 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">C#</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="95%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">C++</span>
-                        <span class="skill-level">Lv. 8</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="80%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">Python</span>
-                        <span class="skill-level">Lv. 7</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="70%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card reveal-on-scroll">
-                <h3>ウェブ・バックエンド</h3>
-                <span class="exp-popup">+5 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Node.js</span>
-                        <span class="skill-level">Lv. 5</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="50%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card reveal-on-scroll">
-                <h3>データベース</h3>
-                <span class="exp-popup">+5 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">MySQL</span>
-                        <span class="skill-level">Lv. 6</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="60%"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="skill-card card-wide reveal-on-scroll">
-                <h3>ツール &amp; コラボレーション</h3>
-                <span class="exp-popup">+10 EXP</span>
-                <ul>
-                    <li>
-                        <span class="skill-name">Git, VS Code</span>
-                        <span class="skill-level">Lv. 9</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="90%"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="skill-name">Jira, Slack, Notion</span>
-                        <span class="skill-level">Lv. 8</span>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar" data-width="85%"></div>
-                        </div>
-                    </li>
-                </ul>
+        <div class="about-content" lang="ja" style="display:none;">
+            <h2 class="reveal-on-scroll">自己紹介</h2>
+            <p class="about-intro reveal-on-scroll">
+                大学ではソフトウェア工学を専攻し、C#を用いたUnityでのゲーム開発について、基礎から実践までしっかりと身につけてきました。
+                プレイヤーが深く没入できるスムーズなシステムや、完成度の高いロジックを実装することに大きなやりがいを感じています。
+            </p>
+            <h2 class="reveal-on-scroll">スキル</h2>
+            <div class="skills-bento-grid">
+                <div class="skill-card card-large reveal-on-scroll">
+                    <h3>ゲームエンジン &amp; グラフィックス</h3>
+                    <span class="exp-popup">+25 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Unity</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="90%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">HLSL</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="75%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">ShaderLab</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="75%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">DirectX 11</span>
+                            <span class="skill-level">Lv. 6</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="60%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card card-tall reveal-on-scroll">
+                    <h3>言語</h3>
+                    <span class="exp-popup">+15 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">C#</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="95%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">C++</span>
+                            <span class="skill-level">Lv. 8</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="80%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Python</span>
+                            <span class="skill-level">Lv. 7</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="70%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>ウェブ・バックエンド</h3>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Node.js</span>
+                            <span class="skill-level">Lv. 5</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="50%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card reveal-on-scroll">
+                    <h3>データベース</h3>
+                    <span class="exp-popup">+5 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">MySQL</span>
+                            <span class="skill-level">Lv. 6</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="60%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="skill-card card-wide reveal-on-scroll">
+                    <h3>ツール &amp; コラボレーション</h3>
+                    <span class="exp-popup">+10 EXP</span>
+                    <ul>
+                        <li>
+                            <span class="skill-name">Git, VS Code</span>
+                            <span class="skill-level">Lv. 9</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="90%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Jira, Slack, Notion</span>
+                            <span class="skill-level">Lv. 8</span>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" data-width="85%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-<header id="top-header" class="top-header">
-    <div>
-        <h1 class="header-title">WI JEONGWOO</h1>
-        <div class="header-sub">SOFTWARE ENGINEERING | GAME DEVELOPER</div>
-    </div>
-    <div class="mode-switch">
-        <button id="game-mode-btn" class="header-btn active">🎮 GAME MODE</button>
-        <button id="resume-mode-btn" class="header-btn">📄 RESUME MODE</button>
-    </div>
-    <div class="header-controls">
-        <select id="lang-selector" class="header-btn">
-            <option value="ko" style="color:#000">KOR</option>
-            <option value="en" style="color:#000">ENG</option>
-            <option value="ja" style="color:#000">JPN</option>
-        </select>
-        <button id="sound-toggle-btn" class="header-btn">SOUND ON</button>
-
-        <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
-
-    </div>
-
-    </button>
-</header>
-
-<button id="hamburger-btn" class="hamburger-btn">
-    <span class="hamburger-icon"></span>
-</button>
-
-<div id="mobile-nav" class="mobile-nav">
-    <div class="mobile-nav-content">
+    </section>
+    <header id="top-header" class="top-header">
+        <div>
+            <h1 class="header-title">WI JEONGWOO</h1>
+            <div class="header-sub">SOFTWARE ENGINEERING | GAME DEVELOPER</div>
+        </div>
         <div class="mode-switch">
-            <button id="game-mode-btn-mobile" class="header-btn active">🎮 GAME MODE</button>
-            <button id="resume-mode-btn-mobile" class="header-btn">📄 RESUME MODE</button>
+            <button id="game-mode-btn" class="header-btn active">🎮 GAME MODE</button>
+            <button id="resume-mode-btn" class="header-btn">📄 RESUME MODE</button>
         </div>
         <div class="header-controls">
-            <select id="lang-selector-mobile" class="header-btn">
+            <select id="lang-selector" class="header-btn">
                 <option value="ko" style="color:#000">KOR</option>
                 <option value="en" style="color:#000">ENG</option>
                 <option value="ja" style="color:#000">JPN</option>
             </select>
-            <button id="sound-toggle-btn-mobile" class="header-btn">SOUND ON</button>
+            <button id="sound-toggle-btn" class="header-btn">SOUND ON</button>
 
             <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
-        </div>
-    </div>
-</div>
 
-<section class="cover-section" id="cover-section">
-    <div class="cover-bg-grid"></div>
-    <div class="cover-content">
-        <div class="terminal-window">
-            <div class="terminal-titlebar">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
+        </div>
+
+        </button>
+    </header>
+
+    <button id="hamburger-btn" class="hamburger-btn">
+        <span class="hamburger-icon"></span>
+    </button>
+
+    <div id="mobile-nav" class="mobile-nav">
+        <div class="mobile-nav-content">
+            <div class="mode-switch">
+                <button id="game-mode-btn-mobile" class="header-btn active">🎮 GAME MODE</button>
+                <button id="resume-mode-btn-mobile" class="header-btn">📄 RESUME MODE</button>
             </div>
-            <div class="terminal-body">
-                <div><span class="term-prompt">user@sys:~$</span>./start_career.sh</div>
-                <div class="term-typed" id="term-typed"></div>
-            </div>
-        </div>
-        <h1 class="cover-title">LIFE <span class="grad-text">RUNNER</span></h1>
-        <p class="cover-subtitle lang-text" data-ko="여정의 시작" data-en="Start a Journey" data-ja="旅の始まり">
-            여정의 시작</p>
-        <p class="cover-keys"><span class="key">A</span><span class="key">D</span> MOVE &nbsp;&nbsp; <span
-                class="key">W</span> JUMP &nbsp;&nbsp; <span class="key">S</span> DUCK</p>
-    </div>
-    <div class="scroll-cue">
-        <span>SCROLL</span>
-        <div class="scroll-chevrons"><span></span><span></span><span></span></div>
-    </div>
-</section>
+            <div class="header-controls">
+                <select id="lang-selector-mobile" class="header-btn">
+                    <option value="ko" style="color:#000">KOR</option>
+                    <option value="en" style="color:#000">ENG</option>
+                    <option value="ja" style="color:#000">JPN</option>
+                </select>
+                <button id="sound-toggle-btn-mobile" class="header-btn">SOUND ON</button>
 
-<section class="horizontal-container">
-    <div class="horizontal-section">
-        <div class="ground-area">
-            <div class="ground-grid"></div>
-        </div>
-        <div class="zone" style="width: 1600px; background-color: #0F172A; overflow: hidden;">
-
-            <h2 class="zone-title lang-text" data-ko="광주광역시 출생" data-en="Born in Gwangju" data-ja="光州広域市生まれ"
-                style="position: relative; z-index: 10;">광주광역시 출생</h2>
-            <p class="zone-subtitle lang-text" data-ko="2003.09" data-en="Sep 2003" data-ja="2003.09"
-                style="position: relative; z-index: 10;">2003.09</p>
-
-        </div>
-        <div class="zone" style="width: 1600px; background-color: #1E1B4B; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"></div>
-            <h2 class="zone-title lang-text" data-ko="장덕초등학교" data-en="Jangdeok Elementary School" data-ja="チャンドク小学校"
-                style="position: relative; z-index: 10;">장덕초등학교</h2>
-            <div class="zone-building zone-building--small" aria-hidden="true"></div>
-            <p class="zone-subtitle lang-text" data-ko="재학: 2010.03 ~ 2016.02" data-en="Attended: Mar 2010 - Feb 2016"
-                data-ja="在学: 2010.03 ~ 2016.02" style="position: relative; z-index: 10;">재학: 2010.03 ~ 2016.02</p>
-
-        </div>
-        <div class="zone" style="width: 1600px; background-color: #312E81; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"></div>
-            <h2 class="zone-title lang-text" data-ko="장덕중학교" data-en="Jangdeok Middle School" data-ja="チャンドク中学校"
-                style="position: relative; z-index: 10;">장덕중학교</h2>
-            <div class="zone-building zone-building--medium" aria-hidden="true"></div>
-            <p class="zone-subtitle lang-text" data-ko="재학: 2016.03 ~ 2019.02" data-en="Attended: Mar 2016 - Feb 2019"
-                data-ja="在学: 2016.03 ~ 2019.02" style="position: relative; z-index: 10;">재학: 2016.03 ~ 2019.02</p>
-
-        </div>
-        <div class="zone" style="width: 1600px; background-color: #4C1D95; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"></div>
-            <h2 class="zone-title lang-text" data-ko="광주진흥고등학교" data-en="Gwangju Jinheung High School"
-                data-ja="光州振興高等学校" style="position: relative; z-index: 10;">광주진흥고등학교</h2>
-            <div class="zone-building zone-building--large" aria-hidden="true"></div>
-            <p class="zone-subtitle lang-text" data-ko="재학: 2019.03 ~ 2022.02" data-en="Attended: Mar 2019 - Feb 2022"
-                data-ja="在学: 2019.03 ~ 2022.02" style="position: relative; z-index: 10;">재학: 2019.03 ~ 2022.02</p>
-
-        </div>
-        <div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"></div>
-            <h2 class="zone-title lang-text" data-ko="1학년 1학기" data-en="Freshman - 1st Semester" data-ja="1年生 1学期"
-                style="position: relative; z-index: 10;">1학년 1학기</h2>
-            <p class="zone-subtitle lang-text" data-ko="전남대 인공지능학부 (2022.03 ~ 2022.06)"
-                data-en="Chonnam Nat'l Univ., AI (Mar 2022 - Jun 2022)" data-ja="全南大学 AI学部 (2022.03 ~ 2022.06)"
-                style="position: relative; z-index: 10;">전남대 인공지능학부 (2022.03 ~ 2022.06)</p>
-
-        </div>
-        <div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"></div>
-            <h2 class="zone-title lang-text" data-ko="1학년 여름방학" data-en="Freshman - Summer Vacation" data-ja="1年生 夏休み"
-                style="position: relative; z-index: 10;">1학년 여름방학</h2>
-            <p class="zone-subtitle lang-text" data-ko="2022.06 ~ 2022.08" data-en="Jun 2022 - Aug 2022"
-                data-ja="2022.06 ~ 2022.08" style="position: relative; z-index: 10;">2022.06 ~ 2022.08</p>
-            <p class="zone-flavor-text lang-text" data-ko="경험치 파밍 중..." data-en="Farming EXP..." data-ja="経験値稼ぎ中...">경험치
-                파밍 중...</p>
-
-        </div>
-        <div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"></div>
-            <h2 class="zone-title lang-text" data-ko="1학년 2학기" data-en="Freshman - 2nd Semester" data-ja="1年生 2学期"
-                style="position: relative; z-index: 10;">1학년 2학기</h2>
-            <p class="zone-subtitle lang-text" data-ko="2022.09 ~ 2022.12" data-en="Sep 2022 - Dec 2022"
-                data-ja="2022.09 ~ 2022.12" style="position: relative; z-index: 10;">2022.09 ~ 2022.12</p>
-
-        </div>
-        <div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"></div>
-            <h2 class="zone-title lang-text" data-ko="1학년 겨울방학" data-en="Freshman - Winter Vacation" data-ja="1年生 冬休み"
-                style="position: relative; z-index: 10;">1학년 겨울방학</h2>
-            <p class="zone-subtitle lang-text" data-ko="2022.12 ~ 2023.02" data-en="Dec 2022 - Feb 2023"
-                data-ja="2022.12 ~ 2023.02" style="position: relative; z-index: 10;">2022.12 ~ 2023.02</p>
-            <p class="zone-flavor-text lang-text" data-ko="서브 퀘스트 진행 중: [새로운 언어 마스터하기]"
-                data-en="Side Quest in Progress: [Mastering a New Language]" data-ja="サブクエスト進行中：[新しい言語のマスター]">서브 퀘스트 진행
-                중: [새로운 언어 마스터하기]</p>
-
-        </div>
-        <div class="zone" style="width: 1400px; background-color: #064E3B; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1400"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1400"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1400"></div>
-            <h2 class="zone-title lang-text" data-ko="2학년 1학기" data-en="Sophomore - 1st Semester" data-ja="2年生 1学期"
-                style="position: relative; z-index: 10;">2학년 1학기</h2>
-            <p class="zone-subtitle lang-text" data-ko="2023.03 ~ 2023.06 (휴학 전)"
-                data-en="Mar 2023 - Jun 2023 (Before leave)" data-ja="2023.03 ~ 2023.06 (休学前)"
-                style="position: relative; z-index: 10;">2023.03 ~ 2023.06 (휴학 전)</p>
-
-        </div>
-        <div class="zone" style="width: 5000px; background-color: #451A03; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="5000"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="5000"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="5000"></div>
-            <h2 class="zone-title lang-text" data-ko="대한민국 공군 병 851기" data-en="ROK Air Force, 851st"
-                data-ja="大韓民国空軍 兵851期" style="position: relative; z-index: 10;">대한민국 공군 병 851기</h2>
-            <p class="zone-subtitle lang-text" data-ko="입대: 2023.09 ~ 전역: 2025.06"
-                data-en="Enlisted: Sep 2023 - Discharged: Jun 2025" data-ja="入隊: 2023.09 ~ 除隊: 2025.06"
-                style="position: relative; z-index: 10;">입대: 2023.09 ~ 전역: 2025.06</p>
-            <p class="zone-flavor-text lang-text" data-ko="히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)"
-                data-en="Hidden Stage: National Defense Duty Quest Cleared (Acquired JLPT N1!)"
-                data-ja="隠しステージ：国防の義務クエストクリア（JLPT N1獲得！）">히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)</p>
-
-        </div>
-        <div class="zone" style="width: 1200px; background-color: #1E3A8A; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"></div>
-            <h2 class="zone-title lang-text" data-ko="2학년 2학기 (복학)" data-en="Sophomore - 2nd Semester (Return)"
-                data-ja="2年生 2学期 (復学)" style="position: relative; z-index: 10;">2학년 2학기 (복학)</h2>
-            <p class="zone-subtitle lang-text" data-ko="2025.09 ~ 2025.12" data-en="Sep 2025 - Dec 2025"
-                data-ja="2025.09 ~ 2025.12" style="position: relative; z-index: 10;">2025.09 ~ 2025.12</p>
-            <p class="zone-flavor-text lang-text" data-ko="메인 퀘스트 Part 2 시작!" data-en="Main Quest Part 2 Start!"
-                data-ja="メインクエスト Part 2 開始！">메인 퀘스트 Part 2 시작!</p>
-
-        </div>
-        <div class="zone" style="width: 600px; background-color: #172554; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"></div>
-            <h2 class="zone-title lang-text" data-ko="2학년 겨울방학" data-en="Sophomore - Winter Vacation" data-ja="2年生 冬休み"
-                style="position: relative; z-index: 10;">2학년 겨울방학</h2>
-            <p class="zone-subtitle lang-text" data-ko="2025.12 ~ 2026.02" data-en="Dec 2025 - Feb 2026"
-                data-ja="2025.12 ~ 2026.02" style="position: relative; z-index: 10;">2025.12 ~ 2026.02</p>
-            <p class="zone-flavor-text lang-text" data-ko="세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)"
-                data-en="Save Point Reached (Restoring HP/MP &amp; Loading Next Semester)"
-                data-ja="セーブポイント到達 (HP/MP回復＆次学期ローディング中)">세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)</p>
-
-        </div>
-        <div class="zone" style="width: 2200px; background-color: #1E3A8A; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="2200"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="2200"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="2200"></div>
-            <h2 class="zone-title lang-text" data-ko="3학년 1학기" data-en="Junior - 1st Semester" data-ja="3年生 1学期"
-                style="position: relative; z-index: 10;">3학년 1학기</h2>
-            <p class="zone-subtitle lang-text" data-ko="2026.03 ~ 2026.06" data-en="Mar 2026 - Jun 2026"
-                data-ja="2026.03 ~ 2026.06" style="position: relative; z-index: 10;">2026.03 ~ 2026.06</p>
-
-        </div>
-        <div class="zone" style="width: 2000px; background-color: #701A75; overflow: hidden;">
-            <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="2000"></div>
-            <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="2000"></div>
-            <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="2000"></div>
-            <h2 class="zone-title lang-text" data-ko="일본 인턴십" data-en="Japan Internship" data-ja="日本インターンシップ"
-                style="position: relative; z-index: 10;">일본 인턴십</h2>
-            <p class="zone-subtitle lang-text" data-ko="도쿄 시부야 (2026.06 ~ 2026.08)"
-                data-en="Shibuya, Tokyo (Jun 2026 - Aug 2026)" data-ja="東京 渋谷 (2026.06 ~ 2026.08)"
-                style="position: relative; z-index: 10;">도쿄 시부야 (2026.06 ~ 2026.08)</p>
-            <p class="zone-flavor-text lang-text" data-ko="글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)"
-                data-en="Playing the Global Expansion Pack (Location: Shibuya, Tokyo)"
-                data-ja="グローバル拡張パックプレイ中 (場所: 東京・渋谷)">글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)</p>
-
-        </div>
-        <div class="zone" style="width: 1300px; background-color: transparent; overflow: hidden; border-right: none;">
-
-            <h2 class="zone-title lang-text" data-ko="계속해서 성장 중..." data-en="Still Growing..." data-ja="継続的に成長中..."
-                style="position: relative; z-index: 10; color: var(--text-sub);">계속해서 성장 중...
-            </h2>
-            <p class="zone-subtitle lang-text" data-ko="" data-en="" data-ja=""
-                style="position: relative; z-index: 10;"></p>
-            <div class="finale-layer">
-                <div class="finale-confetti"
-                    style="top:-20px; left:0%; background:#22D3EE; animation-duration:2s; animation-delay:0s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:53%; background:#FBBF24; animation-duration:2.4s; animation-delay:0.3s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:6%; background:#F472B6; animation-duration:2.8s; animation-delay:0.6s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:59%; background:#4ADE80; animation-duration:3.2s; animation-delay:0.8999999999999999s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:12%; background:#22D3EE; animation-duration:3.6s; animation-delay:1.2s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:65%; background:#FBBF24; animation-duration:2s; animation-delay:1.5s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:18%; background:#F472B6; animation-duration:2.4s; animation-delay:0s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:71%; background:#4ADE80; animation-duration:2.8s; animation-delay:0.3s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:24%; background:#22D3EE; animation-duration:3.2s; animation-delay:0.6s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:77%; background:#FBBF24; animation-duration:3.6s; animation-delay:0.8999999999999999s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:30%; background:#F472B6; animation-duration:2s; animation-delay:1.2s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:83%; background:#4ADE80; animation-duration:2.4s; animation-delay:1.5s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:36%; background:#22D3EE; animation-duration:2.8s; animation-delay:0s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:89%; background:#FBBF24; animation-duration:3.2s; animation-delay:0.3s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:42%; background:#F472B6; animation-duration:3.6s; animation-delay:0.6s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:95%; background:#4ADE80; animation-duration:2s; animation-delay:0.8999999999999999s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:48%; background:#22D3EE; animation-duration:2.4s; animation-delay:1.2s;">
-                </div>
-                <div class="finale-confetti"
-                    style="top:-20px; left:1%; background:#FBBF24; animation-duration:2.8s; animation-delay:1.5s;">
-                </div>
-                <div class="finale-caption">
-                    <div class="finale-caption-retro">STAGE CLEAR</div>
-                </div>
+                <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
             </div>
         </div>
     </div>
-    <div id="sky-overlay"></div>
-    <div id="sun"></div>
-    <div class="global-clouds" aria-hidden="true"></div>
-    <div id="finale-flash"></div>
-    <div id="progress-bar-wrap">
-        <div id="progress-bar">
-            <div id="progress-fill"></div>
+
+    <section class="cover-section" id="cover-section">
+        <div class="cover-bg-grid"></div>
+        <div class="cover-content">
+            <div class="terminal-window">
+                <div class="terminal-titlebar">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div class="terminal-body">
+                    <div><span class="term-prompt">user@sys:~$</span>./start_career.sh</div>
+                    <div class="term-typed" id="term-typed"></div>
+                </div>
+            </div>
+            <h1 class="cover-title">LIFE <span class="grad-text">RUNNER</span></h1>
+            <p class="cover-subtitle lang-text" data-ko="여정의 시작" data-en="Start a Journey" data-ja="旅の始まり">
+                여정의 시작</p>
+            <p class="cover-keys"><span class="key">A</span><span class="key">D</span> MOVE &nbsp;&nbsp; <span
+                    class="key">W</span> JUMP &nbsp;&nbsp; <span class="key">S</span> DUCK</p>
         </div>
-    </div>
-</section>
-
-<section class="dest-section" id="dest-section">
-    <div class="cover-bg-grid"></div>
-    <div class="dest-content">
-        <p class="dest-eyebrow">MISSION COMPLETE</p>
-        <h1 class="dest-title lang-text" data-ko="TUTORIAL CLEARED!" data-en="TUTORIAL CLEARED!"
-            data-ja="TUTORIAL CLEARED!">TUTORIAL CLEARED!</h1>
-        <p class="dest-sub lang-text" data-ko="지금까지는 튜토리얼이었습니다. '메인 퀘스트'는 이제부터 시작됩니다."
-            data-en="This was just a tutorial. 'main quest' begins now."
-            data-ja="これまではチュートリアルでした。本当の「メインクエスト」はここから始まります。">지금까지는 튜토리얼이었습니다. '메인 퀘스트'는 이제부터 시작됩니다.</p>
-        <div class="stat-grid">
-            <div class="stat-card">
-                <div class="stat-num" data-target="27">0</div>
-                <div class="stat-label">Milestones</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num" data-target="15">0</div>
-                <div class="stat-label">Stages</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num" data-target="6">0</div>
-                <div class="stat-label">Certificates</div>
-            </div>
+        <div class="scroll-cue">
+            <span>SCROLL</span>
+            <div class="scroll-chevrons"><span></span><span></span><span></span></div>
         </div>
-        <button class="restart-btn lang-text" data-ko="다시 처음으로" data-en="PLAY AGAIN" data-ja="最初に戻る" id="restart-btn">다시
-            처음으로</button>
-    </div>
-</section>
-
-<!-- Dossier Divider -->
-<section style="padding: 100px 20px; background-color: var(--bg-color); text-align: center; display: none;"
-    id="dossier-divider-section">
-    <h2 class="lang-text" data-ko="PLAYER DOSSIER" data-en="PLAYER DOSSIER" data-ja="PLAYER DOSSIER"
-        style="font-family: var(--font-mono); font-size: 2rem; color: var(--accent); text-shadow: 4px 4px 0 var(--shadow); margin-bottom: 8px;">
-        PLAYER DOSSIER</h2>
-    <p class="lang-text" data-ko="(상세 이력)" data-en="(Detailed Dossier)" data-ja="(詳細記録)"
-        style="font-family: var(--font-title); font-size: 1.2rem; color: var(--text-sub); margin-top: 0; margin-bottom: 32px; text-shadow: 2px 2px 0 var(--shadow);">
-        (상세 이력)</p>
-    <div style="height: 4px; width: 80px; background-color: var(--zone-border); margin: 0 auto;"></div>
-</section>
-
-<section id="resume-section">
-    <div class="cover-bg-grid"></div>
-    <h1 class="lang-text" data-ko="Career Resume" data-en="Career Resume" data-ja="Career Resume">Career Resume</h1>
-    <section class="tr-chapter">
-        <h3 class="lang-text" data-ko="포트폴리오" data-en="Portfolio" data-ja="ポートフォリオ">포트폴리오</h3>
-        <ul>
-            <li>
-                <div class="tr-item-content">
-                    <strong class="lang-text" data-ko="Blind Walker" data-en="Blind Walker (VR)"
-                        data-ja="Blind Walker">Blind Walker</strong>
-                    <span class="tr-desc lang-text" data-ko="Unity VR 프로젝트 (2026.06)" data-en="Unity VR Project (2026.06)"
-                        data-ja="Unity VR プロジェクト (2026.06)">Unity VR 프로젝트 (2026.06)</span>
-                </div>
-                <div class="tr-item-media tr-item-link">
-                    <a href="https://devleu.tistory.com/42" target="_blank" rel="noopener noreferrer">
-                        <img src="./images/blind_walker.png" alt="시각장애인 보행 보조 네비게이션 앱 Blind Walker 프로젝트"
-                            style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
-                    </a>
-                </div>
-            </li>
-            <li>
-                <div class="tr-item-content">
-                    <strong class="lang-text" data-ko="VidHub" data-en="VidHub"
-                        data-ja="VidHub">VidHub</strong>
-                    <span class="tr-desc lang-text" data-ko="안드로이드 동영상 플랫폼 (2026.05)" data-en="Android Video Platform (2026.05)"
-                        data-ja="Android 動画プラットフォーム (2026.05)">안드로이드 동영상 플랫폼 (2026.05)</span>
-                </div>
-                <div class="tr-item-media tr-item-link">
-                    <a href="https://devleu.tistory.com/44" target="_blank" rel="noopener noreferrer">
-                        <img src="./images/vidhub.png" alt="안드로이드 동영상 플랫폼 VidHub 프로젝트"
-                            style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
-                    </a>
-                </div>
-            </li>
-            <li>
-                <div class="tr-item-content">
-                    <strong class="lang-text" data-ko="Ram Pressure Analyzer" data-en="Ram Pressure Analyzer"
-                        data-ja="Ram Pressure Analyzer">Ram Pressure Analyzer</strong>
-                    <span class="tr-desc lang-text" data-ko="WPF 기반 메모리/페이지 폴트 분석기 (2026.01)" data-en="WPF-based Memory/Page Fault Analyzer (2026.01)"
-                        data-ja="WPFベースのメモリ/ページフォールトアナライザー (2026.01)">WPF 기반 메모리/페이지 폴트 분석기 (2026.01)</span>
-                </div>
-                <div class="tr-item-media tr-item-link">
-                    <a href="https://devleu.tistory.com/46" target="_blank" rel="noopener noreferrer">
-                        <img src="./images/ram_pressure_analyzer.png" alt="WPF 기반 메모리/페이지 폴트 분석기 Ram Pressure Analyzer 프로젝트"
-                            style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
-                    </a>
-                </div>
-            </li>
-            <li>
-                <div class="tr-item-content">
-                    <strong class="lang-text" data-ko="Asset Sentinel" data-en="Asset Sentinel"
-                        data-ja="Asset Sentinel">Asset Sentinel</strong>
-                    <span class="tr-desc lang-text" data-ko="Unity 에디터 툴 (2025.12)" data-en="Unity Editor Tool (2025.12)"
-                        data-ja="Unity エディターツール (2025.12)">Unity 에디터 툴 (2025.12)</span>
-                </div>
-                <div class="tr-item-media tr-item-link">
-                    <a href="https://devleu.tistory.com/45" target="_blank" rel="noopener noreferrer">
-                        <img src="./images/asset_sentinel.png" alt="Unity 에디터 툴 Asset Sentinel 프로젝트"
-                            style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
-                    </a>
-                </div>
-            </li>
-            <li>
-                <div class="tr-item-content">
-                    <strong class="lang-text" data-ko="Little Atelier" data-en="Little Atelier"
-                        data-ja="Little Atelier">Little Atelier</strong>
-                    <span class="tr-desc lang-text" data-ko="Unity Interaction 프로젝트 (2025.12)" data-en="Unity Interaction Project (2025.12)"
-                        data-ja="Unity インタラクション プロジェクト (2025.12)">Unity Interaction 프로젝트 (2025.12)</span>
-                </div>
-                <div class="tr-item-media tr-item-link">
-                    <a href="https://devleu.tistory.com/43" target="_blank" rel="noopener noreferrer">
-                        <img src="./images/little_atelier.png" alt="Unity 인터랙션 프로젝트 Little Atelier"
-                            style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
-                    </a>
-                </div>
-            </li>
-        </ul>
     </section>
-    <section class="tr-chapter">
-        <h3 class="lang-text" data-ko="자격증" data-en="Certifications" data-ja="資格">자격증</h3>
-        <ul>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="ADsP" data-en="ADsP"
-                        data-ja="ADsP">ADsP</strong><span class="tr-desc lang-text" data-ko="데이터분석 준전문가 (2026.06)"
-                        data-en="Associate Data Analyst (2026.06)" data-ja="データ分析準専門家 (2026.06)">데이터분석 준전문가
-                        (2026.06)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text"
-                            data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="TOEIC 780점" data-en="TOEIC 780"
-                        data-ja="TOEIC 780点">TOEIC 780점</strong><span class="tr-desc lang-text" data-ko="ETS (2026.04)"
-                        data-en="ETS (April 2026)" data-ja="ETS (2026年4月)">ETS
-                        (2026.04)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://exam.toeic.co.kr/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text"
-                            data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="SQL개발자" data-en="SQL Developer "
-                        data-ja="SQL開発者">SQL개발자</strong><span class="tr-desc lang-text" data-ko="한국데이터산업진흥원 (2026.03)"
-                        data-en="Korea Data Agency (March 2026)" data-ja="韓国データ産業振興院 (2026.03)">한국데이터산업진흥원
-                        (2026.03)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text"
-                            data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="JLPT N1" data-en="JLPT N1"
-                        data-ja="JLPT N1">JLPT N1</strong><span class="tr-desc lang-text" data-ko="군 복무 중 달성 (2025.01)"
-                        data-en="Achieved during military service (Jan 2025)" data-ja="兵役中に達成 (2025年1月)">군 복무 중 달성
-                        (2025.01)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://www.jlpt.or.kr/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text"
-                            data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="ISTQB CTFL" data-en="ISTQB CTFL"
-                        data-ja="ISTQB CTFL">ISTQB CTFL</strong><span class="tr-desc lang-text"
-                        data-ko="KSTQB (2023.06)" data-en="KSTQB (June 2023)" data-ja="KSTQB (2023年6月)">KSTQB
-                        (2023.06)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://www.kstqb.org/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text"
-                            data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="한국사능력검정시험 3급"
-                        data-en="Korean History Proficiency Test Lv.3" data-ja="韓国史能力検定試験 3級">한국사능력검정시험 3급</strong><span
-                        class="tr-desc lang-text" data-ko="국사편찬위원회 (2022.08)"
-                        data-en="National Institute of Korean History (August 2022)" data-ja="国史編纂委員会 (2022年8月)">국사편찬위원회
-                        (2022.08)</span></div>
-                <div class="tr-item-media tr-item-link"><a href="https://www.historyexam.go.kr/" target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:var(--accent); font-size:13px; text-decoration:underline;"><span class="lang-text"
-                            data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
-            </li>
-        </ul>
-    </section>
-    <section class="tr-chapter">
-        <h3 class="lang-text" data-ko="주요 이력" data-en="Key Experience" data-ja="主な経歴">주요 이력</h3>
-        <ul>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="해외 인턴십 시작"
-                        data-en="Global Internship Start" data-ja="海外インターン開始">해외 인턴십 시작</strong><span
-                        class="tr-desc lang-text" data-ko="Global Innovation Handle (2026.06)"
-                        data-en="Global Innovation Handle (June 2026)" data-ja="グローバルイノベーションハンドル（2026年6月）">Global
-                        Innovation Handle (2026.06)</span></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="부전공" data-en="minor"
-                        data-ja="副専攻">부전공</strong><span class="tr-desc lang-text" data-ko="일어일문학 부전공  (2026.03~)"
-                        data-en="Minor in Japanese Language and Literature  (2026.03~)"
-                        data-ja="日本語日本文 副専攻  (2026.03~)">일어일문학 부전공 (2026.03~)</span></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="만기 전역" data-en="Discharged"
-                        data-ja="満期除隊">만기 전역</strong><span class="tr-desc lang-text" data-ko="공군 병 851기 병장 (2025.06)"
-                        data-en="Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)"
-                        data-ja="韓国空軍兵長 (851期, 2025年6月)">공군 병 851기 병장 (2025.06)</span></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="복수전공" data-en="double major"
-                        data-ja="複数専攻">복수전공</strong><span class="tr-desc lang-text" data-ko="지능실감미디어융합 (2023.03~)"
-                        data-en="Intelligent Media Engineering (2023.03~)" data-ja="知能メディア工学 (2023.03~)">지능실감미디어융합
-                        (2023.03~)</span></div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="대학교 입학" data-en="University Entrance"
-                        data-ja="大学入学">대학교 입학</strong><span class="tr-desc lang-text" data-ko="전남대학교 인공지능학부 (2022.03~)"
-                        data-en="Chonnam National University, School of Artificial Intelligence (2022.03~)"
-                        data-ja="全南大学 人工知能学科 (2022.03~)">전남대학교 인공지능학부 (2022.03~)</span>
-                </div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="고등학교 졸업" data-en="High School Grad"
-                        data-ja="高校卒業">고등학교 졸업</strong><span class="tr-desc lang-text" data-ko="광주진흥고 (2022.02)"
-                        data-en="Gwangju Jinheung High School (Feb 2022)" data-ja="光州進興高校 (2022年2月)">광주진흥고
-                        (2022.02)</span></div>  
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="중학교 졸업" data-en="Middle School Grad"
-                        data-ja="中学校卒業">중학교 졸업</strong><span class="tr-desc lang-text" data-ko="장덕중 (2019.02)"
-                        data-en="Jangdeok Middle School (Feb 2019)" data-ja="長徳中学校 (2019年2月)">장덕중 (2019.02)</span>
-                </div>
-            </li>
-            <li>
-                <div class="tr-item-content"><strong class="lang-text" data-ko="초등학교 졸업" data-en="Elem. School Grad"
-                        data-ja="小学校卒業">초등학교 졸업</strong><span class="tr-desc lang-text" data-ko="장덕초 (2016.02)"
-                        data-en="Jangdeok Elementary School (Feb 2016)" data-ja="長徳小学校 (2016年2月)">장덕초
-                        (2016.02)</span></div>
-            </li>
-        </ul>
-    </section>
-</section>
 
-<div class="keyboard-guide hidden-mobile">
-    <span>⌨️ Use</span>
-    <div class="flex gap-2"><span class="key-btn">A</span><span class="key-btn">D</span></div>
-    <span>to move</span>
-</div>
+    <section class="horizontal-container">
+        <div class="horizontal-section">
+            <div class="ground-area">
+                <div class="ground-grid"></div>
+            </div>
+            <div class="zone" style="width: 1600px; background-color: #0F172A; overflow: hidden;">
 
-<div class="mobile-controls-left">
-    <div class="dpad-container">
-        <div class="dpad-visual" aria-hidden="true">
-            <div class="dpad-half left"><span class="dpad-arrow">◀</span></div>
-            <div class="dpad-half right"><span class="dpad-arrow">▶</span></div>
+                <h2 class="zone-title lang-text" data-ko="광주광역시 출생" data-en="Born in Gwangju" data-ja="光州広域市生まれ"
+                    style="position: relative; z-index: 10;">광주광역시 출생</h2>
+                <p class="zone-subtitle lang-text" data-ko="2003.09" data-en="Sep 2003" data-ja="2003.09"
+                    style="position: relative; z-index: 10;">2003.09</p>
+
+            </div>
+            <div class="zone" style="width: 1600px; background-color: #1E1B4B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"></div>
+                <h2 class="zone-title lang-text" data-ko="장덕초등학교" data-en="Jangdeok Elementary School"
+                    data-ja="チャンドク小学校" style="position: relative; z-index: 10;">장덕초등학교</h2>
+                <div class="zone-building zone-building--small" aria-hidden="true"></div>
+                <p class="zone-subtitle lang-text" data-ko="재학: 2010.03 ~ 2016.02"
+                    data-en="Attended: Mar 2010 - Feb 2016" data-ja="在学: 2010.03 ~ 2016.02"
+                    style="position: relative; z-index: 10;">재학: 2010.03 ~ 2016.02</p>
+
+            </div>
+            <div class="zone" style="width: 1600px; background-color: #312E81; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"></div>
+                <h2 class="zone-title lang-text" data-ko="장덕중학교" data-en="Jangdeok Middle School" data-ja="チャンドク中学校"
+                    style="position: relative; z-index: 10;">장덕중학교</h2>
+                <div class="zone-building zone-building--medium" aria-hidden="true"></div>
+                <p class="zone-subtitle lang-text" data-ko="재학: 2016.03 ~ 2019.02"
+                    data-en="Attended: Mar 2016 - Feb 2019" data-ja="在学: 2016.03 ~ 2019.02"
+                    style="position: relative; z-index: 10;">재학: 2016.03 ~ 2019.02</p>
+
+            </div>
+            <div class="zone" style="width: 1600px; background-color: #4C1D95; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1600"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1600"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1600"></div>
+                <h2 class="zone-title lang-text" data-ko="광주진흥고등학교" data-en="Gwangju Jinheung High School"
+                    data-ja="光州振興高等学校" style="position: relative; z-index: 10;">광주진흥고등학교</h2>
+                <div class="zone-building zone-building--large" aria-hidden="true"></div>
+                <p class="zone-subtitle lang-text" data-ko="재학: 2019.03 ~ 2022.02"
+                    data-en="Attended: Mar 2019 - Feb 2022" data-ja="在学: 2019.03 ~ 2022.02"
+                    style="position: relative; z-index: 10;">재학: 2019.03 ~ 2022.02</p>
+
+            </div>
+            <div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 1학기" data-en="Freshman - 1st Semester" data-ja="1年生 1学期"
+                    style="position: relative; z-index: 10;">1학년 1학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="전남대 인공지능학부 (2022.03 ~ 2022.06)"
+                    data-en="Chonnam Nat'l Univ., AI (Mar 2022 - Jun 2022)" data-ja="全南大学 AI学部 (2022.03 ~ 2022.06)"
+                    style="position: relative; z-index: 10;">전남대 인공지능학부 (2022.03 ~ 2022.06)</p>
+
+            </div>
+            <div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 여름방학" data-en="Freshman - Summer Vacation"
+                    data-ja="1年生 夏休み" style="position: relative; z-index: 10;">1학년 여름방학</h2>
+                <p class="zone-subtitle lang-text" data-ko="2022.06 ~ 2022.08" data-en="Jun 2022 - Aug 2022"
+                    data-ja="2022.06 ~ 2022.08" style="position: relative; z-index: 10;">2022.06 ~ 2022.08</p>
+                <p class="zone-flavor-text lang-text" data-ko="경험치 파밍 중..." data-en="Farming EXP..."
+                    data-ja="経験値稼ぎ中...">경험치
+                    파밍 중...</p>
+
+            </div>
+            <div class="zone" style="width: 1200px; background-color: #064E3B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 2학기" data-en="Freshman - 2nd Semester" data-ja="1年生 2学期"
+                    style="position: relative; z-index: 10;">1학년 2학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="2022.09 ~ 2022.12" data-en="Sep 2022 - Dec 2022"
+                    data-ja="2022.09 ~ 2022.12" style="position: relative; z-index: 10;">2022.09 ~ 2022.12</p>
+
+            </div>
+            <div class="zone" style="width: 600px; background-color: #022C22; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"></div>
+                <h2 class="zone-title lang-text" data-ko="1학년 겨울방학" data-en="Freshman - Winter Vacation"
+                    data-ja="1年生 冬休み" style="position: relative; z-index: 10;">1학년 겨울방학</h2>
+                <p class="zone-subtitle lang-text" data-ko="2022.12 ~ 2023.02" data-en="Dec 2022 - Feb 2023"
+                    data-ja="2022.12 ~ 2023.02" style="position: relative; z-index: 10;">2022.12 ~ 2023.02</p>
+                <p class="zone-flavor-text lang-text" data-ko="서브 퀘스트 진행 중: [새로운 언어 마스터하기]"
+                    data-en="Side Quest in Progress: [Mastering a New Language]" data-ja="サブクエスト進行中：[新しい言語のマスター]">서브 퀘스트
+                    진행
+                    중: [새로운 언어 마스터하기]</p>
+
+            </div>
+            <div class="zone" style="width: 1400px; background-color: #064E3B; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1400"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1400"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1400"></div>
+                <h2 class="zone-title lang-text" data-ko="2학년 1학기" data-en="Sophomore - 1st Semester" data-ja="2年生 1学期"
+                    style="position: relative; z-index: 10;">2학년 1학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="2023.03 ~ 2023.06 (휴학 전)"
+                    data-en="Mar 2023 - Jun 2023 (Before leave)" data-ja="2023.03 ~ 2023.06 (休学前)"
+                    style="position: relative; z-index: 10;">2023.03 ~ 2023.06 (휴학 전)</p>
+
+            </div>
+            <div class="zone" style="width: 5000px; background-color: #451A03; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="5000"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="5000"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="5000"></div>
+                <h2 class="zone-title lang-text" data-ko="대한민국 공군 병 851기" data-en="ROK Air Force, 851st"
+                    data-ja="大韓民国空軍 兵851期" style="position: relative; z-index: 10;">대한민국 공군 병 851기</h2>
+                <p class="zone-subtitle lang-text" data-ko="입대: 2023.09 ~ 전역: 2025.06"
+                    data-en="Enlisted: Sep 2023 - Discharged: Jun 2025" data-ja="入隊: 2023.09 ~ 除隊: 2025.06"
+                    style="position: relative; z-index: 10;">입대: 2023.09 ~ 전역: 2025.06</p>
+                <p class="zone-flavor-text lang-text" data-ko="히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)"
+                    data-en="Hidden Stage: National Defense Duty Quest Cleared (Acquired JLPT N1!)"
+                    data-ja="隠しステージ：国防の義務クエストクリア（JLPT N1獲得！）">히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)</p>
+
+            </div>
+            <div class="zone" style="width: 1200px; background-color: #1E3A8A; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="1200"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="1200"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="1200"></div>
+                <h2 class="zone-title lang-text" data-ko="2학년 2학기 (복학)" data-en="Sophomore - 2nd Semester (Return)"
+                    data-ja="2年生 2学期 (復学)" style="position: relative; z-index: 10;">2학년 2학기 (복학)</h2>
+                <p class="zone-subtitle lang-text" data-ko="2025.09 ~ 2025.12" data-en="Sep 2025 - Dec 2025"
+                    data-ja="2025.09 ~ 2025.12" style="position: relative; z-index: 10;">2025.09 ~ 2025.12</p>
+                <p class="zone-flavor-text lang-text" data-ko="메인 퀘스트 Part 2 시작!" data-en="Main Quest Part 2 Start!"
+                    data-ja="メインクエスト Part 2 開始！">메인 퀘스트 Part 2 시작!</p>
+
+            </div>
+            <div class="zone" style="width: 600px; background-color: #172554; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="600"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="600"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="600"></div>
+                <h2 class="zone-title lang-text" data-ko="2학년 겨울방학" data-en="Sophomore - Winter Vacation"
+                    data-ja="2年生 冬休み" style="position: relative; z-index: 10;">2학년 겨울방학</h2>
+                <p class="zone-subtitle lang-text" data-ko="2025.12 ~ 2026.02" data-en="Dec 2025 - Feb 2026"
+                    data-ja="2025.12 ~ 2026.02" style="position: relative; z-index: 10;">2025.12 ~ 2026.02</p>
+                <p class="zone-flavor-text lang-text" data-ko="세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)"
+                    data-en="Save Point Reached (Restoring HP/MP &amp; Loading Next Semester)"
+                    data-ja="セーブポイント到達 (HP/MP回復＆次学期ローディング中)">세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)</p>
+
+            </div>
+            <div class="zone" style="width: 2200px; background-color: #1E3A8A; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="2200"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="2200"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="2200"></div>
+                <h2 class="zone-title lang-text" data-ko="3학년 1학기" data-en="Junior - 1st Semester" data-ja="3年生 1学期"
+                    style="position: relative; z-index: 10;">3학년 1학기</h2>
+                <p class="zone-subtitle lang-text" data-ko="2026.03 ~ 2026.06" data-en="Mar 2026 - Jun 2026"
+                    data-ja="2026.03 ~ 2026.06" style="position: relative; z-index: 10;">2026.03 ~ 2026.06</p>
+
+            </div>
+            <div class="zone" style="width: 2000px; background-color: #701A75; overflow: hidden;">
+                <div class="parallax-bg parallax-bg-far" data-speed="0.2" data-width="2000"></div>
+                <div class="parallax-bg parallax-bg-mid" data-speed="0.5" data-width="2000"></div>
+                <div class="parallax-bg parallax-bg-near" data-speed="0.8" data-width="2000"></div>
+                <h2 class="zone-title lang-text" data-ko="일본 인턴십" data-en="Japan Internship" data-ja="日本インターンシップ"
+                    style="position: relative; z-index: 10;">일본 인턴십</h2>
+                <p class="zone-subtitle lang-text" data-ko="도쿄 시부야 (2026.06 ~ 2026.08)"
+                    data-en="Shibuya, Tokyo (Jun 2026 - Aug 2026)" data-ja="東京 渋谷 (2026.06 ~ 2026.08)"
+                    style="position: relative; z-index: 10;">도쿄 시부야 (2026.06 ~ 2026.08)</p>
+                <p class="zone-flavor-text lang-text" data-ko="글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)"
+                    data-en="Playing the Global Expansion Pack (Location: Shibuya, Tokyo)"
+                    data-ja="グローバル拡張パックプレイ中 (場所: 東京・渋谷)">글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)</p>
+
+            </div>
+            <div class="zone"
+                style="width: 1300px; background-color: transparent; overflow: hidden; border-right: none;">
+
+                <h2 class="zone-title lang-text" data-ko="계속해서 성장 중..." data-en="Still Growing..." data-ja="継続的に成長中..."
+                    style="position: relative; z-index: 10; color: var(--text-sub);">계속해서 성장 중...
+                </h2>
+                <p class="zone-subtitle lang-text" data-ko="" data-en="" data-ja=""
+                    style="position: relative; z-index: 10;"></p>
+                <div class="finale-layer">
+                    <div class="finale-confetti"
+                        style="top:-20px; left:0%; background:#22D3EE; animation-duration:2s; animation-delay:0s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:53%; background:#FBBF24; animation-duration:2.4s; animation-delay:0.3s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:6%; background:#F472B6; animation-duration:2.8s; animation-delay:0.6s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:59%; background:#4ADE80; animation-duration:3.2s; animation-delay:0.8999999999999999s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:12%; background:#22D3EE; animation-duration:3.6s; animation-delay:1.2s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:65%; background:#FBBF24; animation-duration:2s; animation-delay:1.5s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:18%; background:#F472B6; animation-duration:2.4s; animation-delay:0s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:71%; background:#4ADE80; animation-duration:2.8s; animation-delay:0.3s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:24%; background:#22D3EE; animation-duration:3.2s; animation-delay:0.6s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:77%; background:#FBBF24; animation-duration:3.6s; animation-delay:0.8999999999999999s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:30%; background:#F472B6; animation-duration:2s; animation-delay:1.2s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:83%; background:#4ADE80; animation-duration:2.4s; animation-delay:1.5s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:36%; background:#22D3EE; animation-duration:2.8s; animation-delay:0s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:89%; background:#FBBF24; animation-duration:3.2s; animation-delay:0.3s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:42%; background:#F472B6; animation-duration:3.6s; animation-delay:0.6s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:95%; background:#4ADE80; animation-duration:2s; animation-delay:0.8999999999999999s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:48%; background:#22D3EE; animation-duration:2.4s; animation-delay:1.2s;">
+                    </div>
+                    <div class="finale-confetti"
+                        style="top:-20px; left:1%; background:#FBBF24; animation-duration:2.8s; animation-delay:1.5s;">
+                    </div>
+                    <div class="finale-caption">
+                        <div class="finale-caption-retro">STAGE CLEAR</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- left/right action areas sit over the left/right halves of the image -->
-        <button id="btn-left" class="dpad-action left" aria-label="Left"></button>
-        <button id="btn-right" class="dpad-action right" aria-label="Right"></button>
-    </div>
-</div>
-<div class="mobile-controls-right">
-    <button class="ctrl-btn" id="btn-duck" aria-label="Duck"><img src="./images/action-b.svg" alt="아래로 숙이기 버튼"
-            style="width:44px;height:44px;image-rendering:pixelated;display:block;" /></button>
-    <button class="ctrl-btn" id="btn-jump" aria-label="Jump"><img src="./images/action-a.svg" alt="점프 버튼"
-            style="width:44px;height:44px;image-rendering:pixelated;display:block;" /></button>
-</div>
+        <div id="sky-overlay"></div>
+        <div id="sun"></div>
+        <div class="global-clouds" aria-hidden="true"></div>
+        <div id="finale-flash"></div>
+        <div id="progress-bar-wrap">
+            <div id="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+        </div>
+    </section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha384-d+vyQ0dYcymoP8ndq2hW7FGC50nqGdXUEgoOUGxbbkAJwZqL7h+jKN0GGgn9hFDS" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha384-poC0r6usQOX2Ayt/VGA+t81H6V3iN9L+Irz9iO8o+s0X20tLpzc9DOOtnKxhaQSE" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js" integrity="sha384-aO2rdje/BwxNeovaVnYCA1OUtEWaqumve5UCMUMEM9/kKJM/c9NyqDGmgPuJz8eQ" crossorigin="anonymous"></script>
+    <section class="dest-section" id="dest-section">
+        <div class="cover-bg-grid"></div>
+        <div class="dest-content">
+            <p class="dest-eyebrow">MISSION COMPLETE</p>
+            <h1 class="dest-title lang-text" data-ko="TUTORIAL CLEARED!" data-en="TUTORIAL CLEARED!"
+                data-ja="TUTORIAL CLEARED!">TUTORIAL CLEARED!</h1>
+            <p class="dest-sub lang-text" data-ko="지금까지는 튜토리얼이었습니다. '메인 퀘스트'는 이제부터 시작됩니다."
+                data-en="This was just a tutorial. 'main quest' begins now."
+                data-ja="これまではチュートリアルでした。本当の「メインクエスト」はここから始まります。">지금까지는 튜토리얼이었습니다. '메인 퀘스트'는 이제부터 시작됩니다.</p>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-num" data-target="27">0</div>
+                    <div class="stat-label">Milestones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="final-rank">-</div>
+                    <div class="stat-label">Rank</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" data-target="6">0</div>
+                    <div class="stat-label">Certificates</div>
+                </div>
+            </div>
+            <button class="restart-btn lang-text" data-ko="다시 처음으로" data-en="PLAY AGAIN" data-ja="最初に戻る"
+                id="restart-btn">다시
+                처음으로</button>
+        </div>
+    </section>
+
+    <!-- Dossier Divider -->
+    <section style="padding: 100px 20px; background-color: var(--bg-color); text-align: center; display: none;"
+        id="dossier-divider-section">
+        <h2 class="lang-text" data-ko="PLAYER DOSSIER" data-en="PLAYER DOSSIER" data-ja="PLAYER DOSSIER"
+            style="font-family: var(--font-mono); font-size: 2rem; color: var(--accent); text-shadow: 4px 4px 0 var(--shadow); margin-bottom: 8px;">
+            PLAYER DOSSIER</h2>
+        <p class="lang-text" data-ko="(상세 이력)" data-en="(Detailed Dossier)" data-ja="(詳細記録)"
+            style="font-family: var(--font-title); font-size: 1.2rem; color: var(--text-sub); margin-top: 0; margin-bottom: 32px; text-shadow: 2px 2px 0 var(--shadow);">
+            (상세 이력)</p>
+        <div style="height: 4px; width: 80px; background-color: var(--zone-border); margin: 0 auto;"></div>
+    </section>
+
+    <section id="resume-section">
+        <div class="cover-bg-grid"></div>
+        <h1 class="lang-text" data-ko="Career Resume" data-en="Career Resume" data-ja="Career Resume">Career Resume</h1>
+        <section class="tr-chapter">
+            <h3 class="lang-text" data-ko="포트폴리오" data-en="Portfolio" data-ja="ポートフォリオ">포트폴리오</h3>
+            <ul>
+                <li>
+                    <div class="tr-item-content">
+                        <strong class="lang-text" data-ko="Blind Walker" data-en="Blind Walker (VR)"
+                            data-ja="Blind Walker">Blind Walker</strong>
+                        <span class="tr-desc lang-text" data-ko="Unity VR 프로젝트 (2026.06)"
+                            data-en="Unity VR Project (2026.06)" data-ja="Unity VR プロジェクト (2026.06)">Unity VR 프로젝트
+                            (2026.06)</span>
+                    </div>
+                    <div class="tr-item-media tr-item-link">
+                        <a href="https://devleu.tistory.com/42" target="_blank" rel="noopener noreferrer">
+                            <img src="./images/blind_walker.png" alt="시각장애인 보행 보조 네비게이션 앱 Blind Walker 프로젝트"
+                                style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="tr-item-content">
+                        <strong class="lang-text" data-ko="VidHub" data-en="VidHub" data-ja="VidHub">VidHub</strong>
+                        <span class="tr-desc lang-text" data-ko="안드로이드 동영상 플랫폼 (2026.05)"
+                            data-en="Android Video Platform (2026.05)" data-ja="Android 動画プラットフォーム (2026.05)">안드로이드 동영상
+                            플랫폼 (2026.05)</span>
+                    </div>
+                    <div class="tr-item-media tr-item-link">
+                        <a href="https://devleu.tistory.com/44" target="_blank" rel="noopener noreferrer">
+                            <img src="./images/vidhub.png" alt="안드로이드 동영상 플랫폼 VidHub 프로젝트"
+                                style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="tr-item-content">
+                        <strong class="lang-text" data-ko="Ram Pressure Analyzer" data-en="Ram Pressure Analyzer"
+                            data-ja="Ram Pressure Analyzer">Ram Pressure Analyzer</strong>
+                        <span class="tr-desc lang-text" data-ko="WPF 기반 메모리/페이지 폴트 분석기 (2026.01)"
+                            data-en="WPF-based Memory/Page Fault Analyzer (2026.01)"
+                            data-ja="WPFベースのメモリ/ページフォールトアナライザー (2026.01)">WPF 기반 메모리/페이지 폴트 분석기 (2026.01)</span>
+                    </div>
+                    <div class="tr-item-media tr-item-link">
+                        <a href="https://devleu.tistory.com/46" target="_blank" rel="noopener noreferrer">
+                            <img src="./images/ram_pressure_analyzer.png"
+                                alt="WPF 기반 메모리/페이지 폴트 분석기 Ram Pressure Analyzer 프로젝트"
+                                style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="tr-item-content">
+                        <strong class="lang-text" data-ko="Asset Sentinel" data-en="Asset Sentinel"
+                            data-ja="Asset Sentinel">Asset Sentinel</strong>
+                        <span class="tr-desc lang-text" data-ko="Unity 에디터 툴 (2025.12)"
+                            data-en="Unity Editor Tool (2025.12)" data-ja="Unity エディターツール (2025.12)">Unity 에디터 툴
+                            (2025.12)</span>
+                    </div>
+                    <div class="tr-item-media tr-item-link">
+                        <a href="https://devleu.tistory.com/45" target="_blank" rel="noopener noreferrer">
+                            <img src="./images/asset_sentinel.png" alt="Unity 에디터 툴 Asset Sentinel 프로젝트"
+                                style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="tr-item-content">
+                        <strong class="lang-text" data-ko="Little Atelier" data-en="Little Atelier"
+                            data-ja="Little Atelier">Little Atelier</strong>
+                        <span class="tr-desc lang-text" data-ko="Unity Interaction 프로젝트 (2025.12)"
+                            data-en="Unity Interaction Project (2025.12)"
+                            data-ja="Unity インタラクション プロジェクト (2025.12)">Unity Interaction 프로젝트 (2025.12)</span>
+                    </div>
+                    <div class="tr-item-media tr-item-link">
+                        <a href="https://devleu.tistory.com/43" target="_blank" rel="noopener noreferrer">
+                            <img src="./images/little_atelier.png" alt="Unity 인터랙션 프로젝트 Little Atelier"
+                                style="max-width: 100%; border-radius: 8px; display: block;" loading="lazy">
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </section>
+        <section class="tr-chapter">
+            <h3 class="lang-text" data-ko="자격증" data-en="Certifications" data-ja="資格">자격증</h3>
+            <ul>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="ADsP" data-en="ADsP"
+                            data-ja="ADsP">ADsP</strong><span class="tr-desc lang-text" data-ko="데이터분석 준전문가 (2026.06)"
+                            data-en="Associate Data Analyst (2026.06)" data-ja="データ分析準専門家 (2026.06)">데이터분석 준전문가
+                            (2026.06)</span></div>
+                    <div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:var(--accent); font-size:13px; text-decoration:underline;"><span
+                                class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="TOEIC 780점" data-en="TOEIC 780"
+                            data-ja="TOEIC 780点">TOEIC 780점</strong><span class="tr-desc lang-text"
+                            data-ko="ETS (2026.04)" data-en="ETS (April 2026)" data-ja="ETS (2026年4月)">ETS
+                            (2026.04)</span></div>
+                    <div class="tr-item-media tr-item-link"><a href="https://exam.toeic.co.kr/" target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:var(--accent); font-size:13px; text-decoration:underline;"><span
+                                class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="SQL개발자" data-en="SQL Developer "
+                            data-ja="SQL開発者">SQL개발자</strong><span class="tr-desc lang-text"
+                            data-ko="한국데이터산업진흥원 (2026.03)" data-en="Korea Data Agency (March 2026)"
+                            data-ja="韓国データ産業振興院 (2026.03)">한국데이터산업진흥원
+                            (2026.03)</span></div>
+                    <div class="tr-item-media tr-item-link"><a href="https://www.dataq.or.kr/" target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:var(--accent); font-size:13px; text-decoration:underline;"><span
+                                class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="JLPT N1" data-en="JLPT N1"
+                            data-ja="JLPT N1">JLPT N1</strong><span class="tr-desc lang-text"
+                            data-ko="군 복무 중 달성 (2025.01)" data-en="Achieved during military service (Jan 2025)"
+                            data-ja="兵役中に達成 (2025年1月)">군 복무 중 달성
+                            (2025.01)</span></div>
+                    <div class="tr-item-media tr-item-link"><a href="https://www.jlpt.or.kr/" target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:var(--accent); font-size:13px; text-decoration:underline;"><span
+                                class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="ISTQB CTFL" data-en="ISTQB CTFL"
+                            data-ja="ISTQB CTFL">ISTQB CTFL</strong><span class="tr-desc lang-text"
+                            data-ko="KSTQB (2023.06)" data-en="KSTQB (June 2023)" data-ja="KSTQB (2023年6月)">KSTQB
+                            (2023.06)</span></div>
+                    <div class="tr-item-media tr-item-link"><a href="https://www.kstqb.org/" target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:var(--accent); font-size:13px; text-decoration:underline;"><span
+                                class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="한국사능력검정시험 3급"
+                            data-en="Korean History Proficiency Test Lv.3" data-ja="韓国史能力検定試験 3級">한국사능력검정시험
+                            3급</strong><span class="tr-desc lang-text" data-ko="국사편찬위원회 (2022.08)"
+                            data-en="National Institute of Korean History (August 2022)"
+                            data-ja="国史編纂委員会 (2022年8月)">국사편찬위원회
+                            (2022.08)</span></div>
+                    <div class="tr-item-media tr-item-link"><a href="https://www.historyexam.go.kr/" target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:var(--accent); font-size:13px; text-decoration:underline;"><span
+                                class="lang-text" data-ko="[링크]" data-en="[Link]" data-ja="[リンク]">[링크]</span></a></div>
+                </li>
+            </ul>
+        </section>
+        <section class="tr-chapter">
+            <h3 class="lang-text" data-ko="주요 이력" data-en="Key Experience" data-ja="主な経歴">주요 이력</h3>
+            <ul>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="해외 인턴십 시작"
+                            data-en="Global Internship Start" data-ja="海外インターン開始">해외 인턴십 시작</strong><span
+                            class="tr-desc lang-text" data-ko="Global Innovation Handle (2026.06)"
+                            data-en="Global Innovation Handle (June 2026)" data-ja="グローバルイノベーションハンドル（2026年6月）">Global
+                            Innovation Handle (2026.06)</span></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="부전공" data-en="minor"
+                            data-ja="副専攻">부전공</strong><span class="tr-desc lang-text" data-ko="일어일문학 부전공  (2026.03~)"
+                            data-en="Minor in Japanese Language and Literature  (2026.03~)"
+                            data-ja="日本語日本文 副専攻  (2026.03~)">일어일문학 부전공 (2026.03~)</span></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="만기 전역" data-en="Discharged"
+                            data-ja="満期除隊">만기 전역</strong><span class="tr-desc lang-text"
+                            data-ko="공군 병 851기 병장 (2025.06)"
+                            data-en="Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)"
+                            data-ja="韓国空軍兵長 (851期, 2025年6月)">공군 병 851기 병장 (2025.06)</span></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="복수전공" data-en="double major"
+                            data-ja="複数専攻">복수전공</strong><span class="tr-desc lang-text" data-ko="지능실감미디어융합 (2023.03~)"
+                            data-en="Intelligent Media Engineering (2023.03~)" data-ja="知能メディア工学 (2023.03~)">지능실감미디어융합
+                            (2023.03~)</span></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="대학교 입학"
+                            data-en="University Entrance" data-ja="大学入学">대학교 입학</strong><span class="tr-desc lang-text"
+                            data-ko="전남대학교 인공지능학부 (2022.03~)"
+                            data-en="Chonnam National University, School of Artificial Intelligence (2022.03~)"
+                            data-ja="全南大学 人工知能学科 (2022.03~)">전남대학교 인공지능학부 (2022.03~)</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="고등학교 졸업" data-en="High School Grad"
+                            data-ja="高校卒業">고등학교 졸업</strong><span class="tr-desc lang-text" data-ko="광주진흥고 (2022.02)"
+                            data-en="Gwangju Jinheung High School (Feb 2022)" data-ja="光州進興高校 (2022年2月)">광주진흥고
+                            (2022.02)</span></div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="중학교 졸업" data-en="Middle School Grad"
+                            data-ja="中学校卒業">중학교 졸업</strong><span class="tr-desc lang-text" data-ko="장덕중 (2019.02)"
+                            data-en="Jangdeok Middle School (Feb 2019)" data-ja="長徳中学校 (2019年2月)">장덕중 (2019.02)</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="tr-item-content"><strong class="lang-text" data-ko="초등학교 졸업" data-en="Elem. School Grad"
+                            data-ja="小学校卒業">초등학교 졸업</strong><span class="tr-desc lang-text" data-ko="장덕초 (2016.02)"
+                            data-en="Jangdeok Elementary School (Feb 2016)" data-ja="長徳小学校 (2016年2月)">장덕초
+                            (2016.02)</span></div>
+                </li>
+            </ul>
+        </section>
+    </section>
+
+    <div class="keyboard-guide hidden-mobile">
+        <span>⌨️ Use</span>
+        <div class="flex gap-2"><span class="key-btn">A</span><span class="key-btn">D</span></div>
+        <span>to move</span>
+    </div>
+
+    <div class="mobile-controls-left">
+        <div class="dpad-container">
+            <div class="dpad-visual" aria-hidden="true">
+                <div class="dpad-half left"><span class="dpad-arrow">◀</span></div>
+                <div class="dpad-half right"><span class="dpad-arrow">▶</span></div>
+            </div>
+            <!-- left/right action areas sit over the left/right halves of the image -->
+            <button id="btn-left" class="dpad-action left" aria-label="Left"></button>
+            <button id="btn-right" class="dpad-action right" aria-label="Right"></button>
+        </div>
+    </div>
+    <div class="mobile-controls-right">
+        <button class="ctrl-btn" id="btn-duck" aria-label="Duck"><img src="./images/action-b.svg" alt="아래로 숙이기 버튼"
+                style="width:44px;height:44px;image-rendering:pixelated;display:block;" /></button>
+        <button class="ctrl-btn" id="btn-jump" aria-label="Jump"><img src="./images/action-a.svg" alt="점프 버튼"
+                style="width:44px;height:44px;image-rendering:pixelated;display:block;" /></button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+        integrity="sha384-d+vyQ0dYcymoP8ndq2hW7FGC50nqGdXUEgoOUGxbbkAJwZqL7h+jKN0GGgn9hFDS"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+        integrity="sha384-poC0r6usQOX2Ayt/VGA+t81H6V3iN9L+Irz9iO8o+s0X20tLpzc9DOOtnKxhaQSE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"
+        integrity="sha384-aO2rdje/BwxNeovaVnYCA1OUtEWaqumve5UCMUMEM9/kKJM/c9NyqDGmgPuJz8eQ"
+        crossorigin="anonymous"></script>
 
 
 </body>

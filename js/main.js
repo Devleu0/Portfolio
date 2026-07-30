@@ -950,17 +950,17 @@ function triggerCollectEffect(obstacleEl, didAction = false) {
         var score = document.createElement('div');
         score.className = 'score-popup-perfect'; // CSS 충돌 방지를 위한 새 클래스
         score.textContent = 'PERFECT!';
-        
+
         const obsRect = obstacleEl.getBoundingClientRect();
 
         // position:fixed 를 사용하여 화면(viewport) 기준으로 위치를 잡습니다.
         score.style.position = 'fixed';
         score.style.left = obsRect.right + 'px'; // 장애물 오른쪽 끝의 화면상 X 좌표
         score.style.top = (obsRect.top + obsRect.height / 2) + 'px'; // 장애물 중앙의 화면상 Y 좌표
-        
+
         // translateX 값을 조정하여 좌우 오프셋을 변경할 수 있습니다.
-        score.style.transform = 'translateX(10px) translateY(-90%)'; 
-        
+        score.style.transform = 'translateX(10px) translateY(-90%)';
+
         // 기타 스타일
         score.style.color = 'gold';
         score.style.fontWeight = 'bold';
@@ -972,11 +972,13 @@ function triggerCollectEffect(obstacleEl, didAction = false) {
         document.body.appendChild(score); // 최상위인 document.body에 추가
 
         // GSAP 애니메이션
-        gsap.fromTo(score, 
+        gsap.fromTo(score,
             { opacity: 0, yPercent: 50 },
-            { opacity: 1, yPercent: -50, duration: 0.3, ease: 'power2.out',
+            {
+                opacity: 1, yPercent: -50, duration: 0.3, ease: 'power2.out',
                 onComplete: () => {
-                    gsap.to(score, { opacity: 0, yPercent: -100, duration: 0.5, delay: 0.5, ease: 'power1.in', 
+                    gsap.to(score, {
+                        opacity: 0, yPercent: -100, duration: 0.5, delay: 0.5, ease: 'power1.in',
                         onComplete: () => score.remove()
                     });
                 }
@@ -1109,7 +1111,8 @@ if (termTyped) {
     })();
 }
 
-var statNums = document.querySelectorAll('.stat-num');
+var statNums = document.querySelectorAll('.stat-num:not(#final-rank)');
+
 if (statNums.length && 'IntersectionObserver' in window) {
     var counted = false;
     var statObserver = new IntersectionObserver(function (entries) {
@@ -1117,9 +1120,39 @@ if (statNums.length && 'IntersectionObserver' in window) {
             if (entry.isIntersecting && !counted) {
                 counted = true;
                 statNums.forEach(function (el) {
-                    var target = parseInt(el.getAttribute('data-target'), 10) || 0; var current = 0; var stepTime = Math.max(16, 900 / Math.max(target, 1));
-                    var timer = setInterval(function () { current++; el.textContent = current; if (current >= target) clearInterval(timer); }, stepTime);
+                    var target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                    var current = 0;
+                    var stepTime = Math.max(16, 900 / Math.max(target, 1));
+                    var timer = setInterval(function () {
+                        current++; el.textContent = current;
+                        if (current >= target) clearInterval(timer);
+                    }, stepTime);
                 });
+
+                // --- 랭크 시스템 산출 로직 추가 ---
+                var finalRankEl = document.getElementById('final-rank');
+                if (finalRankEl) {
+                    var rank = 'C';
+                    var rankColor = '#94a3b8'; // C 랭크 (회색)
+
+                    // 최대 가능 점수: 13,500점 (27개 * Perfect 500점) 기준으로 산출
+                    if (totalScore >= 12000) {
+                        rank = 'S'; rankColor = '#fbbf24'; // 골드
+                    } else if (totalScore >= 9000) {
+                        rank = 'A'; rankColor = '#f87171'; // 레드
+                    } else if (totalScore >= 5000) {
+                        rank = 'B'; rankColor = '#60a5fa'; // 블루
+                    }
+
+                    // 약간의 딜레이 후 랭크 표시 (숫자 카운팅과 타이밍 맞춤)
+                    setTimeout(function () {
+                        finalRankEl.textContent = rank;
+                        finalRankEl.style.color = rankColor;
+                        finalRankEl.style.textShadow = `0 0 15px ${rankColor}`;
+                        finalRankEl.classList.add('rank-animate');
+                    }, 300);
+                }
+                // ---------------------------------
 
                 var dossierDivider = document.getElementById('dossier-divider-section');
                 if (dossierDivider) {
@@ -1157,6 +1190,19 @@ function resetAndGoToTop() {
             obstacleElements.forEach(function (el) { el.classList.remove('collected'); });
             updateCounter();
             updateScoreDisplay();
+
+            // --- 랭크 초기화 추가 ---
+            var finalRankEl = document.getElementById('final-rank');
+            if (finalRankEl) {
+                finalRankEl.textContent = '-';
+                finalRankEl.style.color = '';
+                finalRankEl.style.textShadow = '';
+                finalRankEl.classList.remove('rank-animate');
+            }
+            // ------------------------
+
+            // 게임 재시작 시 통계 애니메이션이 다시 실행될 수 있도록 카운팅 상태 초기화
+            counted = false;
         }
     });
 }
