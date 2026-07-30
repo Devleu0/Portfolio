@@ -923,19 +923,50 @@ function triggerCollectEffect(obstacleEl, didAction = false) {
     obstacleEl.appendChild(wave);
     setTimeout(function () { wave.remove(); }, 500);
 
-    var score = document.createElement('div');
-    score.className = 'score-popup';
-
     if (didAction) {
+        var score = document.createElement('div');
+        score.className = 'score-popup-perfect'; // CSS 충돌 방지를 위한 새 클래스
         score.textContent = 'PERFECT!';
+        
+        const obsRect = obstacleEl.getBoundingClientRect();
+
+        // position:fixed 를 사용하여 화면(viewport) 기준으로 위치를 잡습니다.
+        score.style.position = 'fixed';
+        score.style.left = obsRect.right + 'px'; // 장애물 오른쪽 끝의 화면상 X 좌표
+        score.style.top = (obsRect.top + obsRect.height / 2) + 'px'; // 장애물 중앙의 화면상 Y 좌표
+        
+        // translateX 값을 조정하여 좌우 오프셋을 변경할 수 있습니다.
+        score.style.transform = 'translateX(10px) translateY(-90%)'; 
+        
+        // 기타 스타일
         score.style.color = 'gold';
         score.style.fontWeight = 'bold';
-    } else {
-        score.textContent = '+100 PTS';
-    }
+        score.style.whiteSpace = 'nowrap';
+        score.style.fontSize = '1.5em';
+        score.style.zIndex = '100'; // 모든 요소 위에 표시되도록 매우 높은 z-index
+        score.style.pointerEvents = 'none'; // 클릭 이벤트 통과
 
-    obstacleEl.appendChild(score);
-    setTimeout(function () { score.remove(); }, 700);
+        document.body.appendChild(score); // 최상위인 document.body에 추가
+
+        // GSAP 애니메이션
+        gsap.fromTo(score, 
+            { opacity: 0, yPercent: 50 },
+            { opacity: 1, yPercent: -50, duration: 0.3, ease: 'power2.out',
+                onComplete: () => {
+                    gsap.to(score, { opacity: 0, yPercent: -100, duration: 0.5, delay: 0.5, ease: 'power1.in', 
+                        onComplete: () => score.remove()
+                    });
+                }
+            }
+        );
+
+    } else {
+        var score = document.createElement('div');
+        score.className = 'score-popup';
+        score.textContent = '+100 PTS';
+        obstacleEl.appendChild(score);
+        setTimeout(function () { score.remove(); }, 700);
+    }
 }
 
 gsap.ticker.add((time, deltaTime) => {
