@@ -440,7 +440,30 @@
         <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
 
     </div>
+
+    <button id="hamburger-btn" class="hamburger-btn">
+        <span class="hamburger-icon"></span>
+    </button>
 </header>
+
+<div id="mobile-nav" class="mobile-nav">
+    <div class="mobile-nav-content">
+        <div class="mode-switch">
+            <button id="game-mode-btn-mobile" class="header-btn active">🎮 GAME MODE</button>
+            <button id="resume-mode-btn-mobile" class="header-btn">📄 RESUME MODE</button>
+        </div>
+        <div class="header-controls">
+            <select id="lang-selector-mobile" class="header-btn">
+                <option value="ko" style="color:#000">KOR</option>
+                <option value="en" style="color:#000">ENG</option>
+                <option value="ja" style="color:#000">JPN</option>
+            </select>
+            <button id="sound-toggle-btn-mobile" class="header-btn">SOUND ON</button>
+
+            <a href="mailto:dnlwjddn@jnu.ac.kr" class="header-btn primary">CONTACT</a>
+        </div>
+    </div>
+</div>
 
 <section class="cover-section" id="cover-section">
     <div class="cover-bg-grid"></div>
@@ -2171,6 +2194,72 @@
 
         // Call the function to create progress markers
         setTimeout(createProgressMarkers, 500);
+
+
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Hamburger Menu Logic
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileNav = document.getElementById('mobile-nav');
+
+        if (hamburgerBtn && mobileNav) {
+            hamburgerBtn.addEventListener('click', () => {
+                mobileNav.classList.toggle('is-active');
+                hamburgerBtn.classList.toggle('is-active');
+            });
+        }
+        
+        // Sync mobile controls with desktop controls
+        const gameModeBtnMobile = document.getElementById('game-mode-btn-mobile');
+        const resumeModeBtnMobile = document.getElementById('resume-mode-btn-mobile');
+        const langSelectorMobile = document.getElementById('lang-selector-mobile');
+        const soundToggleBtnMobile = document.getElementById('sound-toggle-btn-mobile');
+
+        const gameModeBtn = document.getElementById('game-mode-btn');
+        const resumeModeBtn = document.getElementById('resume-mode-btn');
+        const langSelector = document.getElementById('lang-selector');
+        const soundToggleBtn = document.getElementById('sound-toggle-btn');
+        
+        if(gameModeBtnMobile && gameModeBtn) {
+            gameModeBtnMobile.addEventListener('click', () => {
+                gameModeBtn.click();
+                mobileNav.classList.remove('is-active');
+                hamburgerBtn.classList.remove('is-active');
+            });
+        }
+        
+        if(resumeModeBtnMobile && resumeModeBtn) {
+            resumeModeBtnMobile.addEventListener('click', () => {
+                resumeModeBtn.click();
+                mobileNav.classList.remove('is-active');
+                hamburgerBtn.classList.remove('is-active');
+            });
+        }
+
+        if(langSelectorMobile && langSelector) {
+            langSelectorMobile.addEventListener('change', (e) => {
+                langSelector.value = e.target.value;
+                langSelector.dispatchEvent(new Event('change'));
+            });
+        }
+        
+        if(soundToggleBtnMobile && soundToggleBtn) {
+            soundToggleBtnMobile.addEventListener('click', () => {
+                soundToggleBtn.click();
+                soundToggleBtnMobile.textContent = soundToggleBtn.textContent;
+            });
+
+            // Keep text in sync
+            if (soundToggleBtn) {
+                const observer = new MutationObserver(() => {
+                    soundToggleBtnMobile.textContent = soundToggleBtn.textContent;
+                });
+                observer.observe(soundToggleBtn, { childList: true, subtree: true });
+            }
+        }
     });
 </script>
 </body>
