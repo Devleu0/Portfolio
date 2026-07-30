@@ -181,7 +181,7 @@ if (THEME === 'minimal') {
 var obstaclesData = [
     {
         "id": 1,
-        "pos": 300,
+        "pos": 500,
         "elevation": 0,
         "title": {
             "ko": "출생",
