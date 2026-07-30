@@ -757,6 +757,25 @@ function createObstacle(data, fallbackId) {
     tag.innerHTML = `<div class="cat-badge">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="info-tag-divider"></div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
     wrapper.appendChild(tag);
 
+    // --- 튜토리얼 툴팁 추가 ---
+    if (data.id === 1) {
+        var tooltip = document.createElement('div');
+        tooltip.id = 'tutorial-tooltip';
+        tooltip.className = 'tutorial-tooltip lang-text';
+        tooltip.setAttribute('data-ko', '타이밍에 맞춰 점프/숙이기(W,S) 입력!');
+        tooltip.setAttribute('data-en', 'Jump or Duck (W/S) at the exact timing!');
+        tooltip.setAttribute('data-ja', 'タイミングに合わせてジャンプ/しゃがむ(W/S)入力！');
+
+        // 현재 선택된 언어에 맞춰 텍스트 초기화
+        tooltip.innerHTML = getStr({
+            ko: '타이밍에 맞춰 점프/숙이기(W,S) 입력!',
+            en: 'Jump or Duck (W/S) at the exact timing!',
+            ja: 'タイミングに合わせてジャンプ/しゃがむ(W/S)入力！'
+        }, currentLang);
+
+        wrapper.appendChild(tooltip);
+    }
+
     gameContainer.appendChild(wrapper); return wrapper;
 }
 
@@ -922,6 +941,14 @@ function finalizeCollection(obstacle, didAction) {
     locallyCollected.add(dataId);
     collectedIds.add(dataId);
     obstacle.classList.add('collected');
+
+    // --- 튜토리얼 툴팁 제거 애니메이션 ---
+    if (dataId === 1) {
+        var tt = document.getElementById('tutorial-tooltip');
+        if (tt) {
+            gsap.to(tt, { opacity: 0, y: -20, duration: 0.3, ease: "power1.out" });
+        }
+    }
 
     // Update displays
     updateCounter();
@@ -1199,7 +1226,12 @@ function resetAndGoToTop() {
                 finalRankEl.style.textShadow = '';
                 finalRankEl.classList.remove('rank-animate');
             }
-            // ------------------------
+            // --- 튜토리얼 툴팁 복구 로직 ---
+            var tt = document.getElementById('tutorial-tooltip');
+            if (tt) {
+                gsap.killTweensOf(tt); // 진행 중인 페이드아웃 애니메이션 정지
+                gsap.set(tt, { opacity: 1, y: 0 }); // 원래 위치와 투명도로 복구
+            }
 
             // 게임 재시작 시 통계 애니메이션이 다시 실행될 수 있도록 카운팅 상태 초기화
             counted = false;

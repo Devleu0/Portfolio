@@ -1893,3 +1893,43 @@ button.action {
         font-size: 0.9rem;
     }
 }
+
+/* 튜토리얼 툴팁 스타일 */
+.tutorial-tooltip {
+    position: absolute;
+    bottom: calc(100% + 130px); /* 노드 상단에 위치 */
+
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.9);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    font-family: var(--font-title);
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+    animation: bounceTooltip 0.8s infinite alternate;
+    z-index: 100;
+    opacity: 1;
+}
+
+/* 말풍선 꼬리 */
+.tutorial-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--accent) transparent transparent transparent;
+}
+
+@keyframes bounceTooltip {
+    0% { transform: translate(-50%, 0); text-shadow: 0 0 5px transparent; }
+    100% { transform: translate(-50%, -8px); text-shadow: 0 0 8px var(--accent); }
+}
