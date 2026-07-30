@@ -1005,7 +1005,7 @@ gsap.ticker.add((time, deltaTime) => {
     obstacleElements.forEach(obstacle => {
         const obsRect = obstacle.getBoundingClientRect();
         // 히트박스 크기 조절. 숫자가 클수록 히트박스가 넓어집니다.
-        var expand = 5;
+        var expand = 3;
 
         const isOverlappingNow = (playerRect.left < obsRect.right + expand && playerRect.right > obsRect.left - expand && playerRect.top < obsRect.bottom + expand && playerRect.bottom > obsRect.top - expand);
 
@@ -1026,7 +1026,7 @@ gsap.ticker.add((time, deltaTime) => {
                 try { navigator.vibrate(didAction ? 80 : 40); } catch (err) { }
             }
         } else {
-            const isPassed = (playerRect.left > obsRect.right + 20);
+            const isPassed = (playerRect.left > obsRect.right + 150);
             if (isPassed) {
                 // DELAYED collection for safety net
                 beingCollected.add(dataId);
