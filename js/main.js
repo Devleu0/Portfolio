@@ -116,9 +116,9 @@ function updateLanguage(lang) {
         activeAboutContent.style.display = 'block';
     }
 
-    var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 26개의 기록이 발견되었습니다.' :
-        lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 26 RECORDS FOUND.' :
-            '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 26個の記録が見つかりました。';
+    var termTypedText = lang === 'ko' ? '> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 27개의 기록이 발견되었습니다.' :
+        lang === 'en' ? '> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 27 RECORDS FOUND.' :
+            '> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 27個の記録が見つかりました。';
     window._termTypedText = termTypedText;
 
     // Also update the skip button text immediately
@@ -527,6 +527,25 @@ var obstaclesData = [
         "category": "project",
         "inProgress": false,
         "link": "https://devleu.tistory.com/45"
+    },
+    {
+        "id": 27,
+        "pos": 17600,
+        "elevation": 50,
+        "title": {
+            "ko": "Ram Pressure Analyzer",
+            "en": "Ram Pressure Analyzer",
+            "ja": "Ram Pressure Analyzer"
+        },
+        "desc": {
+            "ko": "WPF 기반 메모리/페이지 폴트 분석기 (2026.01)",
+            "en": "WPF-based Memory/Page Fault Analyzer (2026.01)",
+            "ja": "WPFベースのメモリ/ページフォールトアナライザー (2026.01)"
+        },
+        "color": "#38BDF8",
+        "category": "project",
+        "inProgress": false,
+        "link": "https://devleu.tistory.com/46"
     },
     {
         "id": 25,
