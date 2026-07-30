@@ -418,7 +418,7 @@ body {
     color: #FDE047;
     text-shadow: 2px 2px 0 #020617;
     pointer-events: none;
-    z-index: 40;
+    z-index: 60;
     white-space: nowrap;
     animation: scoreFloat 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
 }
@@ -1373,12 +1373,6 @@ body {
     font-weight: bold;
 }
 
-@media (max-width: 768px) {
-    .hidden-mobile {
-        display: none !important;
-    }
-}
-
 .mobile-controls-left,
 .mobile-controls-right {
     position: fixed;
@@ -1394,14 +1388,6 @@ body {
 
 .mobile-controls-right {
     right: 24px;
-}
-
-@media (max-width: 768px) {
-
-    .mobile-controls-left,
-    .mobile-controls-right {
-        display: flex;
-    }
 }
 
 .ctrl-btn {
@@ -1751,7 +1737,17 @@ button.action {
     grid-row: span 2;
 }
 
+/* --- Media Queries --- */
 @media (max-width: 768px) {
+    .hidden-mobile {
+        display: none !important;
+    }
+
+    .mobile-controls-left,
+    .mobile-controls-right {
+        display: flex;
+    }
+
     .skills-bento-grid {
         grid-template-columns: repeat(2, 1fr);
     }
