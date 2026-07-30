@@ -996,6 +996,28 @@
 <script>
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
+    // --- Mobile Scaling ---
+    const isMobile = window.innerWidth <= 768;
+    const mobileScale = 0.5;
+
+    if (isMobile) {
+        // Scale down zone widths which are set via inline styles in the HTML
+        document.querySelectorAll('.zone').forEach(zone => {
+            const originalWidth = parseInt(zone.style.width, 10);
+            if (!isNaN(originalWidth)) {
+                zone.style.width = (originalWidth * mobileScale) + 'px';
+            }
+        });
+        // Also scale the parallax data attribute which is used by GSAP
+        document.querySelectorAll('.parallax-bg').forEach(bg => {
+            const originalWidth = parseInt(bg.dataset.width, 10);
+            if (!isNaN(originalWidth)) {
+                bg.dataset.width = (originalWidth * mobileScale);
+            }
+        });
+    }
+    // --- End Mobile Scaling ---
+
     // --- Sound Engine ---
     let audioCtx;
     let isMuted = true; // Initially muted
@@ -1127,7 +1149,7 @@
     horizontalSection.appendChild(gameContainer);
 
     var player = document.createElement('div');
-    player.style.cssText = 'position:absolute; width:64px; height:64px; bottom:35vh; left:150px; transform-origin:bottom center;';
+    player.style.cssText = `position:absolute; width:${isMobile ? 32:64}px; height:${isMobile ? 32:64}px; bottom:35vh; left:${isMobile ? 75:150}px; transform-origin:bottom center;`;
 
     var playerWrapper = document.createElement('div');
     playerWrapper.style.cssText = 'width:100%; height:100%; transform-origin:bottom center;';
@@ -1138,7 +1160,7 @@
 
     playerWrapper.appendChild(playerInner); player.appendChild(playerWrapper); gameContainer.appendChild(player);
 
-    var LAST_ZONE_START = 22400;
+    var LAST_ZONE_START = isMobile ? 22400 * mobileScale : 22400;
     var posHistory = [];
     var ghostEls = [];
     if (THEME === 'minimal') {
@@ -1634,6 +1656,13 @@
             "inProgress": true
         }
     ];
+
+    if (isMobile) {
+        obstaclesData.forEach(obs => {
+            obs.pos *= mobileScale;
+            if (obs.elevation) obs.elevation *= mobileScale;
+        });
+    }
     var obstacleElements = [];
     var collectedIds = new Set();
 
@@ -1642,8 +1671,8 @@
 
     function createObstacle(data, fallbackId) {
         var hasImg = !!data.customIcon;
-        var size = hasImg ? (THEME === 'minimal' ? 100 : 96) : (THEME === 'minimal' ? 70 : 64);
-        var iconSize = 32;
+        var size = hasImg ? (THEME === 'minimal' ? 100 : 96) : (isMobile ? 48 : (THEME === 'minimal' ? 70 : 64));
+        var iconSize = isMobile ? 24 : 32;
         var elevation = data.elevation || 0;
         var bottomStyle = 'calc(35vh + ' + elevation + 'px)';
 
@@ -1766,7 +1795,7 @@
 
     var keys = { left: false, right: false }; var isJumping = false, isDucking = false;
     var jumpEase = THEME === 'minimal' ? "power2.out" : "power1.out";
-    var jumpHeight = -150;
+    var jumpHeight = isMobile ? -75 : -150;
     var duckScale = THEME === 'minimal' ? 0.6 : 0.5;
 
     function createJumpDust() {
@@ -1775,7 +1804,7 @@
 
         for (let i = 0; i < dustCount; i++) {
             const dustParticle = document.createElement('div');
-            dustParticle.style.cssText = `position: absolute; width: 8px; height: 8px; background-color: white; bottom: 35vh; left: ${150 + (player.offsetWidth / 2)}px; transform: translateX(${playerX}px);`;
+            dustParticle.style.cssText = `position: absolute; width: 8px; height: 8px; background-color: white; bottom: 35vh; left: ${isMobile ? 75 : 150 + (player.offsetWidth / 2)}px; transform: translateX(${playerX}px);`;
             gameContainer.appendChild(dustParticle);
 
             gsap.to(dustParticle, {
@@ -1825,7 +1854,7 @@
     attachTouch('btn-jump', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { handleActionPress(); isDucking = true; gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 }); } }, function (e) { e.preventDefault(); gsap.to(player, { scaleY: 1, duration: 0.1, onComplete: () => isDucking = false }); });
     attachTouch('btn-duck', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { handleActionPress(); isJumping = true; playSound(jumpBuffer); createJumpDust(); gsap.to(player, { y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { isJumping = false; createJumpDust(); } }); } }, function (e) { e.preventDefault(); });
 
-    var scrollSpeed = 24;
+    var scrollSpeed = isMobile ? 16 : 24;
 
     const locallyCollected = new Set();
     const beingCollected = new Set();

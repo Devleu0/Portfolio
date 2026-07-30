@@ -1869,4 +1869,26 @@ button.action {
         grid-column: span 2;
         grid-row: span 1;
     }
+
+    /* Mobile adjustments for game elements */
+    .info-tag {
+        max-width: 140px;
+        padding: 6px 10px;
+    }
+
+    .info-tag .title {
+        font-size: 12px;
+    }
+
+    .info-tag .desc {
+        font-size: 10px;
+    }
+
+    .zone-title {
+        font-size: 2rem;
+    }
+
+    .zone-subtitle {
+        font-size: 0.9rem;
+    }
 }
