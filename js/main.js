@@ -688,9 +688,21 @@ if (isMobile) {
 }
 var obstacleElements = [];
 var collectedIds = new Set();
+let totalScore = 0;
+let perfectCount = 0;
 
 function getStr(obj, lang) { return typeof obj === 'string' ? obj : (obj[lang] || obj.ko || ''); }
-function updateCounter() { var counterEl = document.getElementById('counter-current'); if (counterEl) counterEl.textContent = collectedIds.size; }
+
+function updateCounter() {
+    var counterEl = document.getElementById('counter-current');
+    if (counterEl) counterEl.textContent = collectedIds.size;
+}
+
+function updateScoreDisplay() {
+    var scoreEl = document.getElementById('score-current');
+    if (scoreEl) scoreEl.textContent = totalScore;
+}
+
 
 function createObstacle(data, fallbackId) {
     var hasImg = !!data.customIcon;
@@ -896,13 +908,24 @@ function finalizeCollection(obstacle, didAction) {
         return; // Already collected
     }
 
+    // Score logic
+    if (didAction) {
+        totalScore += 500; // Perfect score
+        perfectCount++;
+    } else {
+        totalScore += 100; // Normal score
+    }
+
     triggerCollectEffect(obstacle, didAction);
     playSound(coinBuffer);
 
     locallyCollected.add(dataId);
     collectedIds.add(dataId);
     obstacle.classList.add('collected');
+
+    // Update displays
     updateCounter();
+    updateScoreDisplay();
 
     // Clean up
     pendingCollectTimeouts.delete(dataId);
@@ -961,11 +984,7 @@ function triggerCollectEffect(obstacleEl, didAction = false) {
         );
 
     } else {
-        var score = document.createElement('div');
-        score.className = 'score-popup';
-        score.textContent = '+100 PTS';
-        obstacleEl.appendChild(score);
-        setTimeout(function () { score.remove(); }, 700);
+        // No score popup for normal collection to prevent clutter, score is on HUD
     }
 }
 
@@ -1133,8 +1152,11 @@ function resetAndGoToTop() {
         onComplete: function () {
             locallyCollected.clear();
             collectedIds.clear();
+            totalScore = 0;
+            perfectCount = 0;
             obstacleElements.forEach(function (el) { el.classList.remove('collected'); });
             updateCounter();
+            updateScoreDisplay();
         }
     });
 }
