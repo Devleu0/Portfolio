@@ -1771,6 +1771,7 @@
         const k = e.key.toLowerCase(); if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) e.preventDefault();
         if (k === 'd' || k === 'arrowright') keys.right = true; if (k === 'a' || k === 'arrowleft') keys.left = true;
         if ((k === 'w' || k === 'arrowup') && !isJumping && !isDucking) {
+            handleActionPress();
             isJumping = true;
             playSound(jumpBuffer);
             createJumpDust();
@@ -1781,7 +1782,11 @@
                 }
             });
         }
-        if ((k === 's' || k === 'arrowdown') && !isJumping && !isDucking) { isDucking = true; gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 }); }
+        if ((k === 's' || k === 'arrowdown') && !isJumping && !isDucking) { 
+            handleActionPress();
+            isDucking = true; 
+            gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 }); 
+        }
     });
     window.addEventListener('keyup', (e) => {
         const k = e.key.toLowerCase();
@@ -1792,22 +1797,66 @@
     function attachTouch(id, onDown, onUp) { var btn = document.getElementById(id); if (!btn) return; btn.addEventListener('pointerdown', onDown); btn.addEventListener('pointerup', onUp); btn.addEventListener('pointerleave', onUp); }
     attachTouch('btn-left', function (e) { e.preventDefault(); keys.left = true; }, function (e) { e.preventDefault(); keys.left = false; });
     attachTouch('btn-right', function (e) { e.preventDefault(); keys.right = true; }, function (e) { e.preventDefault(); keys.right = false; });
-    attachTouch('btn-jump', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { isDucking = true; gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 }); } }, function (e) { e.preventDefault(); gsap.to(player, { scaleY: 1, duration: 0.1, onComplete: () => isDucking = false }); });
-    attachTouch('btn-duck', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { isJumping = true; playSound(jumpBuffer); createJumpDust(); gsap.to(player, { y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { isJumping = false; createJumpDust(); } }); } }, function (e) { e.preventDefault(); });
+    attachTouch('btn-jump', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { handleActionPress(); isDucking = true; gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 }); } }, function (e) { e.preventDefault(); gsap.to(player, { scaleY: 1, duration: 0.1, onComplete: () => isDucking = false }); });
+    attachTouch('btn-duck', function (e) { e.preventDefault(); if (!isJumping && !isDucking) { handleActionPress(); isJumping = true; playSound(jumpBuffer); createJumpDust(); gsap.to(player, { y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { isJumping = false; createJumpDust(); } }); } }, function (e) { e.preventDefault(); });
 
     var scrollSpeed = 24;
 
     const locallyCollected = new Set();
+    const beingCollected = new Set();
+    const pendingCollectTimeouts = new Map();
+    let actionJustPressed = false;
 
-    function triggerCollectEffect(obstacleEl) {
+    function handleActionPress() {
+        actionJustPressed = true;
+        // "Perfect" 판정 타이밍 (ms). 숫자가 클수록 너그러워집니다.
+        setTimeout(() => { actionJustPressed = false; }, 230);
+    }
+
+    function finalizeCollection(obstacle, didAction) {
+        const dataId = parseInt(obstacle.getAttribute('data-id'), 10);
+        if (!dataId || locallyCollected.has(dataId)) {
+            return; // Already collected
+        }
+
+        triggerCollectEffect(obstacle, didAction);
+        playSound(coinBuffer);
+
+        locallyCollected.add(dataId);
+        collectedIds.add(dataId);
+        obstacle.classList.add('collected');
+        updateCounter();
+
+        // Clean up
+        pendingCollectTimeouts.delete(dataId);
+        beingCollected.delete(dataId);
+
+        if (didAction && typeof navigator !== 'undefined' && navigator.vibrate) {
+            try { navigator.vibrate(80); } catch (err) { }
+        }
+    }
+
+
+    function triggerCollectEffect(obstacleEl, didAction = false) {
         var wave = document.createElement('div');
         wave.className = 'collect-shockwave';
+        if (didAction) {
+            wave.style.setProperty('--wave-color', 'gold');
+        }
         obstacleEl.appendChild(wave);
         setTimeout(function () { wave.remove(); }, 500);
 
         var score = document.createElement('div');
         score.className = 'score-popup';
-        score.textContent = '+100 PTS';
+
+        if (didAction) {
+            score.textContent = 'PERFECT!';
+            score.style.color = 'gold';
+            score.style.fontWeight = 'bold';
+        } else {
+            score.textContent = '+100 PTS';
+        }
+
         obstacleEl.appendChild(score);
         setTimeout(function () { score.remove(); }, 700);
     }
@@ -1821,35 +1870,52 @@
 
         if (keys.right || keys.left) playerInner.classList.add('player-running'); else playerInner.classList.remove('player-running');
 
-        const playerRect = player.getBoundingClientRect(); let isColliding = false;
+        const playerRect = player.getBoundingClientRect();
+        let isAnythingOverlapping = false; // For the player glow effect
+
         obstacleElements.forEach(obstacle => {
-            var dataId = parseInt(obstacle.getAttribute('data-id'), 10);
-            if (!dataId || locallyCollected.has(dataId)) return;
+            const obsRect = obstacle.getBoundingClientRect();
+            // 히트박스 크기 조절. 숫자가 클수록 히트박스가 넓어집니다.
+            var expand = 5;
 
-            const obsRect = obstacle.getBoundingClientRect(); var expand = 40;
+            const isOverlappingNow = (playerRect.left < obsRect.right + expand && playerRect.right > obsRect.left - expand && playerRect.top < obsRect.bottom + expand && playerRect.bottom > obsRect.top - expand);
 
-            var isOverlapping = (playerRect.left < obsRect.right + expand && playerRect.right > obsRect.left - expand && playerRect.top < obsRect.bottom + expand && playerRect.bottom > obsRect.top - expand);
-            var isPassed = (playerRect.left > obsRect.right + 20);
+            if (isOverlappingNow) {
+                isAnythingOverlapping = true;
+            }
 
-            if (isOverlapping || isPassed) {
-                if (!locallyCollected.has(dataId)) {
-                    triggerCollectEffect(obstacle);
-                    playSound(coinBuffer);
+            const dataId = parseInt(obstacle.getAttribute('data-id'), 10);
+            if (!dataId || locallyCollected.has(dataId) || beingCollected.has(dataId)) {
+                return; // Skip collection logic if already processed
+            }
+
+            if (isOverlappingNow) {
+                // IMMEDIATE collection on collision
+                const didAction = actionJustPressed;
+                finalizeCollection(obstacle, didAction); // Call synchronously
+                if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                    try { navigator.vibrate(didAction ? 80 : 40); } catch (err) { }
                 }
-                isColliding = isColliding || isOverlapping;
-                locallyCollected.add(dataId);
-                collectedIds.add(dataId);
-                obstacle.classList.add('collected');
-                updateCounter();
-                if (isOverlapping && typeof navigator !== 'undefined' && navigator.vibrate) try { navigator.vibrate(40); } catch (err) { }
+            } else {
+                const isPassed = (playerRect.left > obsRect.right + 20);
+                if (isPassed) {
+                    // DELAYED collection for safety net
+                    beingCollected.add(dataId);
+                    const delay = 300 + Math.random() * 200;
+                    const timeoutId = setTimeout(() => {
+                        finalizeCollection(obstacle, false);
+                    }, delay);
+                    pendingCollectTimeouts.set(dataId, timeoutId);
+                }
             }
         });
 
+        // Visual effect based on ANY overlap
         if (THEME === 'minimal') {
-            playerInner.style.filter = isColliding ? 'drop-shadow(0 0 16px rgba(56,189,248,1)) brightness(1.2)' : 'drop-shadow(0 0 8px rgba(56,189,248,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))';
+            playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px rgba(56,189,248,1)) brightness(1.2)' : 'drop-shadow(0 0 8px rgba(56,189,248,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))';
         } else {
-            playerInner.style.color = isColliding ? '#fff' : '#22D3EE';
-            playerInner.style.filter = isColliding ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
+            playerInner.style.color = isAnythingOverlapping ? '#fff' : '#22D3EE';
+            playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
         }
 
         if (THEME === 'minimal') {
@@ -1945,6 +2011,13 @@
     }
 
     function resetAndGoToTop() {
+        // Clear any pending collection timeouts to prevent ghost collections
+        for (const timeoutId of pendingCollectTimeouts.values()) {
+            clearTimeout(timeoutId);
+        }
+        pendingCollectTimeouts.clear();
+        beingCollected.clear();
+
         gsap.to(window, {
             scrollTo: 0,
             duration: 1.5,

@@ -418,7 +418,7 @@ body {
     color: #FDE047;
     text-shadow: 2px 2px 0 #020617;
     pointer-events: none;
-    z-index: 40;
+    z-index: 60;
     white-space: nowrap;
     animation: scoreFloat 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
 }
