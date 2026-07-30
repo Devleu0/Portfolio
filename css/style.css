@@ -1734,11 +1734,120 @@ button.action {
 
 .card-large {
     grid-column: span 2;
-    grid-row: span 2;
+    grid-row: span 1;
 }
+
+/* Hamburger Menu Styles */
+.hamburger-btn {
+    display: none; /* Hidden by default */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1051; /* Above mobile nav */
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.hamburger-icon {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--text-main);
+    transition: all 0.2s ease-in-out;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background-color: var(--text-main);
+    transition: all 0.2s ease-in-out;
+}
+
+.hamburger-icon::before {
+    top: -8px;
+}
+
+.hamburger-icon::after {
+    bottom: -8px;
+}
+
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(2, 6, 23, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-nav.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+}
+
+.mobile-nav-content .mode-switch,
+.mobile-nav-content .header-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+.mobile-nav-content .header-btn {
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    min-width: 200px;
+}
+
+
+/* Active state for hamburger icon (X) */
+.hamburger-btn.is-active .hamburger-icon {
+    background-color: transparent;
+}
+
+.hamburger-btn.is-active .hamburger-icon::before {
+    transform: rotate(45deg) translate(5px, 6px);
+}
+
+.hamburger-btn.is-active .hamburger-icon::after {
+    transform: rotate(-45deg) translate(5px, -6px);
+}
+
 
 /* --- Media Queries --- */
 @media (max-width: 768px) {
+    .top-header .mode-switch,
+    .top-header .header-controls {
+        display: none;
+    }
+
+    .hamburger-btn {
+        display: block;
+        grid-column: 3 / 4;
+        justify-self: end;
+    }
+
     .hidden-mobile {
         display: none !important;
     }
