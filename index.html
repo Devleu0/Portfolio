@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1622,9 +1622,9 @@
             style="width:44px;height:44px;image-rendering:pixelated;display:block;" /></button>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha384-d+vyQ0dYcymoP8ndq2hW7FGC50nqGdXUEgoOUGxbbkAJwZqL7h+jKN0GGgn9hFDS" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha384-poC0r6usQOX2Ayt/VGA+t81H6V3iN9L+Irz9iO8o+s0X20tLpzc9DOOtnKxhaQSE" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js" integrity="sha384-aO2rdje/BwxNeovaVnYCA1OUtEWaqumve5UCMUMEM9/kKJM/c9NyqDGmgPuJz8eQ" crossorigin="anonymous"></script>
 
 <script>
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -1709,6 +1709,7 @@
 
     function updateLanguage(lang) {
         currentLang = lang;
+        document.documentElement.lang = lang;
         document.querySelectorAll('.lang-text').forEach(function (el) {
             var newText = el.getAttribute('data-' + lang) || el.getAttribute('data-ko') || '';
             if (newText) el.innerHTML = newText;
@@ -2313,7 +2314,7 @@
 
         var strokeColor = THEME === 'minimal' ? (data.color || 'var(--accent)') : '#020617';
         if (data.customIcon) {
-            obstacle.innerHTML = '<img src="' + data.customIcon + '" style="width:100%; height:100%; object-fit:cover; image-rendering:' + (THEME === 'minimal' ? 'auto' : 'pixelated') + ';" />';
+            obstacle.innerHTML = '<img src="' + data.customIcon + '" alt="' + escapeHtml(getStr(data.title, currentLang)) + '" style="width:100%; height:100%; object-fit:cover; image-rendering:' + (THEME === 'minimal' ? 'auto' : 'pixelated') + ';" />';
         } else {
             obstacle.innerHTML = '<svg width="' + iconSize + '" height="' + iconSize + '" viewBox="0 0 24 24" fill="none" stroke="' + strokeColor + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[data.category] || ICONS.other) + '</svg>';
         }
