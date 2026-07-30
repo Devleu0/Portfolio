@@ -1320,7 +1320,8 @@ body {
     border: 2px solid #F8FAFC;
 }
 
-.counter-display {
+.counter-display,
+.score-display {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1457,6 +1458,9 @@ body {
     transform: translateX(-50%);
     pointer-events: none;
     z-index: 85;
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }
 
 #hud-overlay img {
