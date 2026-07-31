@@ -1461,6 +1461,8 @@ body {
     display: flex;
     gap: 20px;
     align-items: center;
+    opacity: 0;
+    visibility: hidden;
 }
 
 #hud-overlay img {
