@@ -120,7 +120,6 @@ function initMainScrollAnimation() {
         const topHeader = document.getElementById('top-header');
         const headerHeight = topHeader.offsetHeight;
         hudOverlay.style.top = `${headerHeight + 12}px`;
-        gsap.set(hudOverlay, { autoAlpha: 0 });
     }
 }
 
