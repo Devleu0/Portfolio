@@ -1,6 +1,6 @@
 import { state } from './config.js';
 
-// 템플릿 리터럴(백틱 `)로 변경하여 줄바꿈 구문 오류 해결
+// 템플릿 리터럴(백틱 `)로 변경하여 줄바꿈 구문 오류 해결 
 let termTypedTextData = {
     ko: `> 프로필 데이터를 불러오는 중... OK
 > 시스템 준비 완료.
