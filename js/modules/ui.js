@@ -1,4 +1,3 @@
-
 import { state, THEME, getStr, mobileScale } from './config.js';
 import { getObstacleData, getObstacleElements, resetGame } from './game.js';
 
@@ -132,8 +131,7 @@ function initTerminalEffect() {
     (function typeChar() {
         const text = window._termTypedText || '';
         if (ti <= text.length) {
-            termTyped.innerHTML = text.slice(0, ti).replace(/
-/g, '<br>') + '<span class="term-cursor" id="term-cursor">█</span>';
+            termTyped.innerHTML = text.slice(0, ti).replace(/\n/g, '<br>') + '<span class="term-cursor" id="term-cursor">█</span>';
             ti++;
             setTimeout(typeChar, 30);
         } else {

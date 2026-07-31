@@ -1,17 +1,16 @@
-
 import { state } from './config.js';
 
-// This will be populated by the game module
+// 템플릿 리터럴(백틱 `)로 변경하여 줄바꿈 구문 오류 해결
 let termTypedTextData = {
-    ko: '> 프로필 데이터를 불러오는 중... OK
+    ko: `> 프로필 데이터를 불러오는 중... OK
 > 시스템 준비 완료.
-> 27개의 기록이 발견되었습니다.',
-    en: '> LOADING PROFILE DATA... OK
+> 27개의 기록이 발견되었습니다.`,
+    en: `> LOADING PROFILE DATA... OK
 > SYSTEM READY.
-> 27 RECORDS FOUND.',
-    ja: '> プロフィールデータを読み込み中... OK
+> 27 RECORDS FOUND.`,
+    ja: `> プロフィールデータを読み込み中... OK
 > システム準備完了。
-> 27個の記録が見つかりました。'
+> 27個の記録が見つかりました。`
 };
 
 export function updateLanguage(lang) {
@@ -35,7 +34,7 @@ export function updateLanguage(lang) {
         activeAboutContent.style.display = 'block';
     }
 
-    // Update terminal text (via a global-like variable accessible to the terminal animation)
+    // Update terminal text
     window._termTypedText = termTypedTextData[lang];
 
     // Update the skip button text immediately
@@ -43,7 +42,10 @@ export function updateLanguage(lang) {
     if (skipBtn) {
         const attr = state.isScrolledToEnd ? `data-${lang}-return` : `data-${lang}`;
         const fallbackAttr = state.isScrolledToEnd ? 'data-ko-return' : 'data-ko';
-        skipBtn.innerHTML = skipBtn.getAttribute(attr) || skipBtn.getAttribute(fallbackAttr);
+        const newText = skipBtn.getAttribute(attr) || skipBtn.getAttribute(fallbackAttr);
+        if (newText) {
+            skipBtn.innerHTML = newText;
+        }
     }
 }
 
