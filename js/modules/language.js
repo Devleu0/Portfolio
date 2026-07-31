@@ -51,12 +51,19 @@ export function updateLanguage(lang) {
 
 export function initLanguageSwitcher() {
     const langSelector = document.getElementById('lang-selector');
+    const supportedLangs = ['ko', 'en', 'ja'];
+    const browserLang = navigator.language.split('-')[0];
+    let initialLang = 'en';
+
+    if (supportedLangs.includes(browserLang)) {
+        initialLang = browserLang;
+    }
+
     if (langSelector) {
+        langSelector.value = initialLang;
         langSelector.addEventListener('change', (e) => updateLanguage(e.target.value));
-        // Set initial language based on selector
-        updateLanguage(langSelector.value);
+        updateLanguage(initialLang);
     } else {
-        // Fallback if selector is not present
-        updateLanguage('ko');
+        updateLanguage(initialLang);
     }
 }
