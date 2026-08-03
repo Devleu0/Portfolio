@@ -1,6 +1,6 @@
 
 import {
-    isMobile, mobileScale, THEME, ICONS, buildLangAttrs, getStr, state
+    isMobile, mobileScale, THEME, ICONS, buildLangAttrs, getStr, state, getCategoryColor
 } from './config.js';
 import { playSound } from './audio.js';
 import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from './ui.js';
@@ -69,7 +69,11 @@ function createObstacle(data, fallbackId) {
     const wrapper = document.createElement('div');
     wrapper.className = 'obstacle-wrapper obstacle-element';
     wrapper.setAttribute('data-id', data.id || fallbackId);
+    wrapper.dataset.category = data.category || 'other'; // Store category for later
     wrapper.style.cssText = `position: absolute; left: ${data.pos}px; bottom: ${bottomStyle}; width: ${size}px; height: ${size}px; pointer-events: auto; cursor: pointer;`;
+
+    const catColor = data.colorOverride || getCategoryColor(data.category);
+    wrapper.style.setProperty('--cat-color', catColor);
 
     wrapper.onclick = (e) => {
         e.stopPropagation();
@@ -94,11 +98,14 @@ function createObstacle(data, fallbackId) {
     obstacle.style.position = 'relative';
     obstacle.style.left = data.customIcon ? '-8px' : '0';
 
-    if (!data.customIcon) {
-        obstacle.style.background = data.color || '#22D3EE';
+    if (THEME === 'minimal' && !data.customIcon) {
+        obstacle.style.background = 'rgba(30,41,59,0.8)';
+        obstacle.style.backdropFilter = 'blur(8px)';
+    } else if (!data.customIcon) {
+        obstacle.style.background = catColor;
     }
 
-    const strokeColor = '#020617';
+    const strokeColor = THEME === 'minimal' ? catColor : '#020617';
     if (data.customIcon) {
         obstacle.innerHTML = `<img src="${data.customIcon}" alt="${getStr(data.title, state.currentLang)}" style="width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />`;
     } else {
@@ -109,7 +116,7 @@ function createObstacle(data, fallbackId) {
     const tag = document.createElement('div');
     tag.className = 'info-tag';
     const catName = (data.category || 'milestone').toUpperCase();
-    tag.innerHTML = `<div class="cat-badge">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="info-tag-divider"></div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
+    tag.innerHTML = `<div class="cat-badge" style="background:${catColor}">[${catName}]</div><div class="title lang-text" ${buildLangAttrs(data.title)}>${getStr(data.title, 'ko')}</div><div class="info-tag-divider"></div><div class="desc lang-text" ${buildLangAttrs(data.desc)}>${getStr(data.desc, 'ko')}</div>`;
     wrapper.appendChild(tag);
 
     if (data.id === 1) {
@@ -180,7 +187,7 @@ function finalizeCollection(obstacle, didAction) {
         state.totalScore += 100;
     }
 
-    triggerCollectEffect(obstacle, didAction);
+    triggerCollectEffect(obstacle, didAction, obstacle.dataset.category);
     playSound('./audio/coin.mp3');
 
     locallyCollected.add(dataId);
@@ -313,6 +320,11 @@ export function resetGame() {
         gsap.set(tt, { opacity: 1, y: 0 });
     }
     state.isStatSectionCounted = false;
+    const maxComboStatEl = document.getElementById('max-combo-stat');
+    if (maxComboStatEl) {
+        maxComboStatEl.textContent = '0';
+        maxComboStatEl.dataset.target = '0';
+    }
 }
 
 export async function initGame() {

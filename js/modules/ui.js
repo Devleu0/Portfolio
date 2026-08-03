@@ -1,4 +1,4 @@
-import { state, THEME, getStr, mobileScale } from './config.js';
+import { state, THEME, getStr, mobileScale, getCategoryColor } from './config.js';
 import { getObstacleData, getObstacleElements, resetGame } from './game.js';
 
 export function updateCounter() {
@@ -11,11 +11,15 @@ export function updateScoreDisplay() {
     if (scoreEl) scoreEl.textContent = state.totalScore;
 }
 
-export function triggerCollectEffect(obstacleEl, didAction = false) {
+export function triggerCollectEffect(obstacleEl, didAction = false, category = 'other') {
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave';
+    
+    const catColor = getCategoryColor(category);
+    wave.style.setProperty('--wave-color', catColor);
+
     if (didAction) {
-        wave.style.setProperty('--wave-color', 'gold');
+        wave.classList.add('is-perfect');
     }
     obstacleEl.appendChild(wave);
     setTimeout(() => wave.remove(), 500);
@@ -58,6 +62,7 @@ function createProgressMarkers() {
         marker.className = 'progress-marker';
         const position = (obstacle.pos / totalWidth) * 100;
         marker.style.left = `${position}%`;
+        marker.style.background = getCategoryColor(obstacle.category);
 
         const tooltip = document.createElement('div');
         tooltip.className = 'progress-tooltip';
@@ -148,19 +153,18 @@ function initStatCounter() {
         if (entries[0].isIntersecting && !state.isStatSectionCounted) {
             state.isStatSectionCounted = true;
 
+            const maxComboStatEl = document.getElementById('max-combo-stat');
+            if (maxComboStatEl) {
+                maxComboStatEl.dataset.target = state.maxCombo;
+            }
+
             document.querySelectorAll('.stat-num:not(#final-rank)').forEach(el => {
-                const id = el.id;
-                let target = 0;
-                if (id === 'max-combo-stat') {
-                    target = state.maxCombo;
-                } else {
-                    target = parseInt(el.getAttribute('data-target'), 10) || 0;
-                }
-                
+                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
                 let current = { val: 0 };
                 gsap.to(current, {
                     val: target,
                     duration: 1.5,
+                    ease: 'power2.out',
                     roundProps: 'val',
                     onUpdate: () => { el.textContent = current.val; }
                 });
@@ -170,7 +174,6 @@ function initStatCounter() {
             if (finalRankEl) {
                 const obstacles = getObstacleData();
                 const totalObjects = obstacles.length;
-                // Simplified dynamic threshold calculation as per plan
                 const estimatedMaxScore = totalObjects * 500 * 1.2; 
 
                 const rankThresholds = {
@@ -185,10 +188,9 @@ function initStatCounter() {
                 else if (state.totalScore >= rankThresholds.A) { rank = 'A'; rankColor = '#f87171'; }
                 else if (state.totalScore >= rankThresholds.B) { rank = 'B'; rankColor = '#60a5fa'; }
                 
-                // Add special badge for high combo
-                if (state.maxCombo >= totalObjects) {
-                    rank = 'PERFECT RUN';
-                    rankColor = '#22D3EE';
+                if (state.maxCombo > 0 && state.maxCombo >= totalObjects) {
+                    rank = 'GOD';
+                    rankColor = '#cb0000'; 
                 }
 
                 setTimeout(() => {

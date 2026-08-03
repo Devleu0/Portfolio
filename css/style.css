@@ -339,8 +339,8 @@ body {
     left: 50%;
     transform: translateX(-50%);
     z-index: 5;
-    background: #334155;
-    border-left: 2px solid #64748B;
+    background: var(--cat-color, #334155);
+    border-left: 2px solid #020617;
     width: 6px;
 }
 
@@ -378,10 +378,14 @@ body {
     position: absolute;
     inset: -4px;
     border-radius: 0;
-    border: 3px solid var(--accent);
+    border: 3px solid var(--wave-color, var(--accent));
     pointer-events: none;
     z-index: 25;
     animation: shockwaveRetro 0.5s ease-out forwards;
+}
+
+.collect-shockwave.is-perfect {
+    box-shadow: 0 0 12px 2px #FBBF24;
 }
 
 @keyframes scoreFloat {
@@ -571,9 +575,9 @@ body {
 .progress-marker {
     position: absolute;
     top: -2px;
-    width: 4px;
+    width: 8px;
     height: 16px;
-    background: #FDE047;
+    /* background: #FDE047; */
     border: 1px solid #020617;
     z-index: 2;
 }
