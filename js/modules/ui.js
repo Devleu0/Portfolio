@@ -161,11 +161,20 @@ function initStatCounter() {
 
             const finalRankEl = document.getElementById('final-rank');
             if (finalRankEl) {
+                const obstacles = getObstacleData();
+                const maxScore = obstacles.length * 500;
+
+                const rankThresholds = {
+                    S: maxScore * 0.9,
+                    A: maxScore * 0.7,
+                    B: maxScore * 0.4,
+                };
+
                 let rank = 'C';
                 let rankColor = '#94a3b8';
-                if (state.totalScore >= 12000) { rank = 'S'; rankColor = '#fbbf24'; }
-                else if (state.totalScore >= 9000) { rank = 'A'; rankColor = '#f87171'; }
-                else if (state.totalScore >= 5000) { rank = 'B'; rankColor = '#60a5fa'; }
+                if (state.totalScore >= rankThresholds.S) { rank = 'S'; rankColor = '#fbbf24'; }
+                else if (state.totalScore >= rankThresholds.A) { rank = 'A'; rankColor = '#f87171'; }
+                else if (state.totalScore >= rankThresholds.B) { rank = 'B'; rankColor = '#60a5fa'; }
 
                 setTimeout(() => {
                     finalRankEl.textContent = rank;
