@@ -59,6 +59,10 @@
             <div class="score-display">
                 SCORE <span id="score-current">0</span>
             </div>
+            <div id="combo-display" class="combo-display">
+                <span id="combo-count">0</span>
+                <span class="combo-label">COMBO</span>
+            </div>
         </div>
         <div style="
         background: var(--bg-color);
@@ -170,6 +174,7 @@
         </div>
         <div id="sky-overlay"></div>
         <div id="sun"></div>
+        <div id="combo-flash"></div>
         <div class="global-clouds" aria-hidden="true"></div>
         <div id="finale-flash"></div>
         <div id="progress-bar-wrap">
@@ -196,6 +201,10 @@
                 <div class="stat-card">
                     <div class="stat-num" id="final-rank">-</div>
                     <div class="stat-label">Rank</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="max-combo-stat" data-target="0">0</div>
+                    <div class="stat-label">Max Combo</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-num" id="certificates-stat" data-target="0">0</div>

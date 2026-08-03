@@ -1929,3 +1929,50 @@ button.action {
     0% { transform: translate(-50%, 0); text-shadow: 0 0 5px transparent; }
     100% { transform: translate(-50%, -8px); text-shadow: 0 0 8px var(--accent); }
 }
+
+/* Combo System */
+.combo-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFF;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.combo-display.is-active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#combo-count {
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.combo-display[data-tier="mid"] #combo-count { color: var(--accent); }
+.combo-display[data-tier="high"] #combo-count { color: #FDE047; }
+.combo-display[data-tier="max"] #combo-count { color: #FDE047; text-shadow: 0 0 8px #FDE047; }
+
+
+#combo-flash {
+    position: fixed; inset: 0; pointer-events: none; z-index: 15;
+    opacity: 0; mix-blend-mode: screen;
+    transition: opacity 0.1s ease-out;
+}
+
+/* Screen Shake Animations */
+@keyframes shake-mid  { 0%,100% { transform: translate(0,0);} 25% { transform: translate(2px,-1px);} 75% { transform: translate(-2px,1px);} }
+@keyframes shake-high { 0%,100% { transform: translate(0,0);} 20% { transform: translate(4px,-3px);} 60% { transform: translate(-4px,2px);} }
+@keyframes shake-max  { 0%,100% { transform: translate(0,0) scale(1);} 30% { transform: translate(6px,-4px) scale(1.015);} 70% { transform: translate(-6px,3px) scale(1.015);} }
+
+.shake-mid  { animation: shake-mid 0.1s ease-in-out; }
+.shake-high { animation: shake-high 0.15s ease-in-out; }
+.shake-max  { animation: shake-max 0.2s ease-in-out; }

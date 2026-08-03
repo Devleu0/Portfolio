@@ -28,6 +28,8 @@ export const state = {
     collectedIds: new Set(),
     totalScore: 0,
     perfectCount: 0,
+    comboCount: 0,
+    maxCombo: 0,
     // Animation/UI State
     isGameHudVisible: false,
     isStatSectionCounted: false,
