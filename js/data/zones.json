@@ -30,7 +30,12 @@
       "en": "Attended: Mar 2010 - Feb 2016",
       "ja": "在学: 2010.03 ~ 2016.02"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "middle",
@@ -47,7 +52,12 @@
       "en": "Attended: Mar 2016 - Feb 2019",
       "ja": "在学: 2016.03 ~ 2019.02"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "high",
@@ -64,7 +74,12 @@
       "en": "Attended: Mar 2019 - Feb 2022",
       "ja": "在学: 2019.03 ~ 2022.02"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "freshman1",
@@ -81,7 +96,12 @@
       "en": "Chonnam Nat'l Univ., AI (Mar 2022 - Jun 2022)",
       "ja": "全南大学 AI学部 (2022.03 ~ 2022.06)"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "freshman_summer",
@@ -102,7 +122,12 @@
       "en": "Farming EXP...",
       "ja": "経験値稼ぎ中..."
     },
-    "bgType": "nature"
+    "bgType": "nature",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "freshman2",
@@ -119,7 +144,12 @@
       "en": "Sep 2022 - Dec 2022",
       "ja": "2022.09 ~ 2022.12"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "freshman_winter",
@@ -140,7 +170,12 @@
       "en": "Side Quest in Progress: [Mastering a New Language]",
       "ja": "サブクエスト進行中：[新しい言語のマスター]"
     },
-    "bgType": "nature"
+    "bgType": "nature",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "sophomore1",
@@ -157,7 +192,12 @@
       "en": "Mar 2023 - Jun 2023 (Before leave)",
       "ja": "2023.03 ~ 2023.06 (休学前)"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "military",
@@ -178,7 +218,12 @@
       "en": "Hidden Stage: National Defense Duty (Acquired JLPT N1!)",
       "ja": "隠しステージ：国防の義務（JLPT N1獲得！）"
     },
-    "bgType": "military"
+    "bgType": "military",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "sophomore2",
@@ -200,7 +245,12 @@
       "en": "Main Quest Part 2 Start!",
       "ja": "メインクエスト Part 2 開始！"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "sophomore_winter",
@@ -221,7 +271,12 @@
       "en": "Save Point Reached",
       "ja": "セーブポイント到達 "
     },
-    "bgType": "nature"
+    "bgType": "nature",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "junior1",
@@ -238,7 +293,12 @@
       "en": "Mar 2026 - Jun 2026",
       "ja": "2026.03 ~ 2026.06"
     },
-    "bgType": "school"
+    "bgType": "school",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "internship",
@@ -261,7 +321,12 @@
       "en": "Playing the Global Expansion Pack ",
       "ja": "グローバル拡張パックプレイ中 "
     },
-    "bgType": "city"
+    "bgType": "city",
+    "parallax": {
+      "far": "images/parallax-far.svg",
+      "mid": "images/parallax-mid.svg",
+      "near": "images/parallax-near.svg"
+    }
   },
   {
     "id": "finale",
