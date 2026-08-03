@@ -335,7 +335,7 @@ export function resetGame() {
 
 export async function initGame() {
     try {
-        const response = await fetch('./js/modules/game/obstacles.json');
+        const response = await fetch('js/data/obstacles.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

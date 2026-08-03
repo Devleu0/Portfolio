@@ -93,7 +93,7 @@ function renderAll(lang) {
 
 export async function init() {
     try {
-        const response = await fetch('./js/data/resume-data.json');
+        const response = await fetch('js/data/resume-data.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
