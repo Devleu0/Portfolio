@@ -75,18 +75,22 @@ function initMainScrollAnimation() {
             },
             onEnter: () => {
                 progressBarWrap.style.opacity = '1';
+                progressBarWrap.style.pointerEvents = 'auto';
                 gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 1, duration: 0.3 });
             },
             onLeave: () => {
                 progressBarWrap.style.opacity = '0';
+                progressBarWrap.style.pointerEvents = 'none';
                 gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 0, duration: 0.3 });
             },
             onEnterBack: () => {
                 progressBarWrap.style.opacity = '1';
+                progressBarWrap.style.pointerEvents = 'auto';
                 gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 1, duration: 0.3 });
             },
             onLeaveBack: () => {
                 progressBarWrap.style.opacity = '0';
+                progressBarWrap.style.pointerEvents = 'none';
                 gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 0, duration: 0.3 });
             },
         }
