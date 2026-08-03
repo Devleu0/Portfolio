@@ -10,7 +10,7 @@
       },
       "title": {
         "ko": "Blind Walker",
-        "en": "Blind Walker (VR)",
+        "en": "Blind Walker",
         "ja": "Blind Walker"
       },
       "description": {
@@ -103,130 +103,286 @@
   ],
   "certifications": [
     {
-      "title": { "ko": "ADsP", "en": "ADsP", "ja": "ADsP" },
-      "description": { "ko": "데이터분석 준전문가 (2026.06)", "en": "Associate Data Analyst (2026.06)", "ja": "データ分析準専門家 (2026.06)" },
+      "title": {
+        "ko": "ADsP",
+        "en": "ADsP",
+        "ja": "ADsP"
+      },
+      "description": {
+        "ko": "데이터분석 준전문가 (2026.06)",
+        "en": "Associate Data Analyst (2026.06)",
+        "ja": "データ分析準専門家 (2026.06)"
+      },
       "link": "https://www.dataq.or.kr/"
     },
     {
-      "title": { "ko": "TOEIC 780점", "en": "TOEIC 780", "ja": "TOEIC 780点" },
-      "description": { "ko": "ETS (2026.04)", "en": "ETS (April 2026)", "ja": "ETS (2026年4月)" },
+      "title": {
+        "ko": "TOEIC 780점",
+        "en": "TOEIC 780",
+        "ja": "TOEIC 780点"
+      },
+      "description": {
+        "ko": "ETS (2026.04)",
+        "en": "ETS (April 2026)",
+        "ja": "ETS (2026年4月)"
+      },
       "link": "https://exam.toeic.co.kr/"
     },
     {
-      "title": { "ko": "SQL개발자", "en": "SQL Developer", "ja": "SQL開発者" },
-      "description": { "ko": "한국데이터산업진흥원 (2026.03)", "en": "Korea Data Agency (March 2026)", "ja": "韓国データ産業振興院 (2026.03)" },
+      "title": {
+        "ko": "SQL개발자",
+        "en": "SQL Developer",
+        "ja": "SQL開発者"
+      },
+      "description": {
+        "ko": "한국데이터산업진흥원 (2026.03)",
+        "en": "Korea Data Agency (March 2026)",
+        "ja": "韓国データ産業振興院 (2026.03)"
+      },
       "link": "https://www.dataq.or.kr/"
     },
     {
-      "title": { "ko": "JLPT N1", "en": "JLPT N1", "ja": "JLPT N1" },
-      "description": { "ko": "군 복무 중 달성 (2025.01)", "en": "Achieved during military service (Jan 2025)", "ja": "兵役中に達成 (2025年1月)" },
+      "title": {
+        "ko": "JLPT N1",
+        "en": "JLPT N1",
+        "ja": "JLPT N1"
+      },
+      "description": {
+        "ko": "군 복무 중 달성 (2025.01)",
+        "en": "Achieved during military service (Jan 2025)",
+        "ja": "兵役中に達成 (2025年1月)"
+      },
       "link": "https://www.jlpt.or.kr/"
     },
     {
-      "title": { "ko": "ISTQB CTFL", "en": "ISTQB CTFL", "ja": "ISTQB CTFL" },
-      "description": { "ko": "KSTQB (2023.06)", "en": "KSTQB (June 2023)", "ja": "KSTQB (2023年6月)" },
+      "title": {
+        "ko": "ISTQB CTFL",
+        "en": "ISTQB CTFL",
+        "ja": "ISTQB CTFL"
+      },
+      "description": {
+        "ko": "KSTQB (2023.06)",
+        "en": "KSTQB (June 2023)",
+        "ja": "KSTQB (2023年6月)"
+      },
       "link": "https://www.kstqb.org/"
     },
     {
-      "title": { "ko": "한국사능력검정시험 3급", "en": "Korean History Proficiency Test Lv.3", "ja": "韓国史能力検定試験 3級" },
-      "description": { "ko": "국사편찬위원회 (2022.08)", "en": "National Institute of Korean History (August 2022)", "ja": "国史編纂委員会 (2022年8月)" },
+      "title": {
+        "ko": "한국사능력검정시험 3급",
+        "en": "Korean History Proficiency Test Lv.3",
+        "ja": "韓国史能力検定試験 3級"
+      },
+      "description": {
+        "ko": "국사편찬위원회 (2022.08)",
+        "en": "National Institute of Korean History (August 2022)",
+        "ja": "国史編纂委員会 (2022年8月)"
+      },
       "link": "https://www.historyexam.go.kr/"
     }
   ],
   "experience": [
     {
-        "title": { "ko": "해외 인턴십 시작", "en": "Global Internship Start", "ja": "海外インターン開始"},
-        "description": { "ko": "Global Innovation Handle (2026.06)", "en": "Global Innovation Handle (June 2026)", "ja": "グローバルイノベーションハンドル（2026年6月）"}
+      "title": {
+        "ko": "해외 인턴십 시작",
+        "en": "Global Internship Start",
+        "ja": "海外インターン開始"
+      },
+      "description": {
+        "ko": "Global Innovation Handle (2026.06)",
+        "en": "Global Innovation Handle (June 2026)",
+        "ja": "グローバルイノベーションハンドル（2026年6月）"
+      }
     },
     {
-        "title": { "ko": "부전공", "en": "Minor", "ja": "副専攻"},
-        "description": { "ko": "일어일문학 부전공  (2026.03~)", "en": "Minor in Japanese Language and Literature  (2026.03~)", "ja": "日本語日本文 副専攻  (2026.03~)"}
+      "title": {
+        "ko": "부전공",
+        "en": "Minor",
+        "ja": "副専攻"
+      },
+      "description": {
+        "ko": "일어일문학 부전공  (2026.03~)",
+        "en": "Minor in Japanese Language and Literature  (2026.03~)",
+        "ja": "日本語日本文 副専攻  (2026.03~)"
+      }
     },
     {
-        "title": { "ko": "만기 전역", "en": "Discharged", "ja": "満期除隊"},
-        "description": { "ko": "공군 병 851기 병장 (2025.06)", "en": "Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)", "ja": "韓国空軍兵長 (851期, 2025年6月)"}
+      "title": {
+        "ko": "만기 전역",
+        "en": "Discharged",
+        "ja": "満期除隊"
+      },
+      "description": {
+        "ko": "공군 병 851기 병장 (2025.06)",
+        "en": "Republic of Korea Air Force Sergeant (E-5), 851st Class (June 2025)",
+        "ja": "韓国空軍兵長 (851期, 2025年6月)"
+      }
     },
     {
-        "title": { "ko": "복수전공", "en": "Double Major", "ja": "複数専攻"},
-        "description": { "ko": "지능실감미디어융합 (2023.03~)", "en": "Intelligent Media Engineering (2023.03~)", "ja": "知能メディア工学 (2023.03~)"}
+      "title": {
+        "ko": "복수전공",
+        "en": "Double Major",
+        "ja": "複数専攻"
+      },
+      "description": {
+        "ko": "지능실감미디어융합 (2023.03~)",
+        "en": "Intelligent Media Engineering (2023.03~)",
+        "ja": "知能メディア工学 (2023.03~)"
+      }
     },
     {
-        "title": { "ko": "대학교 입학", "en": "University Entrance", "ja": "大学入学"},
-        "description": { "ko": "전남대학교 인공지능학부 (2022.03~)", "en": "Chonnam National University, School of Artificial Intelligence (2022.03~)", "ja": "全南大学 人工知能学科 (2022.03~)"}
+      "title": {
+        "ko": "대학교 입학",
+        "en": "University Entrance",
+        "ja": "大学入学"
+      },
+      "description": {
+        "ko": "전남대학교 인공지능학부 (2022.03~)",
+        "en": "Chonnam National University, School of Artificial Intelligence (2022.03~)",
+        "ja": "全南大学 人工知能学科 (2022.03~)"
+      }
     },
     {
-        "title": { "ko": "고등학교 졸업", "en": "High School Grad", "ja": "高校卒業"},
-        "description": { "ko": "광주진흥고 (2022.02)", "en": "Gwangju Jinheung High School (Feb 2022)", "ja": "光州進興高校 (2022年2月)"}
+      "title": {
+        "ko": "고등학교 졸업",
+        "en": "High School Grad",
+        "ja": "高校卒業"
+      },
+      "description": {
+        "ko": "광주진흥고 (2022.02)",
+        "en": "Gwangju Jinheung High School (Feb 2022)",
+        "ja": "光州進興高校 (2022年2月)"
+      }
     },
     {
-        "title": { "ko": "중학교 졸업", "en": "Middle School Grad", "ja": "中学校卒業"},
-        "description": { "ko": "장덕중 (2019.02)", "en": "Jangdeok Middle School (Feb 2019)", "ja": "長徳中学校 (2019年2月)"}
+      "title": {
+        "ko": "중학교 졸업",
+        "en": "Middle School Grad",
+        "ja": "中学校卒業"
+      },
+      "description": {
+        "ko": "장덕중 (2019.02)",
+        "en": "Jangdeok Middle School (Feb 2019)",
+        "ja": "長徳中学校 (2019年2月)"
+      }
     },
     {
-        "title": { "ko": "초등학교 졸업", "en": "Elem. School Grad", "ja": "小学校卒業"},
-        "description": { "ko": "장덕초 (2016.02)", "en": "Jangdeok Elementary School (Feb 2016)", "ja": "長徳小学校 (2016年2月)"}
+      "title": {
+        "ko": "초등학교 졸업",
+        "en": "Elem. School Grad",
+        "ja": "小学校卒業"
+      },
+      "description": {
+        "ko": "장덕초 (2016.02)",
+        "en": "Jangdeok Elementary School (Feb 2016)",
+        "ja": "長徳小学校 (2016年2月)"
+      }
     }
   ],
   "skills": [
     {
       "category": {
-        "ko": "게임 엔진 & 그래픽스",
+        "ko": "Game Engine & Graphics",
         "en": "Game Engine & Graphics",
-        "ja": "ゲームエンジン & グラフィックス"
+        "ja": "Game Engine & Graphics"
       },
       "layout": "card-large",
       "items": [
-        { "name": "Unity", "level": 9, "width": "90%" },
-        { "name": "HLSL", "level": 7, "width": "75%" },
-        { "name": "ShaderLab", "level": 7, "width": "75%" },
-        { "name": "DirectX 11", "level": 6, "width": "60%" }
+        {
+          "name": "Unity",
+          "level": 9,
+          "width": "90%"
+        },
+        {
+          "name": "HLSL",
+          "level": 7,
+          "width": "75%"
+        },
+        {
+          "name": "ShaderLab",
+          "level": 7,
+          "width": "75%"
+        },
+        {
+          "name": "DirectX 11",
+          "level": 6,
+          "width": "60%"
+        }
       ]
     },
     {
       "category": {
-        "ko": "언어",
+        "ko": "Languages",
         "en": "Languages",
-        "ja": "言語"
+        "ja": "Languages"
       },
       "layout": "card-tall",
       "items": [
-        { "name": "C#", "level": 9, "width": "95%" },
-        { "name": "C++", "level": 8, "width": "80%" },
-        { "name": "Python", "level": 7, "width": "70%" }
+        {
+          "name": "C#",
+          "level": 9,
+          "width": "95%"
+        },
+        {
+          "name": "C++",
+          "level": 8,
+          "width": "80%"
+        },
+        {
+          "name": "Python",
+          "level": 7,
+          "width": "70%"
+        }
       ]
     },
     {
       "category": {
-        "ko": "웹 / 백엔드",
+        "ko": "Web / Backend",
         "en": "Web / Backend",
-        "ja": "ウェブ・バックエンド"
+        "ja": "Web / Backend"
       },
       "layout": "",
       "items": [
-        { "name": "Node.js", "level": 5, "width": "50%" }
+        {
+          "name": "Node.js",
+          "level": 5,
+          "width": "50%"
+        }
       ]
     },
     {
       "category": {
-        "ko": "데이터베이스",
+        "ko": "Database",
         "en": "Database",
-        "ja": "データベース"
+        "ja": "Database"
       },
       "layout": "",
       "items": [
-        { "name": "MySQL", "level": 6, "width": "60%" }
+        {
+          "name": "MySQL",
+          "level": 6,
+          "width": "60%"
+        }
       ]
     },
     {
       "category": {
-        "ko": "도구 & 협업",
+        "ko": "Tools & Collaboration",
         "en": "Tools & Collaboration",
-        "ja": "ツール & コラボレーション"
+        "ja": "Tools & Collaboration"
       },
       "layout": "card-wide",
       "items": [
-        { "name": "Git, VS Code", "level": 9, "width": "90%" },
-        { "name": "Jira, Slack, Notion", "level": 8, "width": "85%" }
+        {
+          "name": "Git, VS Code",
+          "level": 9,
+          "width": "90%"
+        },
+        {
+          "name": "Jira, Slack, Notion",
+          "level": 8,
+          "width": "85%"
+        }
       ]
     }
   ]
