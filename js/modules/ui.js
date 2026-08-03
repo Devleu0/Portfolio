@@ -231,38 +231,28 @@ function initMobileMenu() {
 }
 
 function initZoneBuildings() {
-    const mapping = [
-        { k: '장덕초등학교', cls: 'zone-building--small' },
-        { k: '장덕중학교', cls: 'zone-building--medium' },
-        { k: '광주진흥고등학교', cls: 'zone-building--large' },
-        { k: '대학교', cls: 'zone-building--university' },
-        { k: '일본 인턴십', cls: 'zone-building--tower', overlay: 'zone-overlay--scramble' }
-    ];
+    const zones = document.querySelectorAll('.zone');
+    const zoneData = state.zones;
 
-    document.querySelectorAll('.zone').forEach(zone => {
-        const title = zone.querySelector('.zone-title');
-        if (!title) return;
-        const text = (title.textContent || '').trim();
+    if (!zones.length || !zoneData || zones.length !== zoneData.length) {
+        console.error('Zone elements and zone data mismatch.');
+        return;
+    }
 
-        if ((/학년|학기/.test(text)) && !(/여름|겨울|방학|휴학/.test(text))) {
+    zones.forEach((zone, index) => {
+        const data = zoneData[index];
+
+        if (data.building) {
             const b = document.createElement('div');
-            b.className = 'zone-building zone-building--university';
+            b.className = `zone-building zone-building--${data.building}`;
             zone.appendChild(b);
-            return;
         }
 
-        mapping.forEach(m => {
-            if (text.includes(m.k)) {
-                const b = document.createElement('div');
-                b.className = `zone-building ${m.cls}`;
-                zone.appendChild(b);
-                if (m.overlay) {
-                    const o = document.createElement('div');
-                    o.className = `zone-overlay ${m.overlay}`;
-                    zone.appendChild(o);
-                }
-            }
-        });
+        if (data.overlay) {
+            const o = document.createElement('div');
+            o.className = `zone-overlay zone-overlay--${data.overlay}`;
+            zone.appendChild(o);
+        }
     });
 }
 
