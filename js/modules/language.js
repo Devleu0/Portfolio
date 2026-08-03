@@ -1,4 +1,5 @@
 import { state } from './config.js';
+import { update as updateRenderer } from './renderer.js';
 
 // 템플릿 리터럴(백틱 `)로 변경하여 줄바꿈 구문 오류 해결 
 let termTypedTextData = {
@@ -17,22 +18,18 @@ export function updateLanguage(lang) {
     state.currentLang = lang;
     document.documentElement.lang = lang;
 
-    // Update all elements with '.lang-text'
+    // Render dynamic resume sections with the new language
+    updateRenderer(lang);
+
+    // Update all other elements with '.lang-text'
     document.querySelectorAll('.lang-text').forEach(function (el) {
         const newText = el.getAttribute(`data-${lang}`) || el.getAttribute('data-ko') || '';
+        // Only update if the element is not inside a renderer-controlled container,
+        // or if it's a special case. For now, we update if text is different.
         if (newText && el.innerHTML !== newText) {
             el.innerHTML = newText;
         }
     });
-
-    // Toggle visibility of about content sections
-    document.querySelectorAll('.about-content').forEach(function (el) {
-        el.style.display = 'none';
-    });
-    const activeAboutContent = document.querySelector(`.about-content[lang="${lang}"]`);
-    if (activeAboutContent) {
-        activeAboutContent.style.display = 'block';
-    }
 
     // Update terminal text
     window._termTypedText = termTypedTextData[lang];
