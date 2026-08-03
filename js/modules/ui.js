@@ -149,11 +149,18 @@ function initStatCounter() {
             state.isStatSectionCounted = true;
 
             document.querySelectorAll('.stat-num:not(#final-rank)').forEach(el => {
-                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                const id = el.id;
+                let target = 0;
+                if (id === 'max-combo-stat') {
+                    target = state.maxCombo;
+                } else {
+                    target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                }
+                
                 let current = { val: 0 };
                 gsap.to(current, {
                     val: target,
-                    duration: 1,
+                    duration: 1.5,
                     roundProps: 'val',
                     onUpdate: () => { el.textContent = current.val; }
                 });
@@ -162,12 +169,14 @@ function initStatCounter() {
             const finalRankEl = document.getElementById('final-rank');
             if (finalRankEl) {
                 const obstacles = getObstacleData();
-                const maxScore = obstacles.length * 500;
+                const totalObjects = obstacles.length;
+                // Simplified dynamic threshold calculation as per plan
+                const estimatedMaxScore = totalObjects * 500 * 1.2; 
 
                 const rankThresholds = {
-                    S: maxScore * 0.9,
-                    A: maxScore * 0.7,
-                    B: maxScore * 0.4,
+                    S: estimatedMaxScore * 0.9,
+                    A: estimatedMaxScore * 0.7,
+                    B: estimatedMaxScore * 0.4,
                 };
 
                 let rank = 'C';
@@ -175,6 +184,12 @@ function initStatCounter() {
                 if (state.totalScore >= rankThresholds.S) { rank = 'S'; rankColor = '#fbbf24'; }
                 else if (state.totalScore >= rankThresholds.A) { rank = 'A'; rankColor = '#f87171'; }
                 else if (state.totalScore >= rankThresholds.B) { rank = 'B'; rankColor = '#60a5fa'; }
+                
+                // Add special badge for high combo
+                if (state.maxCombo >= totalObjects) {
+                    rank = 'PERFECT RUN';
+                    rankColor = '#22D3EE';
+                }
 
                 setTimeout(() => {
                     finalRankEl.textContent = rank;
@@ -289,4 +304,134 @@ export function initUI() {
             gsap.to(window, { scrollTo: '#resume-section', duration: 1.5, ease: 'power2.inOut' });
         });
     }
+}
+
+// Combo System UI Functions
+export function triggerComboEffect(combo) {
+    const comboEl = document.getElementById('combo-display');
+    const countEl = document.getElementById('combo-count');
+    if (!comboEl || !countEl) return;
+
+    countEl.textContent = combo;
+    comboEl.classList.add('is-active');
+
+    // Tier determination
+    let tier = 'low';
+    if (combo >= 10) tier = 'max';
+    else if (combo >= 5) tier = 'high';
+    else if (combo >= 3) tier = 'mid';
+
+    comboEl.dataset.tier = tier;
+
+    // Counter punch animation
+    gsap.fromTo(comboEl, 
+        { scale: 1.4 }, 
+        { scale: 1, duration: 0.25, ease: 'back.out(3)' }
+    );
+
+    if (tier === 'mid' || tier === 'high' || tier === 'max') {
+        triggerScreenShake(tier);
+        triggerBackgroundFlash(tier);
+    }
+
+    if (tier === 'max' && combo % 10 === 0) {
+        showMaxComboPopup(combo);
+    }
+}
+
+export function hideComboCounter() {
+    const comboEl = document.getElementById('combo-display');
+    if (!comboEl) return;
+    gsap.to(comboEl, { 
+        opacity: 0, scale: 0.8, duration: 0.3, 
+        onComplete: () => {
+            comboEl.classList.remove('is-active');
+            // Reset opacity and scale for the next time
+            gsap.set(comboEl, { opacity: 1, scale: 1, display: 'none' });
+            comboEl.style.display = '';
+        }
+    });
+}
+
+function triggerScreenShake(tier) {
+    const container = document.querySelector('.horizontal-container');
+    if (!container) return;
+    const shakeClass = `shake-${tier}`;
+    
+    // Using a timeout to allow the class to be removed before re-adding
+    container.classList.remove('shake-mid', 'shake-high', 'shake-max');
+    setTimeout(() => {
+        container.classList.add(shakeClass);
+        container.addEventListener('animationend', () => {
+            container.classList.remove(shakeClass);
+        }, { once: true });
+    }, 10); // A small delay is often enough
+}
+
+function triggerBackgroundFlash(tier) {
+    const flash = document.getElementById('combo-flash');
+    if (!flash) return;
+    const color = tier === 'max' ? 'radial-gradient(circle, rgba(253,224,71,0.5), transparent 70%)'
+                : tier === 'high' ? 'radial-gradient(circle, rgba(253,224,71,0.3), transparent 70%)'
+                : 'radial-gradient(circle, rgba(34,211,238,0.2), transparent 70%)';
+    
+    flash.style.background = color;
+    gsap.fromTo(flash, { opacity: 1 }, { opacity: 0, duration: tier === 'max' ? 0.5 : 0.3, ease: 'power2.out' });
+}
+
+function showMaxComboPopup(combo) {
+    const popup = document.createElement('div');
+    popup.textContent = `MAX COMBO x${combo}!`;
+    popup.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        font-family: var(--font-title);
+        color: #FDE047;
+        text-shadow: 4px 4px 0 var(--shadow);
+        pointer-events: none;
+        z-index: 100;
+    `;
+    document.body.appendChild(popup);
+    gsap.fromTo(popup, 
+        { scale: 0.5, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)', 
+            onComplete: () => {
+                gsap.to(popup, { opacity: 0, scale: 1.5, duration: 0.5, delay: 0.5, onComplete: () => popup.remove() });
+            }
+        }
+    );
+}
+
+// Note: `showComboBreakToast` from the plan is not included here yet, as it's part of combo break logic.
+export function showComboBreakToast(lastCombo) {
+    const toast = document.createElement('div');
+    toast.innerHTML = `COMBO BREAK <span style="color: #F87171;">(x${lastCombo})</span>`;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        font-family: var(--font-title);
+        color: var(--text-sub);
+        text-shadow: 2px 2px 0 var(--shadow);
+        pointer-events: none;
+        z-index: 100;
+        opacity: 0;
+        padding: 8px 16px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 2px solid var(--zone-border);
+    `;
+    document.body.appendChild(toast);
+    gsap.fromTo(toast,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out',
+            onComplete: () => {
+                gsap.to(toast, { opacity: 0, y: -20, duration: 0.6, delay: 0.6, ease: 'power1.in', onComplete: () => toast.remove() });
+            }
+        }
+    );
 }

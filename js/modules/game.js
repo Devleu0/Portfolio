@@ -3,7 +3,7 @@ import {
     isMobile, mobileScale, THEME, ICONS, buildLangAttrs, getStr, state
 } from './config.js';
 import { playSound } from './audio.js';
-import { updateCounter, updateScoreDisplay, triggerCollectEffect } from './ui.js';
+import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from './ui.js';
 
 // DOM Elements
 let gameContainer, player, playerWrapper, playerInner;
@@ -159,9 +159,24 @@ function finalizeCollection(obstacle, didAction) {
     if (!dataId || locallyCollected.has(dataId)) return;
 
     if (didAction) {
-        state.totalScore += 500;
+        state.comboCount++;
+        state.maxCombo = Math.max(state.maxCombo, state.comboCount);
+
+        const multiplier = state.comboCount >= 10 ? 2.0
+                          : state.comboCount >= 5  ? 1.5
+                          : state.comboCount >= 3  ? 1.2
+                          : 1.0;
+        state.totalScore += Math.round(500 * multiplier);
         state.perfectCount++;
+
+        triggerComboEffect(state.comboCount);
     } else {
+        if (state.comboCount >= 5) {
+            showComboBreakToast(state.comboCount);
+        }
+        state.lastComboBeforeReset = state.comboCount;
+        state.comboCount = 0;
+        hideComboCounter();
         state.totalScore += 100;
     }
 
@@ -276,6 +291,11 @@ export function resetGame() {
 
     state.totalScore = 0;
     state.perfectCount = 0;
+    state.comboCount = 0;
+    state.maxCombo = 0;
+    state.lastComboBeforeReset = 0;
+    hideComboCounter();
+
     obstacleElements.forEach(el => el.classList.remove('collected'));
     updateCounter();
     updateScoreDisplay();
