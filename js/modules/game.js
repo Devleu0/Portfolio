@@ -334,23 +334,41 @@ export function resetGame() {
 }
 
 export async function initGame() {
-    const response = await fetch('./js/modules/game/obstacles.json');
-    obstaclesData = await response.json();
+    try {
+        const response = await fetch('./js/modules/game/obstacles.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        obstaclesData = await response.json();
 
-    if (isMobile) {
-        obstaclesData.forEach(obs => {
-            obs.pos *= mobileScale;
-            if (obs.elevation) obs.elevation *= mobileScale;
+        // Update total counters based on data length
+        const totalItems = obstaclesData.length;
+        const counterTotalEl = document.getElementById('counter-total');
+        if (counterTotalEl) {
+            counterTotalEl.textContent = totalItems;
+        }
+        const milestonesStatEl = document.getElementById('milestones-stat');
+        if (milestonesStatEl) {
+            milestonesStatEl.dataset.target = totalItems;
+        }
+
+        if (isMobile) {
+            obstaclesData.forEach(obs => {
+                obs.pos *= mobileScale;
+                if (obs.elevation) obs.elevation *= mobileScale;
+            });
+        }
+
+        createPlayer();
+        obstaclesData.forEach((data, index) => {
+            obstacleElements.push(createObstacle(data, index + 1000));
         });
+
+        setupControls();
+        gsap.ticker.add(gameLoop);
+    } catch (error) {
+        console.error("Failed to initialize game:", error);
     }
-
-    createPlayer();
-    obstaclesData.forEach((data, index) => {
-        obstacleElements.push(createObstacle(data, index + 1000));
-    });
-
-    setupControls();
-    gsap.ticker.add(gameLoop);
 }
 
 // Player wrapper animations can be controlled from other modules

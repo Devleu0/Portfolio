@@ -54,7 +54,7 @@
         <div id="hud-overlay">
             <div class="counter-display">
                 <span class="dot"></span>
-                <span id="counter-current">0</span> / 27
+                <span id="counter-current">0</span> / <span id="counter-total">0</span>
             </div>
             <div class="score-display">
                 SCORE <span id="score-current">0</span>
@@ -425,7 +425,7 @@
                 data-ja="これまではチュートリアルでした。本当の「メインクエスト」はここから始まります。">지금까지는 튜토리얼이었습니다. '메인 퀘스트'는 이제부터 시작됩니다.</p>
             <div class="stat-grid">
                 <div class="stat-card">
-                    <div class="stat-num" data-target="27">0</div>
+                    <div class="stat-num" id="milestones-stat" data-target="0">0</div>
                     <div class="stat-label">Milestones</div>
                 </div>
                 <div class="stat-card">
@@ -433,7 +433,7 @@
                     <div class="stat-label">Rank</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-num" data-target="6">0</div>
+                    <div class="stat-num" id="certificates-stat" data-target="0">0</div>
                     <div class="stat-label">Certificates</div>
                 </div>
             </div>

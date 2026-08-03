@@ -98,6 +98,15 @@ export async function init() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         resumeData = await response.json();
+
+        // Update certificates count
+        if (resumeData.certifications) {
+            const certificatesStatEl = document.getElementById('certificates-stat');
+            if (certificatesStatEl) {
+                certificatesStatEl.dataset.target = resumeData.certifications.length;
+            }
+        }
+
         renderAll(state.currentLang);
     } catch (error) {
         console.error("Failed to load or render resume data:", error);
