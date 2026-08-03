@@ -3,7 +3,7 @@ import {
     isMobile, mobileScale, THEME, ICONS, buildLangAttrs, getStr, state
 } from './config.js';
 import { playSound } from './audio.js';
-import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter } from './ui.js';
+import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from './ui.js';
 
 // DOM Elements
 let gameContainer, player, playerWrapper, playerInner;
@@ -171,6 +171,9 @@ function finalizeCollection(obstacle, didAction) {
 
         triggerComboEffect(state.comboCount);
     } else {
+        if (state.comboCount >= 5) {
+            showComboBreakToast(state.comboCount);
+        }
         state.lastComboBeforeReset = state.comboCount;
         state.comboCount = 0;
         hideComboCounter();
