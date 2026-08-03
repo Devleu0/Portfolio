@@ -85,15 +85,19 @@ async function createZoneElements() {
             }
 
             // Create and append parallax backgrounds only if bgType is not 'none'
-            if (zoneData.bgType && zoneData.bgType !== 'none') {
+            if (zoneData.bgType && zoneData.bgType !== 'none' && zoneData.parallax) {
                 const parallaxLayers = [
-                    { speed: 0.1, class: 'parallax-bg-far' },
-                    { speed: 0.2, class: 'parallax-bg-mid' },
-                    { speed: 0.4, class: 'parallax-bg-near' }
+                    { speed: 0.1, class: 'parallax-bg-far', key: 'far' },
+                    { speed: 0.2, class: 'parallax-bg-mid', key: 'mid' },
+                    { speed: 0.4, class: 'parallax-bg-near', key: 'near' }
                 ];
                 parallaxLayers.forEach(layer => {
+                    const imageUrl = zoneData.parallax[layer.key];
+                    if (!imageUrl) return; // Skip if a specific layer is not defined for the zone
+
                     const bgEl = document.createElement('div');
                     bgEl.className = `parallax-bg ${layer.class}`;
+                    bgEl.style.backgroundImage = `url('${imageUrl}')`;
                     bgEl.setAttribute('data-width', zoneData.width);
                     bgEl.setAttribute('data-speed', layer.speed);
                     zoneEl.appendChild(bgEl);
