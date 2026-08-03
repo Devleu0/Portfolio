@@ -1579,11 +1579,12 @@ button.action {
     background: rgba(255, 255, 255, 0.06);
 }
 
-/* Show controls on desktop as well */
+/* Show controls on desktop as well 
 .mobile-controls-left,
 .mobile-controls-right {
     display: flex !important;
 }
+*/
 
 #about-section {
     position: relative;
