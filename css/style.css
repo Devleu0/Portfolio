@@ -575,7 +575,7 @@ body {
 .progress-marker {
     position: absolute;
     top: -2px;
-    width: 4px;
+    width: 8px;
     height: 16px;
     /* background: #FDE047; */
     border: 1px solid #020617;
