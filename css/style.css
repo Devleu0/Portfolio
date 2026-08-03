@@ -1341,6 +1341,12 @@ body {
     box-shadow: 0 0 8px var(--accent);
 }
 
+.game-only-ui {
+    opacity: 0;
+    visibility: hidden;
+    /* pointer-events는 GSAP autoAlpha가 visibility로 자동 처리해줘서 별도 설정 불필요 */
+}
+
 .keyboard-guide {
     position: fixed;
     bottom: 32px;
@@ -1579,12 +1585,12 @@ button.action {
     background: rgba(255, 255, 255, 0.06);
 }
 
-/* Show controls on desktop as well 
+/* Show controls on desktop as well */
 .mobile-controls-left,
 .mobile-controls-right {
     display: flex !important;
 }
-*/
+
 
 #about-section {
     position: relative;
