@@ -32,8 +32,51 @@ async function createZoneElements() {
 
             const zoneEl = document.createElement('div');
             zoneEl.className = 'zone';
+            zoneEl.setAttribute('data-zone-id', zoneData.id);
+
             if (zoneData.isFinale) {
                 zoneEl.classList.add('finale');
+                const finaleLayer = document.createElement('div');
+                finaleLayer.className = 'finale-layer';
+
+                const confettiData = [
+                    { left: '0%', background: '#22D3EE', duration: '2s', delay: '0s' },
+                    { left: '53%', background: '#FBBF24', duration: '2.4s', delay: '0.3s' },
+                    { left: '6%', background: '#F472B6', duration: '2.8s', delay: '0.6s' },
+                    { left: '59%', background: '#4ADE80', duration: '3.2s', delay: '0.9s' },
+                    { left: '12%', background: '#22D3EE', duration: '3.6s', delay: '1.2s' },
+                    { left: '65%', background: '#FBBF24', duration: '2s', delay: '1.5s' },
+                    { left: '18%', background: '#F472B6', duration: '2.4s', delay: '0s' },
+                    { left: '71%', background: '#4ADE80', duration: '2.8s', delay: '0.3s' },
+                    { left: '24%', background: '#22D3EE', duration: '3.2s', delay: '0.6s' },
+                    { left: '77%', background: '#FBBF24', duration: '3.6s', delay: '0.9s' },
+                    { left: '30%', background: '#F472B6', duration: '2s', delay: '1.2s' },
+                    { left: '83%', background: '#4ADE80', duration: '2.4s', delay: '1.5s' },
+                    { left: '36%', background: '#22D3EE', duration: '2.8s', delay: '0s' },
+                    { left: '89%', background: '#FBBF24', duration: '3.2s', delay: '0.3s' },
+                    { left: '42%', background: '#F472B6', duration: '3.6s', delay: '0.6s' },
+                    { left: '95%', background: '#4ADE80', duration: '2s', delay: '0.9s' },
+                    { left: '48%', background: '#22D3EE', duration: '2.4s', delay: '1.2s' },
+                    { left: '1%', background: '#FBBF24', duration: '2.8s', delay: '1.5s' },
+                ];
+
+                confettiData.forEach(confetto => {
+                    const c = document.createElement('div');
+                    c.className = 'finale-confetti';
+                    c.style.top = '-20px';
+                    c.style.left = confetto.left;
+                    c.style.background = confetto.background;
+                    c.style.animationDuration = confetto.duration;
+                    c.style.animationDelay = confetto.delay;
+                    finaleLayer.appendChild(c);
+                });
+
+                const caption = document.createElement('div');
+                caption.className = 'finale-caption';
+                caption.innerHTML = '<div class="finale-caption-retro">STAGE CLEAR</div>';
+                finaleLayer.appendChild(caption);
+
+                zoneEl.appendChild(finaleLayer);
             }
             zoneEl.style.width = `${zoneData.width}px`;
             zoneEl.style.backgroundColor = zoneData.backgroundColor;
@@ -41,19 +84,21 @@ async function createZoneElements() {
                 zoneEl.style.borderRight = 'none';
             }
 
-            // Create and append parallax backgrounds
-            const parallaxLayers = [
-                { speed: 0.1, class: 'parallax-bg-far' },
-                { speed: 0.2, class: 'parallax-bg-mid' },
-                { speed: 0.4, class: 'parallax-bg-near' }
-            ];
-            parallaxLayers.forEach(layer => {
-                const bgEl = document.createElement('div');
-                bgEl.className = `parallax-bg ${layer.class}`;
-                bgEl.setAttribute('data-width', zoneData.width);
-                bgEl.setAttribute('data-speed', layer.speed);
-                zoneEl.appendChild(bgEl);
-            });
+            // Create and append parallax backgrounds only if bgType is not 'none'
+            if (zoneData.bgType && zoneData.bgType !== 'none') {
+                const parallaxLayers = [
+                    { speed: 0.1, class: 'parallax-bg-far' },
+                    { speed: 0.2, class: 'parallax-bg-mid' },
+                    { speed: 0.4, class: 'parallax-bg-near' }
+                ];
+                parallaxLayers.forEach(layer => {
+                    const bgEl = document.createElement('div');
+                    bgEl.className = `parallax-bg ${layer.class}`;
+                    bgEl.setAttribute('data-width', zoneData.width);
+                    bgEl.setAttribute('data-speed', layer.speed);
+                    zoneEl.appendChild(bgEl);
+                });
+            }
 
 
             const titleEl = document.createElement('div');
