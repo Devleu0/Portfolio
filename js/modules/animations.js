@@ -33,6 +33,8 @@ function initMainScrollAnimation() {
     const finaleFlash = document.getElementById('finale-flash');
     const hudOverlay = document.getElementById('hud-overlay');
 
+    const gameOnlyUI = gsap.utils.toArray('.game-only-ui');
+
     gsap.to(horizontalSection, {
         x: () => -(horizontalSection.scrollWidth - window.innerWidth) + "px",
         ease: "none",
@@ -73,23 +75,19 @@ function initMainScrollAnimation() {
             },
             onEnter: () => {
                 progressBarWrap.style.opacity = '1';
-                progressBarWrap.style.pointerEvents = 'auto';
-                gsap.to(hudOverlay, { autoAlpha: 1, duration: 0.3 });
+                gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 1, duration: 0.3 });
             },
             onLeave: () => {
                 progressBarWrap.style.opacity = '0';
-                progressBarWrap.style.pointerEvents = 'none';
-                gsap.to(hudOverlay, { autoAlpha: 0, duration: 0.3 });
+                gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 0, duration: 0.3 });
             },
             onEnterBack: () => {
                 progressBarWrap.style.opacity = '1';
-                progressBarWrap.style.pointerEvents = 'auto';
-                gsap.to(hudOverlay, { autoAlpha: 1, duration: 0.3 });
+                gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 1, duration: 0.3 });
             },
             onLeaveBack: () => {
                 progressBarWrap.style.opacity = '0';
-                progressBarWrap.style.pointerEvents = 'none';
-                gsap.to(hudOverlay, { autoAlpha: 0, duration: 0.3 });
+                gsap.to([hudOverlay, ...gameOnlyUI], { autoAlpha: 0, duration: 0.3 });
             },
         }
     });
