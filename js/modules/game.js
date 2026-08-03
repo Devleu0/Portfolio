@@ -17,13 +17,11 @@ const locallyCollected = new Set();
 const beingCollected = new Set();
 const pendingCollectTimeouts = new Map();
 let actionJustPressed = false;
-let posHistory = []; // For ghost effect
-let ghostEls = [];
 
 // Constants
 const jumpHeight = isMobile ? -75 : -150;
-const duckScale = THEME === 'minimal' ? 0.6 : 0.5;
-const jumpEase = THEME === 'minimal' ? "power2.out" : "power1.out";
+const duckScale = 0.5;
+const jumpEase = "power1.out";
 
 
 export function getObstacleData() {
@@ -58,21 +56,12 @@ function createPlayer() {
     player.appendChild(playerWrapper);
     gameContainer.appendChild(player);
 
-    if (THEME === 'minimal') {
-        const ghostSvg = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block; overflow:visible;"><circle cx="50" cy="30" r="16" fill="currentColor" opacity="0.6"/><rect x="34" y="46" width="32" height="34" rx="12" fill="currentColor"/><rect x="24" y="48" width="12" height="26" rx="6" fill="currentColor"/><rect x="64" y="48" width="12" height="26" rx="6" fill="currentColor"/></svg>`;
-        for (let i = 0; i < 3; i++) {
-            const ghost = document.createElement('div');
-            ghost.className = 'finale-ghost';
-            ghost.innerHTML = ghostSvg;
-            gameContainer.appendChild(ghost);
-            ghostEls.push(ghost);
-        }
-    }
+
 }
 
 function createObstacle(data, fallbackId) {
     const hasImg = !!data.customIcon;
-    const size = hasImg ? (THEME === 'minimal' ? 100 : 96) : (isMobile ? 48 : (THEME === 'minimal' ? 70 : 64));
+    const size = hasImg ? 96 : (isMobile ? 48 : 64);
     const iconSize = isMobile ? 24 : 32;
     const elevation = data.elevation || 0;
     const bottomStyle = `calc(35vh + ${elevation}px)`;
@@ -101,20 +90,17 @@ function createObstacle(data, fallbackId) {
     obstacle.className = `obstacle-badge${data.inProgress ? ' is-inprogress' : ''}`;
     obstacle.style.width = data.customIcon ? '86px' : '100%';
     obstacle.style.height = data.customIcon ? '64px' : '100%';
-    obstacle.style.borderRadius = data.customIcon ? '8px' : (THEME === 'minimal' ? '50%' : '0');
+    obstacle.style.borderRadius = data.customIcon ? '8px' : '0';
     obstacle.style.position = 'relative';
     obstacle.style.left = data.customIcon ? '-8px' : '0';
 
-    if (THEME === 'minimal' && !data.customIcon) {
-        obstacle.style.background = 'rgba(30,41,59,0.8)';
-        obstacle.style.backdropFilter = 'blur(8px)';
-    } else if (!data.customIcon) {
+    if (!data.customIcon) {
         obstacle.style.background = data.color || '#22D3EE';
     }
 
-    const strokeColor = THEME === 'minimal' ? (data.color || 'var(--accent)') : '#020617';
+    const strokeColor = '#020617';
     if (data.customIcon) {
-        obstacle.innerHTML = `<img src="${data.customIcon}" alt="${getStr(data.title, state.currentLang)}" style="width:100%; height:100%; object-fit:cover; image-rendering:${THEME === 'minimal' ? 'auto' : 'pixelated'};" />`;
+        obstacle.innerHTML = `<img src="${data.customIcon}" alt="${getStr(data.title, state.currentLang)}" style="width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />`;
     } else {
         obstacle.innerHTML = `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[data.category] || ICONS.other}</svg>`;
     }
@@ -235,32 +221,8 @@ function gameLoop(time, deltaTime) {
         }
     });
 
-    if (THEME === 'minimal') {
-        playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px rgba(56,189,248,1)) brightness(1.2)' : 'drop-shadow(0 0 8px rgba(56,189,248,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))';
-    } else {
-        playerInner.style.color = isAnythingOverlapping ? '#fff' : '#22D3EE';
-        playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
-    }
-
-    if (THEME === 'minimal') {
-        const px = gsap.getProperty(player, 'x') || 0;
-        const py = gsap.getProperty(player, 'y') || 0;
-        posHistory.push({ x: px, y: py });
-        if (posHistory.length > 30) posHistory.shift();
-
-        ghostEls.forEach((g, i) => {
-            if (state.currentFinaleP > 0.05) {
-                const delay = (i + 1) * 7;
-                const hist = posHistory[posHistory.length - 1 - delay];
-                if (hist) {
-                    g.style.opacity = String(0.22 - i * 0.06);
-                    g.style.transform = `translate(${hist.x}px, ${hist.y}px)`;
-                }
-            } else {
-                g.style.opacity = '0';
-            }
-        });
-    }
+    playerInner.style.color = isAnythingOverlapping ? '#fff' : '#22D3EE';
+    playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
 }
 
 function setupControls() {
@@ -335,7 +297,7 @@ export function resetGame() {
 
 export async function initGame() {
     try {
-        const response = await fetch('./js/modules/game/obstacles.json');
+        const response = await fetch('js/data/obstacles.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

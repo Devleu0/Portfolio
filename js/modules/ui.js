@@ -161,11 +161,20 @@ function initStatCounter() {
 
             const finalRankEl = document.getElementById('final-rank');
             if (finalRankEl) {
+                const obstacles = getObstacleData();
+                const maxScore = obstacles.length * 500;
+
+                const rankThresholds = {
+                    S: maxScore * 0.9,
+                    A: maxScore * 0.7,
+                    B: maxScore * 0.4,
+                };
+
                 let rank = 'C';
                 let rankColor = '#94a3b8';
-                if (state.totalScore >= 12000) { rank = 'S'; rankColor = '#fbbf24'; }
-                else if (state.totalScore >= 9000) { rank = 'A'; rankColor = '#f87171'; }
-                else if (state.totalScore >= 5000) { rank = 'B'; rankColor = '#60a5fa'; }
+                if (state.totalScore >= rankThresholds.S) { rank = 'S'; rankColor = '#fbbf24'; }
+                else if (state.totalScore >= rankThresholds.A) { rank = 'A'; rankColor = '#f87171'; }
+                else if (state.totalScore >= rankThresholds.B) { rank = 'B'; rankColor = '#60a5fa'; }
 
                 setTimeout(() => {
                     finalRankEl.textContent = rank;
@@ -230,7 +239,7 @@ function initMobileMenu() {
     }
 }
 
-function initZoneBuildings() {
+function initZoneScenery() {
     const zones = document.querySelectorAll('.zone');
     const zoneData = state.zones;
 
@@ -242,15 +251,17 @@ function initZoneBuildings() {
     zones.forEach((zone, index) => {
         const data = zoneData[index];
 
-        if (data.building) {
+        if (data.scenery && data.scenery.building) {
             const b = document.createElement('div');
-            b.className = `zone-building zone-building--${data.building}`;
+            b.className = `zone-building zone-building--${data.scenery.building.type}`;
+            b.style.backgroundImage = `url('${data.scenery.building.path}')`;
             zone.appendChild(b);
         }
 
-        if (data.overlay) {
+        if (data.scenery && data.scenery.overlay) {
             const o = document.createElement('div');
-            o.className = `zone-overlay zone-overlay--${data.overlay}`;
+            o.className = `zone-overlay zone-overlay--${data.scenery.overlay.type}`;
+            o.style.backgroundImage = `url('${data.scenery.overlay.path}')`;
             zone.appendChild(o);
         }
     });
@@ -262,7 +273,7 @@ export function initUI() {
     initTerminalEffect();
     initStatCounter();
     initMobileMenu();
-    initZoneBuildings();
+    initZoneScenery();
 
     // Must run after a delay to ensure scrollWidth is calculated correctly
     setTimeout(createProgressMarkers, 500);

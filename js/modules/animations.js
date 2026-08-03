@@ -47,12 +47,12 @@ function initMainScrollAnimation() {
                 updateLanguage(state.currentLang, false); // Refresh language to update skip button
 
                 // --- Visual Updates ---
-                skyOverlay.style.background = `linear-gradient(to bottom, ${getSkyColor(p)}${THEME === 'minimal' ? 'FF' : 'D0'} 0%, transparent 90%)`;
+                skyOverlay.style.background = `linear-gradient(to bottom, ${getSkyColor(p)}D0 0%, transparent 90%)`;
                 sun.style.transform = `translate(${p * (window.innerWidth - 56)}px, ${40 + (1 - Math.sin(p * (Math.PI / 2))) * 140}px)`;
                 progressFill.style.width = `${p * 100}%`;
                 progressFill.style.boxShadow = p >= 0.999
-                    ? (THEME === 'minimal' ? '0 0 20px rgba(56,189,248,0.85), 0 0 36px rgba(56,189,248,0.5)' : '0 0 20px #22D3EE, 0 0 36px #22D3EE')
-                    : (THEME === 'minimal' ? '0 0 10px rgba(56,189,248,0.8)' : '0 0 10px var(--accent)');
+                    ? '0 0 20px #22D3EE, 0 0 36px #22D3EE'
+                    : '0 0 10px var(--accent)';
 
                 // --- Finale Logic ---
                 const maxTranslate = Math.max(1, horizontalSection.scrollWidth - window.innerWidth);
@@ -65,7 +65,7 @@ function initMainScrollAnimation() {
                 finaleFlash.style.opacity = flashP.toFixed(3);
                 state.currentFinaleP = finaleP;
 
-                if (THEME !== 'minimal' && playerWrapper) {
+                if (playerWrapper) {
                     const active = finaleP > 0.05;
                     playerWrapper.classList.toggle('player-victory-cycle', active);
                     playerWrapper.classList.toggle('player-finale-bounce', active);
