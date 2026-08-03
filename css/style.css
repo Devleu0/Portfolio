@@ -1935,39 +1935,3 @@ button.action {
     0% { transform: translate(-50%, 0); text-shadow: 0 0 5px transparent; }
     100% { transform: translate(-50%, -8px); text-shadow: 0 0 8px var(--accent); }
 }
-
-/* Start Overlay Styles */
-#start-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(2, 6, 23, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    cursor: pointer;
-    transition: opacity 0.5s ease;
-    backdrop-filter: blur(5px);
-}
-
-.start-message {
-    text-align: center;
-    color: #fff;
-    font-family: var(--font-title);
-    font-size: 2.5rem;
-    text-shadow: 3px 3px 0 var(--shadow);
-    animation: fadeInOut 2s infinite;
-}
-
-.start-keys {
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    color: var(--text-sub);
-    margin-top: 20px;
-    letter-spacing: 2px;
-}
-
-@keyframes fadeInOut {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
-}
