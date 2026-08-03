@@ -148,19 +148,18 @@ function initStatCounter() {
         if (entries[0].isIntersecting && !state.isStatSectionCounted) {
             state.isStatSectionCounted = true;
 
+            const maxComboStatEl = document.getElementById('max-combo-stat');
+            if (maxComboStatEl) {
+                maxComboStatEl.dataset.target = state.maxCombo;
+            }
+
             document.querySelectorAll('.stat-num:not(#final-rank)').forEach(el => {
-                const id = el.id;
-                let target = 0;
-                if (id === 'max-combo-stat') {
-                    target = state.maxCombo;
-                } else {
-                    target = parseInt(el.getAttribute('data-target'), 10) || 0;
-                }
-                
+                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
                 let current = { val: 0 };
                 gsap.to(current, {
                     val: target,
                     duration: 1.5,
+                    ease: 'power2.out',
                     roundProps: 'val',
                     onUpdate: () => { el.textContent = current.val; }
                 });
@@ -170,7 +169,6 @@ function initStatCounter() {
             if (finalRankEl) {
                 const obstacles = getObstacleData();
                 const totalObjects = obstacles.length;
-                // Simplified dynamic threshold calculation as per plan
                 const estimatedMaxScore = totalObjects * 500 * 1.2; 
 
                 const rankThresholds = {
@@ -185,10 +183,9 @@ function initStatCounter() {
                 else if (state.totalScore >= rankThresholds.A) { rank = 'A'; rankColor = '#f87171'; }
                 else if (state.totalScore >= rankThresholds.B) { rank = 'B'; rankColor = '#60a5fa'; }
                 
-                // Add special badge for high combo
-                if (state.maxCombo >= totalObjects) {
-                    rank = 'PERFECT RUN';
-                    rankColor = '#22D3EE';
+                if (state.maxCombo > 0 && state.maxCombo >= totalObjects) {
+                    rank = 'GOD';
+                    rankColor = '#cb0000'; 
                 }
 
                 setTimeout(() => {
