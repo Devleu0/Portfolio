@@ -1,43 +1,36 @@
-
 import {
     isMobile, mobileScale, THEME, ICONS, buildLangAttrs, getStr, state, getCategoryColor
 } from './config.js';
 import { playSound } from './audio.js';
 import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from './ui.js';
 
-// DOM Elements
 let gameContainer, player, playerWrapper, playerInner;
 
-// Game Data
 let obstaclesData = [];
 let obstacleElements = [];
 
-// Internal State
 const locallyCollected = new Set();
 const beingCollected = new Set();
 const pendingCollectTimeouts = new Map();
 let actionJustPressed = false;
 
-// Constants
 const jumpHeight = isMobile ? -75 : -150;
 const duckScale = 0.5;
 const jumpEase = "power1.out";
 
-
-export function getObstacleData() {
-    return obstaclesData;
-}
-
-export function getObstacleElements() {
-    return obstacleElements;
-}
-
-export function getPlayerElement() {
-    return player;
-}
+export function getObstacleData() { return obstaclesData; }
+export function getObstacleElements() { return obstacleElements; }
+export function getPlayerElement() { return player; }
+export function getPlayerWrapper() { return playerWrapper; }
 
 function createPlayer() {
     const horizontalSection = document.querySelector('.horizontal-section');
+    
+    // 기존 컨테이너가 있다면 제거 (중복 생성 방지)
+    if (gameContainer && gameContainer.parentNode) {
+        gameContainer.parentNode.removeChild(gameContainer);
+    }
+
     gameContainer = document.createElement('div');
     gameContainer.style.cssText = 'position:absolute; top:0; z-index:10; left:0; width:100%; height:100%; overflow:hidden; pointer-events:none;';
     horizontalSection.appendChild(gameContainer);
@@ -55,8 +48,6 @@ function createPlayer() {
     playerWrapper.appendChild(playerInner);
     player.appendChild(playerWrapper);
     gameContainer.appendChild(player);
-
-
 }
 
 function createObstacle(data, fallbackId) {
@@ -69,7 +60,7 @@ function createObstacle(data, fallbackId) {
     const wrapper = document.createElement('div');
     wrapper.className = 'obstacle-wrapper obstacle-element';
     wrapper.setAttribute('data-id', data.id || fallbackId);
-    wrapper.dataset.category = data.category || 'other'; // Store category for later
+    wrapper.dataset.category = data.category || 'other';
     wrapper.style.cssText = `position: absolute; left: ${data.pos}px; bottom: ${bottomStyle}; width: ${size}px; height: ${size}px; pointer-events: auto; cursor: pointer;`;
 
     const catColor = data.colorOverride || getCategoryColor(data.category);
@@ -170,9 +161,9 @@ function finalizeCollection(obstacle, didAction) {
         state.maxCombo = Math.max(state.maxCombo, state.comboCount);
 
         const multiplier = state.comboCount >= 10 ? 2.0
-                          : state.comboCount >= 5  ? 1.5
-                          : state.comboCount >= 3  ? 1.2
-                          : 1.0;
+                         : state.comboCount >= 5  ? 1.5
+                         : state.comboCount >= 3  ? 1.2
+                         : 1.0;
         state.totalScore += Math.round(500 * multiplier);
         state.perfectCount++;
 
@@ -222,11 +213,21 @@ function gameLoop(time, deltaTime) {
 
     const playerRect = player.getBoundingClientRect();
     let isAnythingOverlapping = false;
+    const viewportWidth = window.innerWidth;
 
     obstacleElements.forEach(obstacle => {
         const obsRect = obstacle.getBoundingClientRect();
+        
+        // 뷰포트 범위를 벗어난 먼 요소는 충돌 계산 스킵 (최적화)
+        if (obsRect.right < -100 || obsRect.left > viewportWidth + 100) return;
+
         const expand = 3;
-        const isOverlappingNow = (playerRect.left < obsRect.right + expand && playerRect.right > obsRect.left - expand && playerRect.top < obsRect.bottom + expand && playerRect.bottom > obsRect.top - expand);
+        const isOverlappingNow = (
+            playerRect.left < obsRect.right + expand &&
+            playerRect.right > obsRect.left - expand &&
+            playerRect.top < obsRect.bottom + expand &&
+            playerRect.bottom > obsRect.top - expand
+        );
 
         if (isOverlappingNow) isAnythingOverlapping = true;
 
@@ -247,44 +248,67 @@ function gameLoop(time, deltaTime) {
     playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
 }
 
+function doJump() {
+    if (state.isJumping) return;
+    handleActionPress();
+    state.isJumping = true;
+    playSound('./audio/jump.mp3');
+    createJumpDust();
+    gsap.to(player, {
+        y: jumpHeight,
+        duration: 0.35,
+        yoyo: true,
+        repeat: 1,
+        ease: jumpEase,
+        onComplete: () => {
+            state.isJumping = false;
+            createJumpDust();
+        }
+    });
+}
+
+function doDuckStart() {
+    if (state.isDucking) return;
+    handleActionPress();
+    state.isDucking = true;
+    gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 });
+}
+
+function doDuckEnd() {
+    if (!state.isDucking) return;
+    gsap.to(player, { scaleY: 1, duration: 0.1, onComplete: () => state.isDucking = false });
+}
+
 function setupControls() {
     window.addEventListener('keydown', (e) => {
         const k = e.key.toLowerCase();
         if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) e.preventDefault();
         if (k === 'd' || k === 'arrowright') state.keys.right = true;
         if (k === 'a' || k === 'arrowleft') state.keys.left = true;
-        if ((k === 'w' || k === 'arrowup') && !state.isJumping && !state.isDucking) {
-            handleActionPress();
-            state.isJumping = true;
-            playSound('./audio/jump.mp3');
-            createJumpDust();
-            gsap.to(player, { y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { state.isJumping = false; createJumpDust(); } });
-        }
-        if ((k === 's' || k === 'arrowdown') && !state.isJumping && !state.isDucking) {
-            handleActionPress();
-            state.isDucking = true;
-            gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 });
-        }
+        if (k === 'w' || k === 'arrowup') doJump();
+        if (k === 's' || k === 'arrowdown') doDuckStart();
     });
 
     window.addEventListener('keyup', (e) => {
         const k = e.key.toLowerCase();
         if (k === 'd' || k === 'arrowright') state.keys.right = false;
         if (k === 'a' || k === 'arrowleft') state.keys.left = false;
-        if (k === 's' || k === 'arrowdown') gsap.to(player, { scaleY: 1, duration: 0.1, onComplete: () => state.isDucking = false });
+        if (k === 's' || k === 'arrowdown') doDuckEnd();
     });
 
     function attachTouch(id, onDown, onUp) {
         const btn = document.getElementById(id);
         if (!btn) return;
-        btn.addEventListener('pointerdown', onDown);
-        btn.addEventListener('pointerup', onUp);
-        btn.addEventListener('pointerleave', onUp);
+        btn.addEventListener('pointerdown', (e) => { e.preventDefault(); onDown(e); });
+        btn.addEventListener('pointerup', (e) => { e.preventDefault(); if (onUp) onUp(e); });
+        btn.addEventListener('pointerleave', (e) => { e.preventDefault(); if (onUp) onUp(e); });
     }
-    attachTouch('btn-left', (e) => { e.preventDefault(); state.keys.left = true; }, (e) => { e.preventDefault(); state.keys.left = false; });
-    attachTouch('btn-right', (e) => { e.preventDefault(); state.keys.right = true; }, (e) => { e.preventDefault(); state.keys.right = false; });
-    attachTouch('btn-jump', (e) => { e.preventDefault(); if (!state.isJumping && !state.isDucking) { handleActionPress(); state.isDucking = true; gsap.to(player, { scaleY: duckScale, transformOrigin: "bottom center", duration: 0.1 }); } }, (e) => { e.preventDefault(); gsap.to(player, { scaleY: 1, duration: 0.1, onComplete: () => state.isDucking = false }); });
-    attachTouch('btn-duck', (e) => { e.preventDefault(); if (!state.isJumping && !state.isDucking) { handleActionPress(); state.isJumping = true; playSound('./audio/jump.mp3'); createJumpDust(); gsap.to(player, { y: jumpHeight, duration: 0.35, yoyo: true, repeat: 1, ease: jumpEase, onComplete: () => { state.isJumping = false; createJumpDust(); } }); } }, () => {});
+
+    attachTouch('btn-left', () => { state.keys.left = true; }, () => { state.keys.left = false; });
+    attachTouch('btn-right', () => { state.keys.right = true; }, () => { state.keys.right = false; });
+    
+    attachTouch('btn-jump', () => doJump());
+    attachTouch('btn-duck', () => doDuckStart(), () => doDuckEnd());
 }
 
 export function resetGame() {
@@ -335,16 +359,15 @@ export async function initGame() {
         }
         obstaclesData = await response.json();
 
-        // Update total counters based on data length
+        // 기존 장애물 배열 초기화
+        obstacleElements = [];
+
         const totalItems = obstaclesData.length;
         const counterTotalEl = document.getElementById('counter-total');
-        if (counterTotalEl) {
-            counterTotalEl.textContent = totalItems;
-        }
+        if (counterTotalEl) counterTotalEl.textContent = totalItems;
+        
         const milestonesStatEl = document.getElementById('milestones-stat');
-        if (milestonesStatEl) {
-            milestonesStatEl.dataset.target = totalItems;
-        }
+        if (milestonesStatEl) milestonesStatEl.dataset.target = totalItems;
 
         if (isMobile) {
             obstaclesData.forEach(obs => {
@@ -359,13 +382,11 @@ export async function initGame() {
         });
 
         setupControls();
+        
+        // 중복 등록 방지를 위해 제거 후 추가
+        gsap.ticker.remove(gameLoop);
         gsap.ticker.add(gameLoop);
     } catch (error) {
         console.error("Failed to initialize game:", error);
     }
-}
-
-// Player wrapper animations can be controlled from other modules
-export function getPlayerWrapper() {
-    return playerWrapper;
 }
