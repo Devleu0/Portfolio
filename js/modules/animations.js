@@ -44,7 +44,7 @@ function initMainScrollAnimation() {
             onUpdate: (self) => {
                 const p = self.progress;
                 state.isScrolledToEnd = p > 0.998;
-                updateLanguage(state.currentLang); // Refresh language to update skip button
+                updateLanguage(state.currentLang, false); // Refresh language to update skip button
 
                 // --- Visual Updates ---
                 skyOverlay.style.background = `linear-gradient(to bottom, ${getSkyColor(p)}${THEME === 'minimal' ? 'FF' : 'D0'} 0%, transparent 90%)`;

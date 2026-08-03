@@ -4,7 +4,8 @@
     "width": 1600,
     "backgroundColor": "#0F172A",
     "title": { "ko": "광주광역시 출생", "en": "Born in Gwangju", "ja": "光州広域市生まれ" },
-    "subtitle": { "ko": "2003.09", "en": "Sep 2003", "ja": "2003.09" }
+    "subtitle": { "ko": "2003.09", "en": "Sep 2003", "ja": "2003.09" },
+    "bgType": "none"
   },
   {
     "id": "elementary",
@@ -12,7 +13,8 @@
     "backgroundColor": "#1E1B4B",
     "building": "small",
     "title": { "ko": "장덕초등학교", "en": "Jangdeok Elementary School", "ja": "チャンドク小学校" },
-    "subtitle": { "ko": "재학: 2010.03 ~ 2016.02", "en": "Attended: Mar 2010 - Feb 2016", "ja": "在学: 2010.03 ~ 2016.02" }
+    "subtitle": { "ko": "재학: 2010.03 ~ 2016.02", "en": "Attended: Mar 2010 - Feb 2016", "ja": "在学: 2010.03 ~ 2016.02" },
+    "bgType": "school"
   },
   {
     "id": "middle",
@@ -20,7 +22,8 @@
     "backgroundColor": "#312E81",
     "building": "medium",
     "title": { "ko": "장덕중학교", "en": "Jangdeok Middle School", "ja": "チャンドク中学校" },
-    "subtitle": { "ko": "재학: 2016.03 ~ 2019.02", "en": "Attended: Mar 2016 - Feb 2019", "ja": "在学: 2016.03 ~ 2019.02" }
+    "subtitle": { "ko": "재학: 2016.03 ~ 2019.02", "en": "Attended: Mar 2016 - Feb 2019", "ja": "在学: 2016.03 ~ 2019.02" },
+    "bgType": "school"
   },
   {
     "id": "high",
@@ -28,7 +31,8 @@
     "backgroundColor": "#4C1D95",
     "building": "large",
     "title": { "ko": "광주진흥고등학교", "en": "Gwangju Jinheung High School", "ja": "光州振興高等学校" },
-    "subtitle": { "ko": "재학: 2019.03 ~ 2022.02", "en": "Attended: Mar 2019 - Feb 2022", "ja": "在学: 2019.03 ~ 2022.02" }
+    "subtitle": { "ko": "재학: 2019.03 ~ 2022.02", "en": "Attended: Mar 2019 - Feb 2022", "ja": "在学: 2019.03 ~ 2022.02" },
+    "bgType": "school"
   },
   {
     "id": "freshman1",
@@ -36,7 +40,8 @@
     "backgroundColor": "#064E3B",
     "building": "university",
     "title": { "ko": "1학년 1학기", "en": "Freshman - 1st Semester", "ja": "1年生 1学期" },
-    "subtitle": { "ko": "전남대 인공지능학부 (2022.03 ~ 2022.06)", "en": "Chonnam Nat'l Univ., AI (Mar 2022 - Jun 2022)", "ja": "全南大学 AI学部 (2022.03 ~ 2022.06)" }
+    "subtitle": { "ko": "전남대 인공지능학부 (2022.03 ~ 2022.06)", "en": "Chonnam Nat'l Univ., AI (Mar 2022 - Jun 2022)", "ja": "全南大学 AI学部 (2022.03 ~ 2022.06)" },
+    "bgType": "school"
   },
   {
     "id": "freshman_summer",
@@ -44,7 +49,8 @@
     "backgroundColor": "#022C22",
     "title": { "ko": "1학년 여름방학", "en": "Freshman - Summer Vacation", "ja": "1年生 夏休み" },
     "subtitle": { "ko": "2022.06 ~ 2022.08", "en": "Jun 2022 - Aug 2022", "ja": "2022.06 ~ 2022.08" },
-    "flavorText": { "ko": "경험치 파밍 중...", "en": "Farming EXP...", "ja": "経験値稼ぎ中..." }
+    "flavorText": { "ko": "경험치 파밍 중...", "en": "Farming EXP...", "ja": "経験値稼ぎ中..." },
+    "bgType": "nature"
   },
   {
     "id": "freshman2",
@@ -52,7 +58,8 @@
     "backgroundColor": "#064E3B",
     "building": "university",
     "title": { "ko": "1학년 2학기", "en": "Freshman - 2nd Semester", "ja": "1年生 2学期" },
-    "subtitle": { "ko": "2022.09 ~ 2022.12", "en": "Sep 2022 - Dec 2022", "ja": "2022.09 ~ 2022.12" }
+    "subtitle": { "ko": "2022.09 ~ 2022.12", "en": "Sep 2022 - Dec 2022", "ja": "2022.09 ~ 2022.12" },
+    "bgType": "school"
   },
   {
     "id": "freshman_winter",
@@ -60,7 +67,8 @@
     "backgroundColor": "#022C22",
     "title": { "ko": "1학년 겨울방학", "en": "Freshman - Winter Vacation", "ja": "1年生 冬休み" },
     "subtitle": { "ko": "2022.12 ~ 2023.02", "en": "Dec 2022 - Feb 2023", "ja": "2022.12 ~ 2023.02" },
-    "flavorText": { "ko": "서브 퀘스트 진행 중: [새로운 언어 마스터하기]", "en": "Side Quest in Progress: [Mastering a New Language]", "ja": "サブクエスト進行中：[新しい言語のマスター]" }
+    "flavorText": { "ko": "서브 퀘스트 진행 중: [새로운 언어 마스터하기]", "en": "Side Quest in Progress: [Mastering a New Language]", "ja": "サブクエスト進行中：[新しい言語のマスター]" },
+    "bgType": "nature"
   },
   {
     "id": "sophomore1",
@@ -68,7 +76,8 @@
     "backgroundColor": "#064E3B",
     "building": "university",
     "title": { "ko": "2학년 1학기", "en": "Sophomore - 1st Semester", "ja": "2年生 1学期" },
-    "subtitle": { "ko": "2023.03 ~ 2023.06 (휴학 전)", "en": "Mar 2023 - Jun 2023 (Before leave)", "ja": "2023.03 ~ 2023.06 (休学前)" }
+    "subtitle": { "ko": "2023.03 ~ 2023.06 (휴학 전)", "en": "Mar 2023 - Jun 2023 (Before leave)", "ja": "2023.03 ~ 2023.06 (休学前)" },
+    "bgType": "school"
   },
   {
     "id": "military",
@@ -76,7 +85,8 @@
     "backgroundColor": "#451A03",
     "title": { "ko": "대한민국 공군 병 851기", "en": "ROK Air Force, 851st", "ja": "大韓民国空軍 兵851期" },
     "subtitle": { "ko": "입대: 2023.09 ~ 전역: 2025.06", "en": "Enlisted: Sep 2023 - Discharged: Jun 2025", "ja": "入隊: 2023.09 ~ 除隊: 2025.06" },
-    "flavorText": { "ko": "히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)", "en": "Hidden Stage: National Defense Duty Quest Cleared (Acquired JLPT N1!)", "ja": "隠しステージ：国防の義務クエストクリア（JLPT N1獲得！）" }
+    "flavorText": { "ko": "히든 스테이지: 국방의 의무 퀘스트 클리어 (JLPT N1 획득!)", "en": "Hidden Stage: National Defense Duty Quest Cleared (Acquired JLPT N1!)", "ja": "隠しステージ：国防の義務クエストクリア（JLPT N1獲得！）" },
+    "bgType": "military"
   },
   {
     "id": "sophomore2",
@@ -85,7 +95,8 @@
     "building": "university",
     "title": { "ko": "2학년 2학기 (복학)", "en": "Sophomore - 2nd Semester (Return)", "ja": "2年生 2学期 (復学)" },
     "subtitle": { "ko": "2025.09 ~ 2025.12", "en": "Sep 2025 - Dec 2025", "ja": "2025.09 ~ 2025.12" },
-    "flavorText": { "ko": "메인 퀘스트 Part 2 시작!", "en": "Main Quest Part 2 Start!", "ja": "メインクエスト Part 2 開始！" }
+    "flavorText": { "ko": "메인 퀘스트 Part 2 시작!", "en": "Main Quest Part 2 Start!", "ja": "メインクエスト Part 2 開始！" },
+    "bgType": "school"
   },
   {
     "id": "sophomore_winter",
@@ -93,7 +104,8 @@
     "backgroundColor": "#172554",
     "title": { "ko": "2학년 겨울방학", "en": "Sophomore - Winter Vacation", "ja": "2年生 冬休み" },
     "subtitle": { "ko": "2025.12 ~ 2026.02", "en": "Dec 2025 - Feb 2026", "ja": "2025.12 ~ 2026.02" },
-    "flavorText": { "ko": "세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)", "en": "Save Point Reached (Restoring HP/MP & Loading Next Semester)", "ja": "セーブポイント到達 (HP/MP回復＆次学期ローディング中)" }
+    "flavorText": { "ko": "세이브 포인트 도달 (HP/MP 회복 및 다음 학기 로딩 중)", "en": "Save Point Reached (Restoring HP/MP & Loading Next Semester)", "ja": "セーブポイント到達 (HP/MP回復＆次学期ローディング中)" },
+    "bgType": "nature"
   },
   {
     "id": "junior1",
@@ -101,7 +113,8 @@
     "backgroundColor": "#1E3A8A",
     "building": "university",
     "title": { "ko": "3학년 1학기", "en": "Junior - 1st Semester", "ja": "3年生 1学期" },
-    "subtitle": { "ko": "2026.03 ~ 2026.06", "en": "Mar 2026 - Jun 2026", "ja": "2026.03 ~ 2026.06" }
+    "subtitle": { "ko": "2026.03 ~ 2026.06", "en": "Mar 2026 - Jun 2026", "ja": "2026.03 ~ 2026.06" },
+    "bgType": "school"
   },
   {
     "id": "internship",
@@ -111,7 +124,8 @@
     "overlay": "scramble",
     "title": { "ko": "일본 인턴십", "en": "Japan Internship", "ja": "日本インターンシップ" },
     "subtitle": { "ko": "도쿄 시부야 (2026.06 ~ 2026.08)", "en": "Shibuya, Tokyo (Jun 2026 - Aug 2026)", "ja": "東京 渋谷 (2026.06 ~ 2026.08)" },
-    "flavorText": { "ko": "글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)", "en": "Playing the Global Expansion Pack (Location: Shibuya, Tokyo)", "ja": "グローバル拡張パックプレイ中 (場所: 東京・渋谷)" }
+    "flavorText": { "ko": "글로벌 확장팩 플레이 중 (위치: 도쿄 시부야)", "en": "Playing the Global Expansion Pack (Location: Shibuya, Tokyo)", "ja": "グローバル拡張パックプレイ中 (場所: 東京・渋谷)" },
+    "bgType": "city"
   },
   {
     "id": "finale",
@@ -119,6 +133,7 @@
     "backgroundColor": "transparent",
     "noBorder": true,
     "isFinale": true,
-    "title": { "ko": "계속해서 성장 중...", "en": "Still Growing...", "ja": "継続的に成長中..." }
+    "title": { "ko": "계속해서 성장 중...", "en": "Still Growing...", "ja": "継続的に成長中..." },
+    "bgType": "none"
   }
 ]

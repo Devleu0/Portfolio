@@ -14,12 +14,14 @@ let termTypedTextData = {
 > 27個の記録が見つかりました。`
 };
 
-export function updateLanguage(lang) {
+export function updateLanguage(lang, rerenderFull = true) {
     state.currentLang = lang;
     document.documentElement.lang = lang;
 
     // Render dynamic resume sections with the new language
-    updateRenderer(lang);
+    if (rerenderFull) {
+        updateRenderer(lang);
+    }
 
     // Update all other elements with '.lang-text'
     document.querySelectorAll('.lang-text').forEach(function (el) {
