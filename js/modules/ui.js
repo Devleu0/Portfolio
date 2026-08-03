@@ -230,7 +230,7 @@ function initMobileMenu() {
     }
 }
 
-function initZoneBuildings() {
+function initZoneScenery() {
     const zones = document.querySelectorAll('.zone');
     const zoneData = state.zones;
 
@@ -242,15 +242,15 @@ function initZoneBuildings() {
     zones.forEach((zone, index) => {
         const data = zoneData[index];
 
-        if (data.building) {
+        if (data.scenery && data.scenery.building) {
             const b = document.createElement('div');
-            b.className = `zone-building zone-building--${data.building}`;
+            b.className = `zone-building zone-building--${data.scenery.building}`;
             zone.appendChild(b);
         }
 
-        if (data.overlay) {
+        if (data.scenery && data.scenery.overlay) {
             const o = document.createElement('div');
-            o.className = `zone-overlay zone-overlay--${data.overlay}`;
+            o.className = `zone-overlay zone-overlay--${data.scenery.overlay}`;
             zone.appendChild(o);
         }
     });
@@ -262,7 +262,7 @@ export function initUI() {
     initTerminalEffect();
     initStatCounter();
     initMobileMenu();
-    initZoneBuildings();
+    initZoneScenery();
 
     // Must run after a delay to ensure scrollWidth is calculated correctly
     setTimeout(createProgressMarkers, 500);

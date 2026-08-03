@@ -13,13 +13,14 @@
       "en": "Sep 2003",
       "ja": "2003.09"
     },
-    "bgType": "none"
+    "scenery": {
+      "type": "none"
+    }
   },
   {
     "id": "elementary",
     "width": 1600,
     "backgroundColor": "#1E1B4B",
-    "building": "small",
     "title": {
       "ko": "장덕초등학교",
       "en": "Jangdeok Elementary School",
@@ -30,18 +31,20 @@
       "en": "Attended: Mar 2010 - Feb 2016",
       "ja": "在学: 2010.03 ~ 2016.02"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "small",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "middle",
     "width": 1600,
     "backgroundColor": "#312E81",
-    "building": "medium",
     "title": {
       "ko": "장덕중학교",
       "en": "Jangdeok Middle School",
@@ -52,18 +55,20 @@
       "en": "Attended: Mar 2016 - Feb 2019",
       "ja": "在学: 2016.03 ~ 2019.02"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "medium",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "high",
     "width": 1600,
     "backgroundColor": "#4C1D95",
-    "building": "large",
     "title": {
       "ko": "광주진흥고등학교",
       "en": "Gwangju Jinheung High School",
@@ -74,18 +79,20 @@
       "en": "Attended: Mar 2019 - Feb 2022",
       "ja": "在学: 2019.03 ~ 2022.02"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "large",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "freshman1",
     "width": 1200,
     "backgroundColor": "#064E3B",
-    "building": "university",
     "title": {
       "ko": "1학년 1학기",
       "en": "Freshman - 1st Semester",
@@ -96,11 +103,14 @@
       "en": "Chonnam Nat'l Univ., AI (Mar 2022 - Jun 2022)",
       "ja": "全南大学 AI学部 (2022.03 ~ 2022.06)"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "university",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
@@ -122,18 +132,19 @@
       "en": "Farming EXP...",
       "ja": "経験値稼ぎ中..."
     },
-    "bgType": "nature",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "nature",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "freshman2",
     "width": 1200,
     "backgroundColor": "#064E3B",
-    "building": "university",
     "title": {
       "ko": "1학년 2학기",
       "en": "Freshman - 2nd Semester",
@@ -144,11 +155,14 @@
       "en": "Sep 2022 - Dec 2022",
       "ja": "2022.09 ~ 2022.12"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "university",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
@@ -170,18 +184,19 @@
       "en": "Side Quest in Progress: [Mastering a New Language]",
       "ja": "サブクエスト進行中：[新しい言語のマスター]"
     },
-    "bgType": "nature",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "nature",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "sophomore1",
     "width": 1400,
     "backgroundColor": "#064E3B",
-    "building": "university",
     "title": {
       "ko": "2학년 1학기",
       "en": "Sophomore - 1st Semester",
@@ -192,11 +207,14 @@
       "en": "Mar 2023 - Jun 2023 (Before leave)",
       "ja": "2023.03 ~ 2023.06 (休学前)"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "university",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
@@ -218,18 +236,19 @@
       "en": "Hidden Stage: National Defense Duty (Acquired JLPT N1!)",
       "ja": "隠しステージ：国防の義務（JLPT N1獲得！）"
     },
-    "bgType": "military",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "military",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "sophomore2",
     "width": 1200,
     "backgroundColor": "#1E3A8A",
-    "building": "university",
     "title": {
       "ko": "2학년 2학기 (복학)",
       "en": "Sophomore - 2nd Semester (Return)",
@@ -245,11 +264,14 @@
       "en": "Main Quest Part 2 Start!",
       "ja": "メインクエスト Part 2 開始！"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "university",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
@@ -271,18 +293,19 @@
       "en": "Save Point Reached",
       "ja": "セーブポイント到達 "
     },
-    "bgType": "nature",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "nature",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "junior1",
     "width": 2200,
     "backgroundColor": "#1E3A8A",
-    "building": "university",
     "title": {
       "ko": "3학년 1학기",
       "en": "Junior - 1st Semester",
@@ -293,19 +316,20 @@
       "en": "Mar 2026 - Jun 2026",
       "ja": "2026.03 ~ 2026.06"
     },
-    "bgType": "school",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "school",
+      "building": "university",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
     "id": "internship",
     "width": 2000,
     "backgroundColor": "#701A75",
-    "building": "tower",
-    "overlay": "scramble",
     "title": {
       "ko": "일본 인턴십",
       "en": "Japan Internship",
@@ -321,11 +345,15 @@
       "en": "Playing the Global Expansion Pack ",
       "ja": "グローバル拡張パックプレイ中 "
     },
-    "bgType": "city",
-    "parallax": {
-      "far": "images/parallax-far.svg",
-      "mid": "images/parallax-mid.svg",
-      "near": "images/parallax-near.svg"
+    "scenery": {
+      "type": "city",
+      "building": "tower",
+      "overlay": "scramble",
+      "parallax": {
+        "far": "images/parallax-far.svg",
+        "mid": "images/parallax-mid.svg",
+        "near": "images/parallax-near.svg"
+      }
     }
   },
   {
@@ -339,6 +367,8 @@
       "en": "Still Growing...",
       "ja": "継続的に成長中..."
     },
-    "bgType": "none"
+    "scenery": {
+      "type": "none"
+    }
   }
 ]

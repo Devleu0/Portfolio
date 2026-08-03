@@ -84,15 +84,15 @@ async function createZoneElements() {
                 zoneEl.style.borderRight = 'none';
             }
 
-            // Create and append parallax backgrounds only if bgType is not 'none'
-            if (zoneData.bgType && zoneData.bgType !== 'none' && zoneData.parallax) {
+            // Create and append parallax backgrounds only if scenery type is not 'none'
+            if (zoneData.scenery && zoneData.scenery.type !== 'none' && zoneData.scenery.parallax) {
                 const parallaxLayers = [
                     { speed: 0.1, class: 'parallax-bg-far', key: 'far' },
                     { speed: 0.2, class: 'parallax-bg-mid', key: 'mid' },
                     { speed: 0.4, class: 'parallax-bg-near', key: 'near' }
                 ];
                 parallaxLayers.forEach(layer => {
-                    const imageUrl = zoneData.parallax[layer.key];
+                    const imageUrl = zoneData.scenery.parallax[layer.key];
                     if (!imageUrl) return; // Skip if a specific layer is not defined for the zone
 
                     const bgEl = document.createElement('div');
