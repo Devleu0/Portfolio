@@ -142,10 +142,17 @@ async function createZoneElements() {
 }
 
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize systems that don't depend on game data first
-    initLanguageSwitcher();
-    initAudio();
+document.addEventListener('DOMContentLoaded', () => {
+    // Create and show a start overlay
+    const startOverlay = document.createElement('div');
+    startOverlay.id = 'start-overlay';
+    startOverlay.innerHTML = `
+        <div class="start-message">
+            <div class="lang-text" data-ko="화면을 클릭하여 시작" data-en="Click to Start" data-ja="クリックして開始">Click to Start</div>
+            <div class="start-keys">[ W, A, S, D ] or [ ←, → ]</div>
+        </div>
+    `;
+    document.body.appendChild(startOverlay);
 
     // Load and render dynamic data from JSON
     await initRenderer();
@@ -156,9 +163,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize the game, which creates the player and obstacles
     await initGame();
 
-    // Initialize animations, which depend on the game elements being in the DOM
-    initAnimations();
+        // Initialize all game systems
+        initLanguageSwitcher();
+        initAudio();
+        await initGame();
+        initAnimations();
+        initUI();
+    }
 
-    // Initialize UI components, which may also depend on game elements
-    initUI();
+    // Add a one-time event listener for the first user interaction
+    document.addEventListener('pointerdown', initializeAndStartGame, { once: true });
 });
