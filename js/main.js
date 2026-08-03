@@ -142,7 +142,7 @@ async function createZoneElements() {
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Initialize systems that don't depend on game data first
     initLanguageSwitcher();
     initAudio();
