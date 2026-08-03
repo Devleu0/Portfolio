@@ -5,7 +5,7 @@ import { initGame } from './modules/game.js';
 import { initUI } from './modules/ui.js';
 import { initAnimations } from './modules/animations.js';
 import { init as initRenderer } from './modules/renderer.js';
-import { state } from './modules/config.js';
+import { state, isMobile, mobileScale } from './modules/config.js';
 
 async function createZoneElements() {
     try {
@@ -41,6 +41,21 @@ async function createZoneElements() {
                 zoneEl.style.borderRight = 'none';
             }
 
+            // Create and append parallax backgrounds
+            const parallaxLayers = [
+                { speed: 0.1, class: 'parallax-bg-far' },
+                { speed: 0.2, class: 'parallax-bg-mid' },
+                { speed: 0.4, class: 'parallax-bg-near' }
+            ];
+            parallaxLayers.forEach(layer => {
+                const bgEl = document.createElement('div');
+                bgEl.className = `parallax-bg ${layer.class}`;
+                bgEl.setAttribute('data-width', zoneData.width);
+                bgEl.setAttribute('data-speed', layer.speed);
+                zoneEl.appendChild(bgEl);
+            });
+
+
             const titleEl = document.createElement('div');
             titleEl.className = 'zone-title lang-text';
             titleEl.setAttribute('data-ko', zoneData.title.ko);
@@ -73,8 +88,8 @@ async function createZoneElements() {
             horizontalSection.appendChild(zoneEl);
         });
 
-        state.LAST_ZONE_START = isMobile ? totalWidthBeforeFinale * mobileScale : totalWidthBeforeFinale;
-
+        // Store the raw, unscaled width. Scaling will be handled in the animation logic.
+        state.LAST_ZONE_START = totalWidthBeforeFinale;
 
     } catch (error) {
         console.error('Error creating zone elements:', error);
