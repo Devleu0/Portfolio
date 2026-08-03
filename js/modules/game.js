@@ -100,7 +100,7 @@ function createObstacle(data, fallbackId) {
 
     const strokeColor = '#020617';
     if (data.customIcon) {
-        obstacle.innerHTML = `<img src="${data.customIcon}" alt="${getStr(data.title, state.currentLang)}" style="width:100%; height:100%; object-fit:cover; image-rendering:${THEME === 'minimal' ? 'auto' : 'pixelated'};" />`;
+        obstacle.innerHTML = `<img src="${data.customIcon}" alt="${getStr(data.title, state.currentLang)}" style="width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />`;
     } else {
         obstacle.innerHTML = `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[data.category] || ICONS.other}</svg>`;
     }
@@ -221,32 +221,8 @@ function gameLoop(time, deltaTime) {
         }
     });
 
-    if (THEME === 'minimal') {
-        playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px rgba(56,189,248,1)) brightness(1.2)' : 'drop-shadow(0 0 8px rgba(56,189,248,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))';
-    } else {
-        playerInner.style.color = isAnythingOverlapping ? '#fff' : '#22D3EE';
-        playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
-    }
-
-    if (THEME === 'minimal') {
-        const px = gsap.getProperty(player, 'x') || 0;
-        const py = gsap.getProperty(player, 'y') || 0;
-        posHistory.push({ x: px, y: py });
-        if (posHistory.length > 30) posHistory.shift();
-
-        ghostEls.forEach((g, i) => {
-            if (state.currentFinaleP > 0.05) {
-                const delay = (i + 1) * 7;
-                const hist = posHistory[posHistory.length - 1 - delay];
-                if (hist) {
-                    g.style.opacity = String(0.22 - i * 0.06);
-                    g.style.transform = `translate(${hist.x}px, ${hist.y}px)`;
-                }
-            } else {
-                g.style.opacity = '0';
-            }
-        });
-    }
+    playerInner.style.color = isAnythingOverlapping ? '#fff' : '#22D3EE';
+    playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
 }
 
 function setupControls() {
