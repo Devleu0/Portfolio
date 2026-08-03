@@ -15,12 +15,12 @@ export const ICONS = {
 };
 
 export const SKY_STOPS = THEME === 'minimal' ? ['#020617', '#0F172A', '#1E293B', '#0F172A'] : ['#0F172A', '#1E1B4B', '#4C1D95', '#701A75'];
-export const LAST_ZONE_START = isMobile ? 22400 * mobileScale : 22400;
 
 export const state = {
     currentLang: 'ko',
     isScrolledToEnd: false,
     currentFinaleP: 0,
+    LAST_ZONE_START: 0,
     // Game State
     isJumping: false,
     isDucking: false,

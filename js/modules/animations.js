@@ -1,5 +1,5 @@
 
-import { isMobile, mobileScale, THEME, LAST_ZONE_START, getSkyColor, state } from './config.js';
+import { isMobile, mobileScale, THEME, getSkyColor, state } from './config.js';
 import { getPlayerElement, getPlayerWrapper } from './game.js';
 import { updateLanguage } from './language.js';
 
@@ -44,7 +44,7 @@ function initMainScrollAnimation() {
             onUpdate: (self) => {
                 const p = self.progress;
                 state.isScrolledToEnd = p > 0.998;
-                updateLanguage(state.currentLang); // Refresh language to update skip button
+                updateLanguage(state.currentLang, false); // Refresh language to update skip button
 
                 // --- Visual Updates ---
                 skyOverlay.style.background = `linear-gradient(to bottom, ${getSkyColor(p)}${THEME === 'minimal' ? 'FF' : 'D0'} 0%, transparent 90%)`;
@@ -56,7 +56,8 @@ function initMainScrollAnimation() {
 
                 // --- Finale Logic ---
                 const maxTranslate = Math.max(1, horizontalSection.scrollWidth - window.innerWidth);
-                const zoneStartFraction = Math.min(0.98, LAST_ZONE_START / maxTranslate);
+                const scaledLastZoneStart = isMobile ? state.LAST_ZONE_START * mobileScale : state.LAST_ZONE_START;
+                const zoneStartFraction = Math.min(0.98, scaledLastZoneStart / maxTranslate);
                 const denom = Math.max(0.0001, 1 - zoneStartFraction);
                 const finaleP = Math.min(1, Math.max(0, (p - zoneStartFraction) / denom));
                 const flashP = finaleP > 0 ? Math.max(0, 1 - finaleP / 0.12) : 0;
