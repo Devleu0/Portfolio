@@ -14,6 +14,21 @@ export const ICONS = {
     other: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>'
 };
 
+export const CATEGORY_COLORS = {
+    birth:       '#22D3EE', // cyan
+    enrollment:  '#4ADE80', // green
+    graduation:  '#FBBF24', // gold
+    military:    '#F97316', // orange
+    certificate: '#A78BFA', // violet
+    project:     '#38BDF8', // blue
+    internship:  '#F472B6', // pink
+    other:       '#94A3B8', // gray
+};
+
+export function getCategoryColor(category) {
+    return CATEGORY_COLORS[category] || CATEGORY_COLORS.other;
+}
+
 export const SKY_STOPS = THEME === 'minimal' ? ['#020617', '#0F172A', '#1E293B', '#0F172A'] : ['#0F172A', '#1E1B4B', '#4C1D95', '#701A75'];
 
 export const state = {

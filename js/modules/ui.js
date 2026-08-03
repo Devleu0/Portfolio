@@ -1,4 +1,4 @@
-import { state, THEME, getStr, mobileScale } from './config.js';
+import { state, THEME, getStr, mobileScale, getCategoryColor } from './config.js';
 import { getObstacleData, getObstacleElements, resetGame } from './game.js';
 
 export function updateCounter() {
@@ -11,11 +11,15 @@ export function updateScoreDisplay() {
     if (scoreEl) scoreEl.textContent = state.totalScore;
 }
 
-export function triggerCollectEffect(obstacleEl, didAction = false) {
+export function triggerCollectEffect(obstacleEl, didAction = false, category = 'other') {
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave';
+    
+    const catColor = getCategoryColor(category);
+    wave.style.setProperty('--wave-color', catColor);
+
     if (didAction) {
-        wave.style.setProperty('--wave-color', 'gold');
+        wave.classList.add('is-perfect');
     }
     obstacleEl.appendChild(wave);
     setTimeout(() => wave.remove(), 500);
@@ -58,6 +62,7 @@ function createProgressMarkers() {
         marker.className = 'progress-marker';
         const position = (obstacle.pos / totalWidth) * 100;
         marker.style.left = `${position}%`;
+        marker.style.background = getCategoryColor(obstacle.category);
 
         const tooltip = document.createElement('div');
         tooltip.className = 'progress-tooltip';
