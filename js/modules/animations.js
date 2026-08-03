@@ -56,7 +56,8 @@ function initMainScrollAnimation() {
 
                 // --- Finale Logic ---
                 const maxTranslate = Math.max(1, horizontalSection.scrollWidth - window.innerWidth);
-                const zoneStartFraction = Math.min(0.98, state.LAST_ZONE_START / maxTranslate);
+                const scaledLastZoneStart = isMobile ? state.LAST_ZONE_START * mobileScale : state.LAST_ZONE_START;
+                const zoneStartFraction = Math.min(0.98, scaledLastZoneStart / maxTranslate);
                 const denom = Math.max(0.0001, 1 - zoneStartFraction);
                 const finaleP = Math.min(1, Math.max(0, (p - zoneStartFraction) / denom));
                 const flashP = finaleP > 0 ? Math.max(0, 1 - finaleP / 0.12) : 0;

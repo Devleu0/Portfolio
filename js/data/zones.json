@@ -107,6 +107,7 @@
     "id": "internship",
     "width": 2000,
     "backgroundColor": "#701A75",
+    "building": "tower",
     "overlay": "scramble",
     "title": { "ko": "일본 인턴십", "en": "Japan Internship", "ja": "日本インターンシップ" },
     "subtitle": { "ko": "도쿄 시부야 (2026.06 ~ 2026.08)", "en": "Shibuya, Tokyo (Jun 2026 - Aug 2026)", "ja": "東京 渋谷 (2026.06 ~ 2026.08)" },
