@@ -244,13 +244,15 @@ function initZoneScenery() {
 
         if (data.scenery && data.scenery.building) {
             const b = document.createElement('div');
-            b.className = `zone-building zone-building--${data.scenery.building}`;
+            b.className = `zone-building zone-building--${data.scenery.building.type}`;
+            b.style.backgroundImage = `url('${data.scenery.building.path}')`;
             zone.appendChild(b);
         }
 
         if (data.scenery && data.scenery.overlay) {
             const o = document.createElement('div');
-            o.className = `zone-overlay zone-overlay--${data.scenery.overlay}`;
+            o.className = `zone-overlay zone-overlay--${data.scenery.overlay.type}`;
+            o.style.backgroundImage = `url('${data.scenery.overlay.path}')`;
             zone.appendChild(o);
         }
     });

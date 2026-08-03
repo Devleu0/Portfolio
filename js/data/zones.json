@@ -33,7 +33,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "small",
+      "building": {
+        "type": "small",
+        "path": "images/building-small.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -57,7 +60,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "medium",
+      "building": {
+        "type": "medium",
+        "path": "images/building-medium.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -81,7 +87,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "large",
+      "building": {
+        "type": "large",
+        "path": "images/building-large.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -105,7 +114,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "university",
+      "building": {
+        "type": "university",
+        "path": "images/building-university.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -157,7 +169,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "university",
+      "building": {
+        "type": "university",
+        "path": "images/building-university.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -209,7 +224,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "university",
+      "building": {
+        "type": "university",
+        "path": "images/building-university.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -266,7 +284,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "university",
+      "building": {
+        "type": "university",
+        "path": "images/building-university.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -318,7 +339,10 @@
     },
     "scenery": {
       "type": "school",
-      "building": "university",
+      "building": {
+        "type": "university",
+        "path": "images/building-university.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
@@ -347,8 +371,14 @@
     },
     "scenery": {
       "type": "city",
-      "building": "tower",
-      "overlay": "scramble",
+      "building": {
+        "type": "tower",
+        "path": "images/building-tower.svg"
+      },
+      "overlay": {
+        "type": "scramble",
+        "path": "images/scramble-crossing.svg"
+      },
       "parallax": {
         "far": "images/parallax-far.svg",
         "mid": "images/parallax-mid.svg",
