@@ -281,13 +281,15 @@ function finalizeCollection(event, didAction) {
         // 프레임이 있는 아이템은 프레임과 뱃지가 함께 부서지는 효과
         triggerCollectEffect(eventBadge, didAction, event.dataset.category);
         
-        gsap.to(frame.querySelectorAll('.frame-wall'), {
-            opacity: 0, scale: 1.5, stagger: 0.05, duration: 0.3, ease: 'power2.out',
-        });
-        gsap.to(eventBadge, {
-            opacity: 0, scale: 2, duration: 0.4, ease: 'power2.out', delay: 0.1,
-            onComplete: () => event.classList.add('collected')
-        });
+        // gsap.to(frame.querySelectorAll('.frame-wall'), {
+        //     opacity: 0, scale: 1.5, stagger: 0.05, duration: 0.3, ease: 'power2.out',
+        // }); // 프레임 벽이 사라지는 애니메이션 주석 처리
+        // gsap.to(eventBadge, {
+        //     opacity: 0, scale: 2, duration: 0.4, ease: 'power2.out', delay: 0.1,
+        //     onComplete: () => event.classList.add('collected')
+        // }); // 뱃지가 사라지는 애니메이션 주석 처리
+        // 대신 collected 클래스를 바로 추가하여 CSS로 상태 처리
+        event.classList.add('collected');
     } else {
         // 일반 아이템 수집 효과
         triggerCollectEffect(event, didAction, event.dataset.category);
