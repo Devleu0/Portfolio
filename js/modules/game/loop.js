@@ -1,6 +1,6 @@
 import { isMobile, state } from '../config.js';
 import { gameState } from './state.js';
-import { sweptAABB } from './collision.js';
+import { moveAxis, shiftRect } from './collision.js';
 import { finalizeCollection } from './events.js';
 import { doJump } from './player.js';
 
@@ -31,7 +31,7 @@ export function gameLoop(time, deltaTime) {
     }
     const yDelta = state.velocityY * timeScale;
 
-    // 근처 이벤트의 벽들을 한 번만 모아서 X축/Y축 스윕에 재사용한다.
+    // 근처 이벤트의 벽들을 한 번만 모아서 X축/Y축 이동 해석에 재사용한다.
     const nearbyWalls = [];
     for (const event of gameState.eventElements) {
         if (!event.walls || event.walls.length === 0) continue;
@@ -42,58 +42,40 @@ export function gameLoop(time, deltaTime) {
         }
     }
 
-    // 두 축(X, Y) 스윕 모두 이 프레임 시작 시점의 동일한 rect 스냅샷을 사용한다.
-    // (스크롤 직후 getBoundingClientRect를 다시 읽으면 ScrollTrigger의 transform 갱신이
-    //  아직 반영되지 않았을 수 있어, 그 시점 의존성을 아예 없앤다.)
     const prevY = gsap.getProperty(player, 'y');
     const playerRect = hitbox.getBoundingClientRect();
+    // 서브스텝 크기: 히트박스 크기의 절반 이하로 잡아, 그보다 얇지 않은 벽은
+    // 절대 건너뛸 수 없도록 한다(터널링 방지의 핵심).
+    const maxStep = Math.max(2, Math.min(playerRect.width, playerRect.height) / 2);
 
     // ---- 1) X축(수평) 이동 해석 ----
-    // 옆벽 충돌은 오직 수평 이동만 제한해야 하며, 같은 프레임의 낙하/점프(Y축)에
-    // 영향을 주면 안 된다. 그래서 vel.y=0으로 스윕해 X축만 독립적으로 검사한다.
-    // 이 프로젝트의 "가로 이동"은 실제로는 window.scrollBy({ top }) 을 통해
-    // ScrollTrigger가 .horizontal-section을 translateX 시키는 방식이므로,
-    // 반드시 top으로 스크롤해야 한다 (left 아님).
-    let xCollisionTime = 1.0;
+    // 이 프로젝트의 "가로 이동"은 window.scrollBy({ top }) 을 통해 ScrollTrigger가
+    // .horizontal-section을 translateX 시키는 방식이므로 반드시 top으로 스크롤한다.
+    let xMoved = 0;
     if (scrollDelta !== 0) {
-        for (const wall of nearbyWalls) {
-            const wallRect = wall.getBoundingClientRect();
-            const hit = sweptAABB(playerRect, { x: scrollDelta, y: 0 }, wallRect);
-            if (hit.time < xCollisionTime) {
-                xCollisionTime = hit.time;
-            }
-        }
-        // 이 프로젝트는 세로 스크롤(window.scrollY)을 GSAP ScrollTrigger가 감지해서 .horizontal-section을 가로로 translateX 시키는 구조입니다.  "
-        // 수평 이동"의 실체는 window.scrollBy({top: ...}) 입니다. x, y 를 착각하지 마세요.
-        window.scrollBy({ top: scrollDelta * xCollisionTime, left: 0, behavior: 'instant' });
+        const xResult = moveAxis(playerRect, scrollDelta, nearbyWalls, 'x', maxStep);
+        xMoved = xResult.delta;
     }
 
     // ---- 2) Y축(수직) 이동 해석 ----
-    // 같은 프레임의 playerRect를 그대로 사용해 수직 이동(vel.x=0)만 독립적으로 스윕한다.
-    // 이렇게 하면 발판 착지/천장 충돌 판정이 옆벽 충돌과 완전히 분리된다.
-    let yCollisionTime = 1.0;
-    let yNormal = 0;
-    let collidedWall = null;
-
-    for (const wall of nearbyWalls) {
-        const wallRect = wall.getBoundingClientRect();
-        const hit = sweptAABB(playerRect, { x: 0, y: yDelta }, wallRect);
-        if (hit.time < yCollisionTime) {
-            yCollisionTime = hit.time;
-            yNormal = hit.normal.y;
-            collidedWall = wall;
-        }
+    // 실제 스크롤 후 DOM을 다시 읽지 않고, X 이동 결과(xMoved)를 반영한 좌표를
+    // 직접 계산해 사용한다 — ScrollTrigger의 transform 갱신 타이밍에 의존하지 않는
+    // 결정론적인 방식이며, X와 Y 축은 서로의 이동 결과에 전혀 간섭하지 않는다.
+    const playerRectAfterX = shiftRect(playerRect, xMoved, 0);
+    const yResult = moveAxis(playerRectAfterX, yDelta, nearbyWalls, 'y', maxStep);
+    gsap.set(player, { y: prevY + yResult.delta });
+    if (xMoved !== 0) {
+        window.scrollBy({ top: xMoved, left: 0, behavior: 'instant' });
     }
-    gsap.set(player, { y: prevY + yDelta * yCollisionTime });
 
-    if (yCollisionTime < 1.0) {
-        if (yNormal === -1) {
+    if (yResult.collided) {
+        if (yResult.normal === -1) {
             state.velocityY = 0;
-            state.onPlatform = collidedWall;
+            state.onPlatform = yResult.wall;
             state.onGround = false;
             state.isJumping = false;
         }
-        if (yNormal === 1) {
+        if (yResult.normal === 1) {
             state.velocityY = 0;
         }
     } else {
