@@ -59,7 +59,7 @@ function createProgressMarkers() {
     const eventsData = getEventData();
     if (!progressBar || !eventsData || eventsData.length === 0) return;
 
-    const totalWidth = horizontalSection.scrollWidth - window.innerWIidth;
+    const totalWidth = horizontalSection.scrollWidth - window.innerWidth;
     if (totalWidth <= 0) return;
 
     eventsData.forEach(event => {
