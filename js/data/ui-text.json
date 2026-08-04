@@ -1,0 +1,26 @@
+{
+  "about": {
+    "title": {
+      "ko": "자기소개",
+      "en": "About Me",
+      "ja": "自己紹介"
+    },
+    "intro": {
+      "ko": "소프트웨어를 전공하며 C# 기반의 Unity 엔진을 통해 게임 개발 능력을 다져왔습니다. 플레이어가 몰입할 수 있는 매끄러운 시스템과 완성도 높은 로직을 구현하는 데 즐거움을 느낍니다. 꾸준한 배움과 문제 해결로 가치를 더하는 개발자가 되겠습니다.",
+      "en": "As a Software Engineering major, I have built a solid foundation in game development through practical experience with Unity and C#. I find deep satisfaction in crafting seamless systems and robust logic that deliver truly immersive player experiences. Dedicated to continuous learning and persistent problem-solving, I aim to bring tangible value to every team and project I join.",
+      "ja": "大学ではソフトウェア工学を専攻し、C#を用いたUnityでのゲーム開発について、基礎から実践までしっかりと身につけてきました。プレイヤーが深く没入できるスムーズなシステムや、完成度の高いロジックを実装することに大きなやりがいを感じています。"
+    },
+    "skillsTitle": {
+      "ko": "기술 스택",
+      "en": "Skills",
+      "ja": "スキル"
+    }
+  },
+  "terminal": {
+    "text": {
+        "ko": "> 프로필 데이터를 불러오는 중... OK\n> 시스템 준비 완료.\n> 27개의 기록이 발견되었습니다.",
+        "en": "> LOADING PROFILE DATA... OK\n> SYSTEM READY.\n> 27 RECORDS FOUND.",
+        "ja": "> プロフィールデータを読み込み中... OK\n> システム準備完了。\n> 27個の記録が見つかりました。"
+    }
+  }
+}

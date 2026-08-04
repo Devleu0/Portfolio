@@ -1,10 +1,35 @@
 import { state } from './config.js';
 
 let resumeData = null;
+let uiTextData = null;
 
 function getLocalized(data, lang) {
     if (!data) return '';
+    if (typeof data === 'string') return data;
     return data[lang] || data['en'] || data['ko'] || '';
+}
+
+function renderUiText(lang) {
+    if (!uiTextData) return;
+
+    const aboutTitle = document.getElementById('about-title');
+    const aboutIntro = document.getElementById('about-intro');
+    const skillsTitle = document.getElementById('skills-title');
+
+    if (aboutTitle) {
+        aboutTitle.textContent = getLocalized(uiTextData.about.title, lang);
+    }
+    if (aboutIntro) {
+        aboutIntro.textContent = getLocalized(uiTextData.about.intro, lang);
+    }
+    if (skillsTitle) {
+        skillsTitle.textContent = getLocalized(uiTextData.about.skillsTitle, lang);
+    }
+
+    // Update terminal text
+    if (uiTextData.terminal && uiTextData.terminal.text) {
+        window._termTypedText = getLocalized(uiTextData.terminal.text, lang);
+    }
 }
 
 function renderPortfolio(lang) {
@@ -89,15 +114,25 @@ function renderAll(lang) {
     renderCertifications(lang);
     renderExperience(lang);
     renderSkills(lang);
+    renderUiText(lang);
 }
 
 export async function init() {
     try {
-        const response = await fetch('js/data/resume-data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const [resumeResponse, uiTextResponse] = await Promise.all([
+            fetch('js/data/resume-data.json'),
+            fetch('js/data/ui-text.json')
+        ]);
+
+        if (!resumeResponse.ok) {
+            throw new Error(`HTTP error! status: ${resumeResponse.status}`);
         }
-        resumeData = await response.json();
+        if (!uiTextResponse.ok) {
+            throw new Error(`HTTP error! status: ${uiTextResponse.status}`);
+        }
+
+        resumeData = await resumeResponse.json();
+        uiTextData = await uiTextResponse.json();
 
         // Update certificates count
         if (resumeData.certifications) {
