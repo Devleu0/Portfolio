@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>data-editor // Portfolio Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg: #0B1120;
+    --panel: #131B2E;
+    --panel-2: #101828;
+    --border: #22304A;
+    --border-soft: #1B2740;
+    --text: #E2E8F0;
+    --text-dim: #7C8AA5;
+    --text-faint: #4B5872;
+    --accent: #38BDF8;
+    --accent-dim: #1D4E66;
+    --ok: #4ADE80;
+    --warn: #FBBF24;
+    --danger: #F87171;
+    --pink: #F472B6;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; margin:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(56,189,248,0.05), transparent 40%),
+      radial-gradient(circle at 85% 100%, rgba(244,114,182,0.04), transparent 40%);
+  }
+  ::selection{ background: var(--accent); color: #001018; }
+  button{ font-family: var(--mono); cursor: pointer; }
+  textarea, input, select{ font-family: var(--mono); }
+
+  #app{ height:100vh; display:flex; flex-direction:column; }
+
+  /* ---------- Titlebar (echoes the portfolio's own terminal window) ---------- */
+  .titlebar{
+    display:flex; align-items:center; gap:14px;
+    padding: 10px 16px;
+    background: linear-gradient(180deg, #141F35, #0F1729);
+    border-bottom: 1px solid var(--border);
+    flex-shrink:0;
+  }
+  .dots{ display:flex; gap:6px; }
+  .dot{ width:11px; height:11px; border-radius:50%; display:inline-block; }
+  .dot.red{ background:#F87171; } .dot.yellow{ background:#FBBF24; } .dot.green{ background:#4ADE80; }
+  .titlebar-text{ color: var(--text-dim); letter-spacing: 0.5px; white-space:nowrap; }
+  .titlebar-text .path{ color: var(--accent); }
+  .titlebar-spacer{ flex:1; }
+  .titlebar-actions{ display:flex; align-items:center; gap:10px; }
+  .status-text{ color: var(--text-faint); font-size:11px; }
+  .status-text.ok{ color: var(--ok); }
+
+  .btn{
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: border-color .15s, color .15s, background .15s;
+    white-space: nowrap;
+  }
+  .btn:hover:not(:disabled){ border-color: var(--accent); color: var(--accent); }
+  .btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .btn.primary{ background: var(--accent); border-color: var(--accent); color:#00131C; }
+  .btn.primary:hover:not(:disabled){ background:#5FCBFB; color:#00131C; }
+  .btn.save{ background: var(--ok); border-color: var(--ok); color:#00220C; }
+  .btn.save:hover:not(:disabled){ background:#6BF29A; color:#00220C; }
+  .btn.save:disabled{ background: var(--panel-2); border-color:var(--border); color:var(--text-faint); opacity:1; }
+  .btn.danger{ border-color: var(--danger); color: var(--danger); background:transparent; }
+  .btn.danger:hover:not(:disabled){ background: rgba(248,113,113,0.1); }
+  .btn-mini{
+    background: transparent; border: 1px solid var(--border-soft); color: var(--text-dim);
+    font-size: 10px; padding: 3px 7px; border-radius: 3px; font-weight:600;
+  }
+  .btn-mini:hover{ border-color: var(--accent); color: var(--accent); }
+
+  select#translate-engine{
+    background: var(--panel-2); border:1px solid var(--border); color: var(--text-dim);
+    padding: 6px 8px; border-radius:4px; font-size: 11px;
+  }
+
+  /* ---------- Main layout ---------- */
+  .main-layout{ flex:1; display:grid; grid-template-columns: 200px 300px 1fr; min-height:0; }
+
+  .tab-nav{
+    background: var(--panel-2);
+    border-right: 1px solid var(--border);
+    overflow-y:auto;
+    padding: 10px 0;
+  }
+  .tab-group-label{
+    color: var(--text-faint); font-size: 10px; letter-spacing: 1.5px;
+    padding: 14px 16px 6px; text-transform: uppercase;
+  }
+  .tab-item{
+    display:flex; align-items:center; gap:8px;
+    padding: 9px 16px; color: var(--text-dim); font-size: 12px; font-weight:600;
+    border-left: 2px solid transparent; cursor:pointer;
+  }
+  .tab-item:hover{ color: var(--text); background: rgba(255,255,255,0.02); }
+  .tab-item.active{ color: var(--accent); border-left-color: var(--accent); background: rgba(56,189,248,0.06); }
+  .tab-item .dirty-dot{ width:6px; height:6px; border-radius:50%; background: var(--warn); margin-left:auto; flex-shrink:0; display:none; }
+  .tab-item.dirty .dirty-dot{ display:inline-block; }
+  .tab-item.missing{ opacity:0.35; cursor:not-allowed; }
+
+  .list-panel{
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display:flex; flex-direction:column; min-height:0;
+  }
+  .list-toolbar{
+    display:flex; gap:8px; padding: 10px; border-bottom:1px solid var(--border-soft); flex-shrink:0;
+  }
+  .list-items{ flex:1; overflow-y:auto; padding: 6px; }
+  .list-row{
+    display:flex; align-items:center; gap:6px;
+    padding: 8px 9px; border-radius:5px; margin-bottom:3px;
+    border:1px solid transparent; cursor:pointer;
+  }
+  .list-row:hover{ background: rgba(255,255,255,0.03); }
+  .list-row.selected{ background: var(--accent-dim); border-color: var(--accent); }
+  .list-row .row-main{ flex:1; min-width:0; }
+  .list-row .row-title{ font-size:12px; font-weight:600; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .list-row .row-sub{ font-size:10px; color: var(--text-faint); margin-top:2px; }
+  .list-row .row-reorder{ display:flex; flex-direction:column; gap:1px; }
+  .list-row .row-reorder button{ background:none; border:none; color:var(--text-faint); font-size:9px; padding:0 3px; line-height:1.3; }
+  .list-row .row-reorder button:hover{ color: var(--accent); }
+  .list-empty{ color: var(--text-faint); font-size:12px; padding: 20px; text-align:center; }
+
+  .edit-panel{ overflow-y:auto; padding: 20px 26px 60px; }
+  .empty-state{ color: var(--text-faint); padding: 40px; text-align:center; font-size:13px; }
+  .empty-state .big{ font-size: 28px; display:block; margin-bottom:10px; opacity:0.5; }
+
+  .edit-header{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+    margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-soft);
+  }
+  .edit-header h2{ font-size:15px; margin:0 0 4px; color: var(--text); }
+  .edit-header .meta{ font-size:11px; color: var(--text-faint); }
+  .edit-header-actions{ display:flex; gap:8px; flex-shrink:0; }
+
+  .field{ margin-bottom: 16px; }
+  .field label{
+    display:block; font-size:11px; font-weight:700; color: var(--text-dim);
+    letter-spacing: 0.4px; margin-bottom:6px; text-transform: uppercase;
+  }
+  .field label .opt{ color: var(--text-faint); font-weight:400; text-transform:none; }
+  .field input[type=text], .field input[type=number], .field textarea, .field select{
+    width:100%; background: var(--panel-2); border:1px solid var(--border);
+    color: var(--text); padding: 8px 10px; border-radius:4px; font-size:12.5px;
+    resize: vertical;
+  }
+  .field input[type=text]:focus, .field textarea:focus, .field select:focus{ outline:none; border-color: var(--accent); }
+  .field textarea{ min-height: 54px; line-height:1.5; }
+  .field input[type=color]{ width:44px; height:30px; padding:2px; background:var(--panel-2); border:1px solid var(--border); border-radius:4px; }
+  .field .color-row{ display:flex; align-items:center; gap:8px; }
+  .field .color-row input[type=text]{ width:120px; }
+  .checkbox-row{ display:flex; align-items:center; gap:8px; }
+  .checkbox-row input{ width:15px; height:15px; }
+  .checkbox-row label{ margin:0; text-transform:none; font-size:12.5px; color:var(--text); font-weight:400; }
+
+  .two-col{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+  .three-col{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px; }
+
+  .lang-field .lang-grid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+  .lang-col{ position:relative; }
+  .lang-tag{
+    display:inline-block; font-size:9px; font-weight:800; letter-spacing:1px;
+    color: var(--text-faint); margin-bottom:4px;
+  }
+  .lang-col.ko .lang-tag{ color: var(--pink); }
+  .lang-col.en .lang-tag{ color: var(--accent); }
+  .lang-col.ja .lang-tag{ color: var(--warn); }
+  .lang-col textarea{ min-height:64px; }
+  .lang-col .translate-btn{ position:absolute; top:0; right:0; }
+  .lang-field-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+
+  .json-field textarea{ min-height: 110px; font-size:11.5px; color: var(--accent); }
+  .json-field textarea.invalid{ border-color: var(--danger); }
+  .json-error{ color: var(--danger); font-size:10.5px; margin-top:4px; display:none; }
+  .json-error.show{ display:block; }
+
+  .section-divider{
+    font-size:10px; color: var(--text-faint); letter-spacing:1.5px; text-transform:uppercase;
+    margin: 22px 0 10px; padding-top:10px; border-top: 1px dashed var(--border-soft);
+  }
+
+  .welcome{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    height:100%; text-align:center; padding: 40px; color: var(--text-dim); gap:14px;
+  }
+  .welcome h1{ font-size:16px; color: var(--text); margin:0; }
+  .welcome p{ font-size:12px; color: var(--text-faint); max-width:440px; line-height:1.7; margin:0; }
+  .welcome code{ background: var(--panel-2); padding:2px 6px; border-radius:3px; color: var(--accent); }
+
+  /* Toasts */
+  #toast-container{ position:fixed; bottom:20px; right:20px; display:flex; flex-direction:column; gap:8px; z-index:100; }
+  .toast{
+    background: var(--panel); border:1px solid var(--border); border-left:3px solid var(--accent);
+    padding: 10px 16px; border-radius:5px; font-size:12px; box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    animation: toast-in .2s ease-out;
+  }
+  .toast.ok{ border-left-color: var(--ok); }
+  .toast.err{ border-left-color: var(--danger); }
+  @keyframes toast-in{ from{ opacity:0; transform: translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  ::-webkit-scrollbar{ width:9px; height:9px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+  ::-webkit-scrollbar-thumb{ background: var(--border); border-radius:5px; }
+  ::-webkit-scrollbar-thumb:hover{ background: var(--text-faint); }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="titlebar">
+    <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+    <div class="titlebar-text">admin@portfolio:~$ <span class="path" id="folder-path">no folder open</span></div>
+    <div class="titlebar-spacer"></div>
+    <div class="titlebar-actions">
+      <select id="translate-engine" title="번역 엔진">
+        <option value="mymemory">MyMemory (무료)</option>
+      </select>
+      <span class="status-text" id="folder-status">폴더 미선택</span>
+      <button class="btn primary" id="open-folder-btn">📁 데이터 폴더 열기</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <nav class="tab-nav" id="tab-nav"></nav>
+    <section class="list-panel" id="list-panel"></section>
+    <section class="edit-panel" id="edit-panel">
+      <div class="welcome">
+        <h1>&gt; 아직 열린 폴더가 없습니다</h1>
+        <p>
+          우측 상단의 <b>데이터 폴더 열기</b> 버튼으로 프로젝트 루트 폴더 또는 <code>js/data</code> 폴더를 선택하세요.<br><br>
+          이 도구는 <code>zones.json</code>, <code>obstacles.json</code>, <code>resume-data.json</code>, <code>ui-text.json</code> 을 찾아 자동으로 불러옵니다.<br><br>
+          ⚠️ Chrome 또는 Edge 브라우저가 필요합니다 (File System Access API).
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast-container"></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   0. FILE MAP + SCHEMAS
+   ============================================================ */
+
+const FILES = {
+  zones:      { name: 'zones.json' },
+  obstacles:  { name: 'obstacles.json' },
+  resume:     { name: 'resume-data.json' },
+  uiText:     { name: 'ui-text.json' },
+};
+
+function emptyLang(){ return { ko:'', en:'', ja:'' }; }
+function uid(prefix){ return prefix + '-' + Date.now().toString(36) + Math.floor(Math.random()*1000); }
+
+const CATEGORY_OPTIONS = ['birth','enrollment','graduation','military','certificate','project','internship','other'];
+
+// ---- schemas describe how to render list rows + edit forms for each array item ----
+
+const zoneSchema = {
+  label: item => (item.title && item.title.ko) || item.id || '(제목 없음)',
+  sub: item => `w:${item.width ?? '-'}  ${item.backgroundColor ?? ''}`,
+  newItem: () => ({ id: uid('zone'), width: 1000, backgroundColor: '#0F172A', title: emptyLang(), subtitle: emptyLang(), scenery: { type: 'none' } }),
+  fields: [
+    { key:'id', type:'text', label:'ID' },
+    { key:'width', type:'number', label:'Width (px)' },
+    { key:'backgroundColor', type:'color', label:'Background Color' },
+    { key:'noBorder', type:'checkbox', label:'경계선 없음 (noBorder)' },
+    { key:'isFinale', type:'checkbox', label:'피날레 존 (isFinale)' },
+    { key:'title', type:'lang', label:'Title' },
+    { key:'subtitle', type:'lang', label:'Subtitle' },
+    { key:'flavorText', type:'lang', label:'Flavor Text' },
+    { key:'scenery', type:'json', label:'Scenery (raw JSON)' },
+  ],
+};
+
+const obstacleSchema = {
+  label: item => (item.title && item.title.ko) || ('#' + item.id),
+  sub: item => `pos:${item.pos ?? '-'}  ${item.category ?? ''}`,
+  sortBy: item => item.pos ?? 0,
+  newItem: () => ({ id: Date.now() % 100000, pos: 0, elevation: 0, title: emptyLang(), desc: emptyLang(), color: '#38BDF8', category: 'other', link: '' }),
+  fields: [
+    { key:'id', type:'number', label:'ID' },
+    { key:'pos', type:'number', label:'Position (pos)' },
+    { key:'elevation', type:'number', label:'Elevation' },
+    { key:'color', type:'color', label:'Color' },
+    { key:'category', type:'select', label:'Category', options: CATEGORY_OPTIONS },
+    { key:'title', type:'lang', label:'Title' },
+    { key:'desc', type:'lang', label:'Description' },
+    { key:'link', type:'text', label:'Link URL' },
+    { key:'customIcon', type:'text', label:'Custom Icon', optional:true },
+    { key:'hidden', type:'checkbox', label:'숨김 (hidden)' },
+    { key:'inProgress', type:'checkbox', label:'진행중 (inProgress)' },
+  ],
+};
+
+const portfolioSchema = {
+  label: item => (item.title && item.title.ko) || item.id,
+  sub: item => item.image || '',
+  newItem: () => ({ id: uid('proj'), image: './images/', alt: emptyLang(), title: emptyLang(), description: emptyLang(), link: '' }),
+  fields: [
+    { key:'id', type:'text', label:'ID' },
+    { key:'image', type:'text', label:'Image Path' },
+    { key:'title', type:'lang', label:'Title' },
+    { key:'description', type:'lang', label:'Description' },
+    { key:'alt', type:'lang', label:'Alt Text (접근성)' },
+    { key:'link', type:'text', label:'Link URL' },
+  ],
+};
+
+const certSchema = {
+  label: item => (item.title && item.title.ko) || '(제목 없음)',
+  sub: item => item.link || '',
+  newItem: () => ({ title: emptyLang(), description: emptyLang(), link: '' }),
+  fields: [
+    { key:'title', type:'lang', label:'Title' },
+    { key:'description', type:'lang', label:'Description' },
+    { key:'link', type:'text', label:'Link URL' },
+  ],
+};
+
+const expSchema = {
+  label: item => (item.title && item.title.ko) || '(제목 없음)',
+  sub: item => (item.description && item.description.ko) || '',
+  newItem: () => ({ title: emptyLang(), description: emptyLang() }),
+  fields: [
+    { key:'title', type:'lang', label:'Title' },
+    { key:'description', type:'lang', label:'Description' },
+  ],
+};
+
+const skillSchema = {
+  label: item => (item.category && item.category.ko) || '(카테고리 없음)',
+  sub: item => `${(item.items||[]).length}개 항목  ${item.layout||''}`,
+  newItem: () => ({ category: emptyLang(), layout: '', items: [] }),
+  fields: [
+    { key:'category', type:'lang', label:'Category' },
+    { key:'layout', type:'text', label:'Layout (card-large / card-tall / card-wide / "")' },
+    { key:'items', type:'json', label:'Items (raw JSON: name/level/width)' },
+  ],
+};
+
+// tab definitions: how each tab maps onto the loaded file data
+const TABS = [
+  { id:'zones', group:'WORLD', label:'Zones', file:'zones', getArr: d => d, schema: zoneSchema, reorder:true },
+  { id:'obstacles', group:'WORLD', label:'Obstacles', file:'obstacles', getArr: d => d, schema: obstacleSchema, reorder:false },
+  { id:'portfolio', group:'RESUME', label:'포트폴리오', file:'resume', getArr: d => d.portfolio, schema: portfolioSchema, reorder:true },
+  { id:'certifications', group:'RESUME', label:'자격증', file:'resume', getArr: d => d.certifications, schema: certSchema, reorder:true },
+  { id:'experience', group:'RESUME', label:'주요 이력', file:'resume', getArr: d => d.experience, schema: expSchema, reorder:true },
+  { id:'skills', group:'RESUME', label:'스킬', file:'resume', getArr: d => d.skills, schema: skillSchema, reorder:true },
+  { id:'uiText', group:'TEXT', label:'UI 텍스트', file:'uiText', kind:'object-form' },
+];
+
+/* ============================================================
+   1. STATE
+   ============================================================ */
+
+let dirHandle = null;
+let fileHandles = {};   // key -> FileSystemFileHandle | null
+let data = {};          // key -> parsed json
+let dirty = {};         // key -> bool
+let activeTabId = null;
+let selectedIndex = null; // index into the (unsorted) underlying array for array tabs
+
+/* ============================================================
+   2. TRANSLATION (MyMemory - free, no API key)
+   ============================================================ */
+
+function utf8ByteLen(str){ return new TextEncoder().encode(str).length; }
+
+function splitIntoChunks(text, maxBytes){
+  // split on sentence boundaries / newlines first, then group under the byte budget
+  const pieces = text.split(/(?<=[.!?\n])\s*/).filter(Boolean);
+  const chunks = [];
+  let cur = '';
+  for (const piece of pieces){
+    const candidate = cur ? cur + ' ' + piece : piece;
+    if (utf8ByteLen(candidate) > maxBytes && cur){
+      chunks.push(cur);
+      cur = piece;
+    } else {
+      cur = candidate;
+    }
+  }
+  if (cur) chunks.push(cur);
+  // guard: if a single piece is still too long (no punctuation), hard-slice it
+  return chunks.flatMap(c => {
+    if (utf8ByteLen(c) <= maxBytes) return [c];
+    const out = [];
+    let s = c;
+    while (utf8ByteLen(s) > maxBytes){
+      let cut = Math.floor(maxBytes / 2); // conservative for multi-byte hangul
+      out.push(s.slice(0, cut));
+      s = s.slice(cut);
+    }
+    if (s) out.push(s);
+    return out;
+  });
+}
+
+async function mymemoryTranslate(text, target){
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=ko|${target}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('네트워크 오류: ' + res.status);
+  const json = await res.json();
+  if (json && json.responseData && typeof json.responseData.translatedText === 'string'){
+    return json.responseData.translatedText;
+  }
+  throw new Error('번역 실패');
+}
+
+async function translateText(koText, target){
+  const text = (koText || '').trim();
+  if (!text) return '';
+  const chunks = splitIntoChunks(text, 450); // stay under MyMemory's ~500 byte anonymous limit
+  const results = [];
+  for (const chunk of chunks){
+    const t = await mymemoryTranslate(chunk, target);
+    results.push(t);
+    await new Promise(r => setTimeout(r, 250)); // be polite to the free API
+  }
+  return results.join(' ');
+}
+
+/* ============================================================
+   3. FOLDER / FILE I/O
+   ============================================================ */
+
+async function findFileHandle(root, filename){
+  try { return await root.getFileHandle(filename); } catch(e){}
+  // common nested locations
+  const candidates = [['js','data'], ['data']];
+  for (const path of candidates){
+    try {
+      let h = root;
+      for (const seg of path) h = await h.getDirectoryHandle(seg);
+      return await h.getFileHandle(filename);
+    } catch(e){}
+  }
+  return null;
+}
+
+async function openFolder(){
+  if (!window.showDirectoryPicker){
+    alert('이 브라우저는 File System Access API를 지원하지 않습니다.\nChrome 또는 Edge를 사용해주세요.');
+    return;
+  }
+  try {
+    dirHandle = await window.showDirectoryPicker();
+  } catch(e){
+    return; // user cancelled
+  }
+
+  document.getElementById('folder-path').textContent = dirHandle.name + '/';
+  document.getElementById('folder-status').textContent = '불러오는 중...';
+
+  fileHandles = {};
+  data = {};
+  dirty = {};
+
+  for (const key of Object.keys(FILES)){
+    const handle = await findFileHandle(dirHandle, FILES[key].name);
+    fileHandles[key] = handle;
+    if (handle){
+      try {
+        const file = await handle.getFile();
+        data[key] = JSON.parse(await file.text());
+        dirty[key] = false;
+      } catch(e){
+        console.error('파일 로드 실패:', key, e);
+        fileHandles[key] = null;
+      }
+    }
+  }
+
+  const foundCount = Object.values(fileHandles).filter(Boolean).length;
+  const statusEl = document.getElementById('folder-status');
+  if (foundCount === 0){
+    statusEl.textContent = '❌ json 파일을 찾지 못했습니다';
+    statusEl.className = 'status-text';
+  } else {
+    statusEl.textContent = `✓ ${foundCount}/4 파일 로드됨`;
+    statusEl.className = 'status-text ok';
+  }
+
+  renderTabNav();
+  const firstAvailable = TABS.find(t => fileHandles[t.file]);
+  selectTab(firstAvailable ? firstAvailable.id : null);
+}
+
+async function saveFile(fileKey){
+  const handle = fileHandles[fileKey];
+  if (!handle){ toast('파일 핸들이 없습니다.', 'err'); return; }
+  try {
+    const writable = await handle.createWritable();
+    await writable.write(JSON.stringify(data[fileKey], null, 2));
+    await writable.close();
+    dirty[fileKey] = false;
+    toast(`${FILES[fileKey].name} 저장 완료`, 'ok');
+    renderTabNav();
+    renderEditHeaderActions();
+  } catch(e){
+    console.error(e);
+    toast('저장 실패: ' + e.message, 'err');
+  }
+}
+
+function markDirty(fileKey){
+  dirty[fileKey] = true;
+  renderTabNav();
+  renderEditHeaderActions();
+}
+
+/* ============================================================
+   4. TOASTS
+   ============================================================ */
+
+function toast(msg, kind){
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' ' + kind : '');
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+/* ============================================================
+   5. TAB NAV
+   ============================================================ */
+
+function renderTabNav(){
+  const nav = document.getElementById('tab-nav');
+  nav.innerHTML = '';
+  let lastGroup = null;
+  for (const tab of TABS){
+    if (tab.group !== lastGroup){
+      const g = document.createElement('div');
+      g.className = 'tab-group-label';
+      g.textContent = tab.group;
+      nav.appendChild(g);
+      lastGroup = tab.group;
+    }
+    const available = !!fileHandles[tab.file];
+    const el = document.createElement('div');
+    el.className = 'tab-item' + (tab.id === activeTabId ? ' active' : '') + (!available ? ' missing' : '') + (dirty[tab.file] ? ' dirty' : '');
+    el.innerHTML = `<span>${tab.label}</span><span class="dirty-dot"></span>`;
+    if (available){
+      el.addEventListener('click', () => selectTab(tab.id));
+    } else {
+      el.title = FILES[tab.file].name + ' 파일을 찾을 수 없음';
+    }
+    nav.appendChild(el);
+  }
+}
+
+function selectTab(tabId){
+  activeTabId = tabId;
+  selectedIndex = null;
+  renderTabNav();
+  renderListPanel();
+  renderEditPanel();
+}
+
+function currentTab(){
+  return TABS.find(t => t.id === activeTabId) || null;
+}
+
+function currentArray(){
+  const tab = currentTab();
+  if (!tab || tab.kind === 'object-form') return null;
+  const root = data[tab.file];
+  if (!root) return null;
+  return tab.getArr(root);
+}
+
+/* ============================================================
+   6. LIST PANEL
+   ============================================================ */
+
+function renderListPanel(){
+  const panel = document.getElementById('list-panel');
+  const tab = currentTab();
+  if (!tab){
+    panel.innerHTML = '';
+    return;
+  }
+  if (tab.kind === 'object-form'){
+    panel.innerHTML = `<div class="list-toolbar"><span style="color:var(--text-faint);font-size:11px;padding:6px 2px;">이 탭은 단일 텍스트 세트입니다 →</span></div>`;
+    return;
+  }
+
+  const arr = currentArray();
+  if (!arr){
+    panel.innerHTML = `<div class="list-empty">데이터를 불러올 수 없습니다.</div>`;
+    return;
+  }
+
+  let html = `<div class="list-toolbar"><button class="btn primary" id="add-item-btn" style="flex:1;">+ 새 항목</button></div><div class="list-items" id="list-items"></div>`;
+  panel.innerHTML = html;
+
+  document.getElementById('add-item-btn').addEventListener('click', () => {
+    const newItem = tab.schema.newItem();
+    arr.push(newItem);
+    selectedIndex = arr.length - 1;
+    markDirty(tab.file);
+    renderListPanel();
+    renderEditPanel();
+  });
+
+  const itemsEl = document.getElementById('list-items');
+  if (arr.length === 0){
+    itemsEl.innerHTML = `<div class="list-empty">항목이 없습니다.<br>“+ 새 항목”으로 추가하세요.</div>`;
+    return;
+  }
+
+  // build display order (sorted view) while keeping real indices for editing/reorder
+  let order = arr.map((_, i) => i);
+  if (tab.schema.sortBy){
+    order.sort((a, b) => tab.schema.sortBy(arr[a]) - tab.schema.sortBy(arr[b]));
+  }
+
+  for (const realIndex of order){
+    const item = arr[realIndex];
+    const row = document.createElement('div');
+    row.className = 'list-row' + (realIndex === selectedIndex ? ' selected' : '');
+    row.innerHTML = `
+      <div class="row-main">
+        <div class="row-title">${escapeHtml(tab.schema.label(item))}</div>
+        <div class="row-sub">${escapeHtml(tab.schema.sub ? tab.schema.sub(item) : '')}</div>
+      </div>
+      ${tab.reorder ? `<div class="row-reorder"><button data-dir="up" title="위로">▲</button><button data-dir="down" title="아래로">▼</button></div>` : ''}
+    `;
+    row.querySelector('.row-main').addEventListener('click', () => {
+      selectedIndex = realIndex;
+      renderListPanel();
+      renderEditPanel();
+    });
+    if (tab.reorder){
+      row.querySelectorAll('.row-reorder button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const dir = btn.getAttribute('data-dir');
+          const swapWith = dir === 'up' ? realIndex - 1 : realIndex + 1;
+          if (swapWith < 0 || swapWith >= arr.length) return;
+          [arr[realIndex], arr[swapWith]] = [arr[swapWith], arr[realIndex]];
+          if (selectedIndex === realIndex) selectedIndex = swapWith;
+          else if (selectedIndex === swapWith) selectedIndex = realIndex;
+          markDirty(tab.file);
+          renderListPanel();
+        });
+      });
+    }
+    itemsEl.appendChild(row);
+  }
+}
+
+function escapeHtml(str){
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ============================================================
+   7. EDIT PANEL
+   ============================================================ */
+
+function renderEditHeaderActions(){
+  const btn = document.getElementById('save-file-btn');
+  const tab = currentTab();
+  if (!btn || !tab) return;
+  btn.disabled = !dirty[tab.file];
+  btn.textContent = dirty[tab.file] ? `💾 ${FILES[tab.file].name} 저장 *` : `💾 ${FILES[tab.file].name} 저장됨`;
+}
+
+function renderEditPanel(){
+  const panel = document.getElementById('edit-panel');
+  const tab = currentTab();
+
+  if (!tab){
+    panel.innerHTML = `<div class="welcome"><h1>&gt; 왼쪽에서 탭을 선택하세요</h1></div>`;
+    return;
+  }
+
+  if (tab.kind === 'object-form'){
+    renderUiTextForm(panel, tab);
+    return;
+  }
+
+  const arr = currentArray();
+  if (selectedIndex === null || !arr || !arr[selectedIndex]){
+    panel.innerHTML = `<div class="empty-state"><span class="big">◇</span>왼쪽 목록에서 항목을 선택하거나<br>“+ 새 항목”으로 추가하세요.</div>`;
+    return;
+  }
+
+  const item = arr[selectedIndex];
+  panel.innerHTML = `
+    <div class="edit-header">
+      <div>
+        <h2>${escapeHtml(tab.schema.label(item))}</h2>
+        <div class="meta">${tab.label} · ${FILES[tab.file].name}</div>
+      </div>
+      <div class="edit-header-actions">
+        <button class="btn" id="translate-all-btn">⚡ 빈 칸 전체 번역</button>
+        <button class="btn save" id="save-file-btn"></button>
+        <button class="btn danger" id="delete-item-btn">삭제</button>
+      </div>
+    </div>
+    <div id="form-fields"></div>
+  `;
+
+  const fieldsEl = document.getElementById('form-fields');
+  for (const field of tab.schema.fields){
+    fieldsEl.appendChild(renderField(item, field, tab));
+  }
+
+  renderEditHeaderActions();
+
+  document.getElementById('delete-item-btn').addEventListener('click', () => {
+    if (!confirm('이 항목을 삭제할까요? 되돌릴 수 없습니다.')) return;
+    arr.splice(selectedIndex, 1);
+    selectedIndex = null;
+    markDirty(tab.file);
+    renderListPanel();
+    renderEditPanel();
+  });
+
+  document.getElementById('save-file-btn').addEventListener('click', () => saveFile(tab.file));
+
+  document.getElementById('translate-all-btn').addEventListener('click', async () => {
+    const langFields = tab.schema.fields.filter(f => f.type === 'lang');
+    if (langFields.length === 0){ toast('번역할 텍스트 필드가 없습니다.', 'err'); return; }
+    toast('번역 중... (' + langFields.length + '개 필드)');
+    for (const field of langFields){
+      const val = item[field.key] || emptyLang();
+      const ko = (val.ko || '').trim();
+      if (!ko) continue;
+      try {
+        if (!val.en || !val.en.trim()) val.en = await translateText(ko, 'en');
+        if (!val.ja || !val.ja.trim()) val.ja = await translateText(ko, 'ja');
+        item[field.key] = val;
+      } catch(e){
+        toast(`"${field.label}" 번역 실패: ${e.message}`, 'err');
+      }
+    }
+    markDirty(tab.file);
+    renderEditPanel();
+    toast('번역 완료 (검수 후 저장하세요)', 'ok');
+  });
+}
+
+function renderField(item, field, tab){
+  const wrap = document.createElement('div');
+  wrap.className = 'field' + (field.type === 'lang' ? ' lang-field' : field.type === 'json' ? ' json-field' : '');
+
+  if (field.type === 'lang'){
+    const val = item[field.key] || (item[field.key] = emptyLang());
+    wrap.innerHTML = `
+      <div class="lang-field-top">
+        <label style="margin:0;">${field.label}</label>
+      </div>
+      <div class="lang-grid">
+        <div class="lang-col ko"><span class="lang-tag">KO</span><textarea data-lang="ko">${escapeHtml(val.ko)}</textarea></div>
+        <div class="lang-col en"><span class="lang-tag">EN</span><button class="btn-mini translate-btn" data-target="en">⚡ 번역</button><textarea data-lang="en">${escapeHtml(val.en)}</textarea></div>
+        <div class="lang-col ja"><span class="lang-tag">JA</span><button class="btn-mini translate-btn" data-target="ja">⚡ 번역</button><textarea data-lang="ja">${escapeHtml(val.ja)}</textarea></div>
+      </div>
+    `;
+    wrap.querySelectorAll('textarea').forEach(ta => {
+      ta.addEventListener('input', () => {
+        val[ta.getAttribute('data-lang')] = ta.value;
+        markDirty(tab.file);
+        updateListRowLabel(item, tab);
+      });
+    });
+    wrap.querySelectorAll('.translate-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const koTa = wrap.querySelector('textarea[data-lang="ko"]');
+        const targetLang = btn.getAttribute('data-target');
+        const targetTa = wrap.querySelector(`textarea[data-lang="${targetLang}"]`);
+        const koText = koTa.value.trim();
+        if (!koText){ toast('한국어 원문을 먼저 입력하세요.', 'err'); return; }
+        if (targetTa.value.trim() && !confirm(`${targetLang.toUpperCase()} 번역 결과를 덮어쓸까요?`)) return;
+        const original = btn.textContent;
+        btn.textContent = '...';
+        btn.disabled = true;
+        try {
+          const translated = await translateText(koText, targetLang);
+          targetTa.value = translated;
+          val[targetLang] = translated;
+          markDirty(tab.file);
+          updateListRowLabel(item, tab);
+        } catch(e){
+          toast('번역 실패: ' + e.message, 'err');
+        } finally {
+          btn.textContent = original;
+          btn.disabled = false;
+        }
+      });
+    });
+    return wrap;
+  }
+
+  if (field.type === 'json'){
+    const jsonStr = JSON.stringify(item[field.key] ?? null, null, 2);
+    wrap.innerHTML = `
+      <label>${field.label}</label>
+      <textarea spellcheck="false">${escapeHtml(jsonStr)}</textarea>
+      <div class="json-error">JSON 형식이 올바르지 않습니다. 수정 전까지 저장되지 않습니다.</div>
+    `;
+    const ta = wrap.querySelector('textarea');
+    const errEl = wrap.querySelector('.json-error');
+    ta.addEventListener('input', () => {
+      try {
+        const parsed = JSON.parse(ta.value);
+        item[field.key] = parsed;
+        ta.classList.remove('invalid');
+        errEl.classList.remove('show');
+        markDirty(tab.file);
+      } catch(e){
+        ta.classList.add('invalid');
+        errEl.classList.add('show');
+      }
+    });
+    return wrap;
+  }
+
+  if (field.type === 'checkbox'){
+    wrap.innerHTML = `
+      <div class="checkbox-row">
+        <input type="checkbox" id="chk-${field.key}" ${item[field.key] ? 'checked' : ''}>
+        <label for="chk-${field.key}">${field.label}</label>
+      </div>
+    `;
+    wrap.querySelector('input').addEventListener('change', (e) => {
+      item[field.key] = e.target.checked;
+      markDirty(tab.file);
+    });
+    return wrap;
+  }
+
+  if (field.type === 'select'){
+    wrap.innerHTML = `
+      <label>${field.label}</label>
+      <select>${field.options.map(o => `<option value="${o}" ${item[field.key] === o ? 'selected' : ''}>${o}</option>`).join('')}</select>
+    `;
+    wrap.querySelector('select').addEventListener('change', (e) => {
+      item[field.key] = e.target.value;
+      markDirty(tab.file);
+      updateListRowLabel(item, tab);
+    });
+    return wrap;
+  }
+
+  if (field.type === 'color'){
+    const val = item[field.key] || '#000000';
+    wrap.innerHTML = `
+      <label>${field.label}</label>
+      <div class="color-row">
+        <input type="color" value="${/^#[0-9a-fA-F]{6}$/.test(val) ? val : '#000000'}">
+        <input type="text" value="${escapeHtml(val)}">
+      </div>
+    `;
+    const colorInput = wrap.querySelector('input[type=color]');
+    const textInput = wrap.querySelector('input[type=text]');
+    colorInput.addEventListener('input', () => {
+      textInput.value = colorInput.value;
+      item[field.key] = colorInput.value;
+      markDirty(tab.file);
+    });
+    textInput.addEventListener('input', () => {
+      item[field.key] = textInput.value;
+      if (/^#[0-9a-fA-F]{6}$/.test(textInput.value)) colorInput.value = textInput.value;
+      markDirty(tab.file);
+    });
+    return wrap;
+  }
+
+  if (field.type === 'number'){
+    wrap.innerHTML = `<label>${field.label}</label><input type="number" value="${item[field.key] ?? 0}">`;
+    wrap.querySelector('input').addEventListener('input', (e) => {
+      item[field.key] = e.target.value === '' ? 0 : Number(e.target.value);
+      markDirty(tab.file);
+      updateListRowLabel(item, tab);
+    });
+    return wrap;
+  }
+
+  // default: text
+  wrap.innerHTML = `<label>${field.label}${field.optional ? ' <span class="opt">(선택)</span>' : ''}</label><input type="text" value="${escapeHtml(item[field.key] ?? '')}">`;
+  wrap.querySelector('input').addEventListener('input', (e) => {
+    item[field.key] = e.target.value;
+    markDirty(tab.file);
+    updateListRowLabel(item, tab);
+  });
+  return wrap;
+}
+
+function updateListRowLabel(item, tab){
+  // cheap targeted refresh so typing doesn't steal focus by re-rendering the whole edit panel
+  renderListPanel();
+  // re-select the row visually (renderListPanel rebuilds selection class from selectedIndex already)
+}
+
+/* ---------- UI TEXT (single object form, no list) ---------- */
+
+const UITEXT_FIELDS = [
+  { path:['about','title'], label:'About · 타이틀' },
+  { path:['about','intro'], label:'About · 소개글' },
+  { path:['about','skillsTitle'], label:'About · 스킬 섹션 타이틀' },
+  { path:['terminal','text'], label:'Terminal · 부팅 텍스트' },
+];
+
+function getPath(obj, path){
+  return path.reduce((o, k) => (o && o[k] !== undefined) ? o[k] : undefined, obj);
+}
+function ensurePath(obj, path){
+  let cur = obj;
+  for (let i = 0; i < path.length - 1; i++){
+    if (!cur[path[i]]) cur[path[i]] = {};
+    cur = cur[path[i]];
+  }
+  const lastKey = path[path.length - 1];
+  if (!cur[lastKey]) cur[lastKey] = emptyLang();
+  return cur[lastKey];
+}
+
+function renderUiTextForm(panel, tab){
+  const root = data[tab.file];
+  if (!root){
+    panel.innerHTML = `<div class="empty-state">ui-text.json 데이터를 불러올 수 없습니다.</div>`;
+    return;
+  }
+  panel.innerHTML = `
+    <div class="edit-header">
+      <div>
+        <h2>UI 텍스트</h2>
+        <div class="meta">사이트 전역 문구 · ${FILES[tab.file].name}</div>
+      </div>
+      <div class="edit-header-actions">
+        <button class="btn save" id="save-file-btn"></button>
+      </div>
+    </div>
+    <div id="uitext-fields"></div>
+  `;
+  const fieldsEl = document.getElementById('uitext-fields');
+  for (const f of UITEXT_FIELDS){
+    const val = ensurePath(root, f.path);
+    const pseudoItem = { _val: val };
+    const pseudoField = { key:'_val', type:'lang', label: f.label };
+    fieldsEl.appendChild(renderField(pseudoItem, pseudoField, tab));
+  }
+  renderEditHeaderActions();
+  document.getElementById('save-file-btn').addEventListener('click', () => saveFile(tab.file));
+}
+
+/* ============================================================
+   8. INIT
+   ============================================================ */
+
+document.getElementById('open-folder-btn').addEventListener('click', openFolder);
+
+})();
+</script>
+</body>
+</html>

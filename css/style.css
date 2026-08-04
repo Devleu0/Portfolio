@@ -1845,7 +1845,7 @@ button.action {
 
 
 /* --- Media Queries --- */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .top-header {
         display: none;
     }
@@ -1880,20 +1880,28 @@ button.action {
 
     /* Mobile adjustments for game elements */
     .info-tag {
-        max-width: 140px;
-        padding: 6px 10px;
+        max-width: 150px;
+        max-height: 100px;
+        padding: 3px 7px;
+        opacity: 0.7;
     }
 
     .info-tag .title {
-        font-size: 12px;
+        font-size: 9px;
     }
 
     .info-tag .desc {
-        font-size: 10px;
+        font-size: 8px;
+    }
+
+    .cat-badge {
+        font-size: 8px;
+        margin-bottom: 2px;
+        padding: 2px 2px;
     }
 
     .zone-title {
-        font-size: 2rem;
+        font-size: 1.4rem;
     }
 
     .zone-subtitle {
