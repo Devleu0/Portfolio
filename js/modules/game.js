@@ -6,8 +6,8 @@ import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEf
 
 let gameContainer, player, playerWrapper, playerInner;
 
-let obstaclesData = [];
-let obstacleElements = [];
+let eventsData = [];
+let eventElements = [];
 let prevPlayerY = 0;
 
 const locallyCollected = new Set();
@@ -19,8 +19,8 @@ const jumpHeight = isMobile ? -75 : -150;
 const duckScale = 0.5;
 const jumpEase = "power1.out";
 
-export function getObstacleData() { return obstaclesData; }
-export function getObstacleElements() { return obstacleElements; }
+export function getEventData() { return eventsData; }
+export function getEventElements() { return eventElements; }
 export function getPlayerElement() { return player; }
 export function getPlayerWrapper() { return playerWrapper; }
 
@@ -51,7 +51,7 @@ function createPlayer() {
     gameContainer.appendChild(player);
 }
 
-function createObstacle(data, fallbackId) {
+function createEvent(data, fallbackId) {
     const hasImg = !!data.customIcon;
     const badgeSize = hasImg ? 96 : (isMobile ? 48 : 64);
     const iconSize = isMobile ? 24 : 32;
@@ -64,7 +64,7 @@ function createObstacle(data, fallbackId) {
     const bottomStyle = `calc(35vh + ${elevation}px)`;
 
     const wrapper = document.createElement('div');
-    wrapper.className = 'obstacle-wrapper obstacle-element';
+    wrapper.className = 'event-wrapper event-element';
     wrapper.setAttribute('data-id', data.id || fallbackId);
     wrapper.dataset.category = data.category || 'other';
     // wrapper 크기를 동적으로 설정
@@ -82,31 +82,31 @@ function createObstacle(data, fallbackId) {
 
     if (elevation > 0) {
         const pole = document.createElement('div');
-        pole.className = 'obstacle-pole';
+        pole.className = 'event-pole';
         pole.style.bottom = `-${elevation}px`;
         pole.style.height = `${elevation}px`;
         wrapper.appendChild(pole);
     }
 
-    const obstacle = document.createElement('div');
-    obstacle.className = `obstacle-badge${data.inProgress ? ' is-inprogress' : ''}`;
+    const event = document.createElement('div');
+    event.className = `event-badge${data.inProgress ? ' is-inprogress' : ''}`;
     // 프레임 존재 여부와 관계없이 뱃지는 고유 크기를 가짐
-    obstacle.style.width = (data.customIcon ? 86 : badgeSize) + 'px';
-    obstacle.style.height = (data.customIcon ? 64 : badgeSize) + 'px';
-    obstacle.style.borderRadius = data.customIcon ? '8px' : '0';
+    event.style.width = (data.customIcon ? 86 : badgeSize) + 'px';
+    event.style.height = (data.customIcon ? 64 : badgeSize) + 'px';
+    event.style.borderRadius = data.customIcon ? '8px' : '0';
     
     if (THEME === 'minimal' && !data.customIcon) {
-        obstacle.style.background = 'rgba(30,41,59,0.8)';
-        obstacle.style.backdropFilter = 'blur(8px)';
+        event.style.background = 'rgba(30,41,59,0.8)';
+        event.style.backdropFilter = 'blur(8px)';
     } else if (!data.customIcon) {
-        obstacle.style.background = catColor;
+        event.style.background = catColor;
     }
 
     const strokeColor = THEME === 'minimal' ? catColor : '#020617';
     if (data.customIcon) {
-        obstacle.innerHTML = `<img src="${data.customIcon}" alt="${getStr(data.title, state.currentLang)}" style="width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />`;
+        event.innerHTML = `<img src="${data.customIcon}" alt="${getStr(data.title, state.currentLang)}" style="width:100%; height:100%; object-fit:cover; image-rendering:pixelated;" />`;
     } else {
-        obstacle.innerHTML = `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[data.category] || ICONS.other}</svg>`;
+        event.innerHTML = `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[data.category] || ICONS.other}</svg>`;
     }
 
     if (hasFrame) {
@@ -116,13 +116,13 @@ function createObstacle(data, fallbackId) {
         frame.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%;';
         
         // 뱃지에 중앙 정렬 및 애니메이션 스타일 적용
-        obstacle.style.position = 'absolute';
-        obstacle.style.top = '50%';
-        obstacle.style.left = '50%';
-        obstacle.style.transform = 'translate(-50%, -50%)';
-        obstacle.classList.add('floating');
+        event.style.position = 'absolute';
+        event.style.top = '50%';
+        event.style.left = '50%';
+        event.style.transform = 'translate(-50%, -50%)';
+        event.classList.add('floating');
 
-        frame.appendChild(obstacle);
+        frame.appendChild(event);
 
         const wallDefs = {
             top: '<div class="frame-wall wall-horizontal wall-top platform-surface"></div>',
@@ -141,9 +141,9 @@ function createObstacle(data, fallbackId) {
         wrapper.walls = Array.from(frame.querySelectorAll('.frame-wall'));
         wrapper.appendChild(frame);
     } else {
-        obstacle.style.position = 'relative';
-        obstacle.style.left = data.customIcon ? '-8px' : '0';
-        wrapper.appendChild(obstacle);
+        event.style.position = 'relative';
+        event.style.left = data.customIcon ? '-8px' : '0';
+        wrapper.appendChild(event);
         wrapper.walls = [];
     }
 
@@ -195,11 +195,11 @@ function createJumpDust() {
     }
 }
 
-function finalizeCollection(obstacle, didAction) {
-    const dataId = parseInt(obstacle.getAttribute('data-id'), 10);
+function finalizeCollection(event, didAction) {
+    const dataId = parseInt(event.getAttribute('data-id'), 10);
     if (!dataId || locallyCollected.has(dataId)) return;
 
-    const obstacleBadge = obstacle.querySelector('.obstacle-badge');
+    const eventBadge = event.querySelector('.event-badge');
 
     if (didAction) {
         state.comboCount++;
@@ -223,10 +223,10 @@ function finalizeCollection(obstacle, didAction) {
         state.totalScore += 100;
     }
 
-    const frame = obstacle.querySelector('.cyber-frame');
+    const frame = event.querySelector('.cyber-frame');
     if (frame && didAction) {
         // For framed items, play a custom disintegration animation
-        triggerCollectEffect(obstacleBadge, didAction, obstacle.dataset.category);
+        triggerCollectEffect(eventBadge, didAction, event.dataset.category);
         
         gsap.to(frame.querySelectorAll('.frame-wall'), {
             opacity: 0,
@@ -235,20 +235,20 @@ function finalizeCollection(obstacle, didAction) {
             duration: 0.3,
             ease: 'power2.out',
         });
-        gsap.to(obstacleBadge, {
+        gsap.to(eventBadge, {
             opacity: 0,
             scale: 2,
             duration: 0.4,
             ease: 'power2.out',
             delay: 0.1,
             onComplete: () => {
-                obstacle.classList.add('collected');
+                event.classList.add('collected');
             }
         });
     } else {
         // Default collection effect for non-framed items
-        triggerCollectEffect(obstacle, didAction, obstacle.dataset.category);
-        obstacle.classList.add('collected');
+        triggerCollectEffect(event, didAction, event.dataset.category);
+        event.classList.add('collected');
     }
 
     playSound('./audio/coin.mp3');
@@ -288,17 +288,17 @@ function gameLoop(time, deltaTime) {
     let isAnythingOverlapping = false;
     const viewportWidth = window.innerWidth;
 
-    obstacleElements.forEach(obstacle => {
-        const obsRect = obstacle.getBoundingClientRect();
+    eventElements.forEach(event => {
+        const obsRect = event.getBoundingClientRect();
         
         if (obsRect.right < -200 || obsRect.left > viewportWidth + 200) return;
 
-        const dataId = parseInt(obstacle.getAttribute('data-id'), 10);
+        const dataId = parseInt(event.getAttribute('data-id'), 10);
         if (!dataId || locallyCollected.has(dataId) || beingCollected.has(dataId)) return;
 
         let wallHit = false;
-        if (obstacle.walls && obstacle.walls.length > 0) {
-            for (const wall of obstacle.walls) {
+        if (event.walls && event.walls.length > 0) {
+            for (const wall of event.walls) {
                 const wallRect = wall.getBoundingClientRect();
                 const isOverlappingWall = (
                     playerRect.left < wallRect.right &&
@@ -345,10 +345,10 @@ function gameLoop(time, deltaTime) {
             return;
         }
         
-        const obstacleBadge = obstacle.querySelector('.obstacle-badge');
-        if (!obstacleBadge) return;
+        const eventBadge = event.querySelector('.event-badge');
+        if (!eventBadge) return;
 
-        const badgeRect = obstacleBadge.getBoundingClientRect();
+        const badgeRect = eventBadge.getBoundingClientRect();
         const expand = 3;
         const isOverlappingBadge = (
             playerRect.left < badgeRect.right + expand &&
@@ -359,11 +359,11 @@ function gameLoop(time, deltaTime) {
 
         if (isOverlappingBadge) {
             isAnythingOverlapping = true;
-            finalizeCollection(obstacle, actionJustPressed);
+            finalizeCollection(event, actionJustPressed);
         } else if (playerRect.left > obsRect.right + 150) {
             beingCollected.add(dataId);
             const delay = 300 + Math.random() * 200;
-            const timeoutId = setTimeout(() => finalizeCollection(obstacle, false), delay);
+            const timeoutId = setTimeout(() => finalizeCollection(event, false), delay);
             pendingCollectTimeouts.set(dataId, timeoutId);
         }
     });
@@ -462,7 +462,7 @@ export function resetGame() {
     hideComboCounter();
     state.onPlatform = null; // ADDED: Reset onPlatform
 
-    obstacleElements.forEach(el => el.classList.remove('collected'));
+    eventElements.forEach(el => el.classList.remove('collected'));
     updateCounter();
     updateScoreDisplay();
 
@@ -488,16 +488,16 @@ export function resetGame() {
 
 export async function initGame() {
     try {
-        const response = await fetch('js/data/obstacles.json');
+        const response = await fetch('js/data/events.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        obstaclesData = await response.json();
+        eventsData = await response.json();
 
         // 기존 장애물 배열 초기화
-        obstacleElements = [];
+        eventElements = [];
 
-        const totalItems = obstaclesData.length;
+        const totalItems = eventsData.length;
         const counterTotalEl = document.getElementById('counter-total');
         if (counterTotalEl) counterTotalEl.textContent = totalItems;
         
@@ -505,15 +505,15 @@ export async function initGame() {
         if (milestonesStatEl) milestonesStatEl.dataset.target = totalItems;
 
         if (isMobile) {
-            obstaclesData.forEach(obs => {
+            eventsData.forEach(obs => {
                 obs.pos *= mobileScale;
                 if (obs.elevation) obs.elevation *= mobileScale;
             });
         }
 
         createPlayer();
-        obstaclesData.forEach((data, index) => {
-            obstacleElements.push(createObstacle(data, index + 1000));
+        eventsData.forEach((data, index) => {
+            eventElements.push(createEvent(data, index + 1000));
         });
 
         setupControls();

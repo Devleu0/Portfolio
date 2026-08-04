@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Create the game world from zone data
     await createZoneElements();
 
-    // Initialize the game, which creates the player and obstacles
+    // Initialize the game, which creates the player and events
     await initGame();
 
     // Initialize animations, which depend on the game elements being in the DOM

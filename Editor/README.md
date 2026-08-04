@@ -23,13 +23,13 @@ python3 -m http.server 5500
 - 프로젝트 루트 폴더 (내부에서 `js/data/*.json`을 자동으로 찾습니다)
 - 또는 `js/data` 폴더를 직접 선택
 
-찾는 파일: `zones.json`, `obstacles.json`, `resume-data.json`, `ui-text.json`
+찾는 파일: `zones.json`, `events.json`, `resume-data.json`, `ui-text.json`
 
 처음 폴더를 선택하면 브라우저가 "이 폴더에 대한 접근을 허용할까요?" 팝업을 띄웁니다 → 허용.
 
 ## 3. 편집
 
-- 왼쪽 탭: World(zones/obstacles) / Resume(포트폴리오/자격증/이력/스킬) / UI 텍스트
+- 왼쪽 탭: World(zones/events) / Resume(포트폴리오/자격증/이력/스킬) / UI 텍스트
 - 가운데 목록에서 항목 선택 → 오른쪽에서 편집
 - 순서가 의미 있는 데이터(zones, 자격증 등)는 목록의 ▲▼ 버튼으로 순서 변경 가능
 - `scenery`, `items`(skills)처럼 구조가 복잡한 값은 raw JSON 텍스트로 직접 편집

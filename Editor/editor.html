@@ -713,7 +713,7 @@
           <h1>&gt; 아직 열린 폴더가 없습니다</h1>
           <p>
             우측 상단의 <b>데이터 폴더 열기</b> 버튼으로 프로젝트 루트 폴더 또는 <code>js/data</code> 폴더를 선택하세요.<br><br>
-            이 도구는 <code>zones.json</code>, <code>obstacles.json</code>, <code>resume-data.json</code>,
+            이 도구는 <code>zones.json</code>, <code>events.json</code>, <code>resume-data.json</code>,
             <code>ui-text.json</code> 을 찾아 자동으로 불러옵니다.<br><br>
             ⚠️ Chrome 또는 Edge 브라우저가 필요합니다 (File System Access API).
           </p>
@@ -734,7 +734,7 @@
 
       const FILES = {
         zones: { name: 'zones.json' },
-        obstacles: { name: 'obstacles.json' },
+        events: { name: 'events.json' },
         resume: { name: 'resume-data.json' },
         uiText: { name: 'ui-text.json' },
       };
@@ -763,7 +763,7 @@
         ],
       };
 
-      const obstacleSchema = {
+      const eventSchema = {
         label: item => (item.title && item.title.ko) || ('#' + item.id),
         sub: item => `pos:${item.pos ?? '-'}  ${item.category ?? ''}`,
         sortBy: item => item.pos ?? 0,
@@ -834,7 +834,7 @@
       // tab definitions: how each tab maps onto the loaded file data
       const TABS = [
         { id: 'zones', group: 'WORLD', label: 'Zones', file: 'zones', getArr: d => d, schema: zoneSchema, reorder: true },
-        { id: 'obstacles', group: 'WORLD', label: 'Obstacles', file: 'obstacles', getArr: d => d, schema: obstacleSchema, reorder: false },
+        { id: 'events', group: 'WORLD', label: 'Events', file: 'events', getArr: d => d, schema: eventSchema, reorder: false },
         { id: 'portfolio', group: 'RESUME', label: '포트폴리오', file: 'resume', getArr: d => d.portfolio, schema: portfolioSchema, reorder: true },
         { id: 'certifications', group: 'RESUME', label: '자격증', file: 'resume', getArr: d => d.certifications, schema: certSchema, reorder: true },
         { id: 'experience', group: 'RESUME', label: '주요 이력', file: 'resume', getArr: d => d.experience, schema: expSchema, reorder: true },

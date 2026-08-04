@@ -94,7 +94,7 @@
         "color": "#38BDF8",
         "category": "graduation",
         "link": "http://jangdeok.gen.ms.kr/",
-        "entranceDir": 0
+        "entranceDir": 2
     },
     {
         "id": 6,
@@ -132,7 +132,7 @@
         "color": "#38BDF8",
         "category": "graduation",
         "link": "http://jinheung.gen.hs.kr/",
-        "entranceDir": 0
+        "entranceDir": 3
     },
     {
         "id": 21,
@@ -172,7 +172,7 @@
         "color": "#38BDF8",
         "category": "certificate",
         "link": "https://www.historyexam.go.kr/",
-        "entranceDir": 0
+        "entranceDir": 4
     },
     {
         "id": 23,

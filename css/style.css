@@ -88,7 +88,7 @@ body {
     line-height: 1.4;
 }
 
-.obstacle-badge {
+.event-badge {
     background: var(--accent);
     display: flex;
     align-items: center;
@@ -102,7 +102,7 @@ body {
     will-change: transform;
 }
 
-.obstacle-badge svg {
+.event-badge svg {
     pointer-events: none;
 }
 
@@ -320,21 +320,21 @@ body {
     preserveAspectRatio: none;
 }
 
-.obstacle-wrapper {
+.event-wrapper {
     pointer-events: auto;
     transition: z-index 0.2s;
 }
 
-.obstacle-wrapper:hover {
+.event-wrapper:hover {
     z-index: 100;
 }
 
-.obstacle-wrapper:hover .obstacle-badge {
+.event-wrapper:hover .event-badge {
     transform: scale(2);
     z-index: 150;
 }
 
-.obstacle-pole {
+.event-pole {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -627,13 +627,13 @@ body {
     color: #020617;
 }
 
-.obstacle-wrapper.collected {
+.event-wrapper.collected {
     opacity: 0.85;
     filter: grayscale(100%);
     transition: all 0.3s ease;
 }
 
-.obstacle-wrapper.collected:hover {
+.event-wrapper.collected:hover {
     opacity: 1 !important;
     filter: grayscale(0%) !important;
 }
@@ -2004,7 +2004,7 @@ button.action {
 }
 
 /* 뱃지에 플로팅 애니메이션 추가 (프레임과 무관하게) */
-.obstacle-badge.floating {
+.event-badge.floating {
     animation: float-item 3s ease-in-out infinite;
 }
 

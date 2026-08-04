@@ -1,5 +1,5 @@
 import { state, THEME, getStr, mobileScale, getCategoryColor } from './config.js';
-import { getObstacleData, getObstacleElements, resetGame } from './game.js';
+import { getEventData, getEventElements, resetGame } from './game.js';
 
 export function updateCounter() {
     const counterEl = document.getElementById('counter-current');
@@ -11,7 +11,7 @@ export function updateScoreDisplay() {
     if (scoreEl) scoreEl.textContent = state.totalScore;
 }
 
-export function triggerCollectEffect(obstacleEl, didAction = false, category = 'other') {
+export function triggerCollectEffect(eventEl, didAction = false, category = 'other') {
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave';
     
@@ -21,7 +21,7 @@ export function triggerCollectEffect(obstacleEl, didAction = false, category = '
     if (didAction) {
         wave.classList.add('is-perfect');
     }
-    obstacleEl.appendChild(wave);
+    eventEl.appendChild(wave);
     setTimeout(() => wave.remove(), 500);
 
     if (didAction) {
@@ -29,7 +29,7 @@ export function triggerCollectEffect(obstacleEl, didAction = false, category = '
         score.className = 'score-popup-perfect';
         score.textContent = 'PERFECT!';
 
-        const obsRect = obstacleEl.getBoundingClientRect();
+        const obsRect = eventEl.getBoundingClientRect();
         score.style.cssText = `position: fixed; left: ${obsRect.right}px; top: ${obsRect.top + obsRect.height / 2}px; transform: translateX(10px) translateY(-90%); color: gold; font-weight: bold; white-space: nowrap; font-size: 1.5em; z-index: 100; pointer-events: none;`;
         document.body.appendChild(score);
 
@@ -51,22 +51,22 @@ export function triggerCollectEffect(obstacleEl, didAction = false, category = '
 function createProgressMarkers() {
     const progressBar = document.getElementById('progress-bar');
     const horizontalSection = document.querySelector('.horizontal-section');
-    const obstaclesData = getObstacleData();
-    if (!progressBar || !obstaclesData || obstaclesData.length === 0) return;
+    const eventsData = getEventData();
+    if (!progressBar || !eventsData || eventsData.length === 0) return;
 
     const totalWidth = horizontalSection.scrollWidth - window.innerWidth;
     if (totalWidth <= 0) return;
 
-    obstaclesData.forEach(obstacle => {
+    eventsData.forEach(event => {
         const marker = document.createElement('div');
         marker.className = 'progress-marker';
-        const position = (obstacle.pos / totalWidth) * 100;
+        const position = (event.pos / totalWidth) * 100;
         marker.style.left = `${position}%`;
-        marker.style.background = getCategoryColor(obstacle.category);
+        marker.style.background = getCategoryColor(event.category);
 
         const tooltip = document.createElement('div');
         tooltip.className = 'progress-tooltip';
-        tooltip.textContent = getStr(obstacle.title, state.currentLang);
+        tooltip.textContent = getStr(event.title, state.currentLang);
         marker.appendChild(tooltip);
 
         progressBar.appendChild(marker);
@@ -109,8 +109,8 @@ function initModeButtons() {
             if (state.isScrolledToEnd) {
                 resetAndGoToTop();
             } else {
-                const obstacleElements = getObstacleElements();
-                obstacleElements.forEach(obs => {
+                const eventElements = getEventElements();
+                eventElements.forEach(obs => {
                     const dataId = parseInt(obs.getAttribute('data-id'), 10);
                     if (dataId) {
                         state.collectedIds.add(dataId);
@@ -172,8 +172,8 @@ function initStatCounter() {
 
             const finalRankEl = document.getElementById('final-rank');
             if (finalRankEl) {
-                const obstacles = getObstacleData();
-                const totalObjects = obstacles.length;
+                const events = getEventData();
+                const totalObjects = events.length;
                 const estimatedMaxScore = totalObjects * 500 * 1.2; 
 
                 const rankThresholds = {
