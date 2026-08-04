@@ -780,6 +780,8 @@
           { key: 'customIcon', type: 'text', label: 'Custom Icon', optional: true },
           { key: 'hidden', type: 'checkbox', label: '숨김 (hidden)' },
           { key: 'inProgress', type: 'checkbox', label: '진행중 (inProgress)' },
+          { key: 'entranceDir', type: 'select', label: 'Entrance Direction (entranceDir)', options: ['0: None', '1: Top (∪)', '2: Right (⊂)', '3: Bottom (∩)', '4: Left (⊃)'] },
+
         ],
       };
 
@@ -1332,12 +1334,13 @@
         }
 
         if (field.type === 'select') {
+          const val = item[field.key] ?? 0;
           wrap.innerHTML = `
       <label>${field.label}</label>
-      <select>${field.options.map(o => `<option value="${o}" ${item[field.key] === o ? 'selected' : ''}>${o}</option>`).join('')}</select>
+      <select>${field.options.map(o => `<option value="${o}" ${val === parseInt(o.split(':')[0], 10) ? 'selected' : ''}>${o}</option>`).join('')}</select>
     `;
           wrap.querySelector('select').addEventListener('change', (e) => {
-            item[field.key] = e.target.value;
+            item[field.key] = parseInt(e.target.value.split(':')[0], 10);
             markDirty(tab.file);
             updateListRowLabel(item, tab);
           });

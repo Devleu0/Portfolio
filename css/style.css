@@ -1995,3 +1995,94 @@ button.action {
 .shake-mid  { animation: shake-mid 0.1s ease-in-out; }
 .shake-high { animation: shake-high 0.15s ease-in-out; }
 .shake-max  { animation: shake-max 0.2s ease-in-out; }
+
+/* --- Cyber Frame --- */
+.cyber-frame {
+    position: absolute;
+    inset: 0; /* top, right, bottom, left = 0 */
+    pointer-events: none; /* 벽(wall)에서만 충돌 판정 */
+}
+
+/* 뱃지에 플로팅 애니메이션 추가 (프레임과 무관하게) */
+.obstacle-badge.floating {
+    animation: float-item 3s ease-in-out infinite;
+}
+
+@keyframes float-item {
+    0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+    50% {
+        transform: translate(-50%, -50%) translateY(-10px);
+    }
+}
+
+
+/* 방화벽(벽면) 기본 스타일 */
+.frame-wall {
+    position: absolute;
+    background-color: rgba(2, 6, 23, 0.85); /* var(--bg-color) 활용 */
+    border: 2px solid var(--cat-color); /* 카테고리 색상 기반 네온 테두리 */
+    box-shadow: 0 0 10px var(--cat-color), inset 0 0 8px var(--cat-color);
+    /* 사이버틱한 해저드(경고) 빗금 패턴 */
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 8px,
+        rgba(255, 255, 255, 0.05) 8px,
+        rgba(255, 255, 255, 0.05) 16px
+    );
+    z-index: 40;
+    pointer-events: auto; /* 벽에서는 충돌 이벤트를 감지해야 함 */
+}
+
+/* 벽 두께 */
+.wall-horizontal { height: 20px; width: 100%; left: 0; }
+.wall-vertical { width: 20px; height: 100%; top: 0; }
+
+/* 위치 지정 */
+.wall-top { top: 0; }
+.wall-bottom { bottom: 0; }
+.wall-left { left: 0; }
+.wall-right { right: 0; }
+
+/* --- Collision Feedback --- */
+
+/* 카메라 흔들림 */
+@keyframes shake-body {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.shake {
+    animation: shake-body 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* 플레이어 글리치 효과 */
+@keyframes glitch-player {
+  0%, 100% {
+    filter: none;
+    opacity: 1;
+  }
+  25% {
+    filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
+    opacity: 0.8;
+    transform: translate3d(5px, 0, 0) scaleX(var(--facing, 1));
+  }
+  50% {
+    filter: drop-shadow(0 0 5px #00ff00) drop-shadow(0 0 10px #00ff00);
+    opacity: 1;
+    transform: translate3d(-5px, 0, 0) scaleX(var(--facing, 1));
+  }
+  75% {
+    filter: drop-shadow(0 0 5px #0000ff) drop-shadow(0 0 10px #0000ff);
+    opacity: 0.8;
+    transform: translate3d(0, 5px, 0) scaleX(var(--facing, 1));
+  }
+}
+
+.glitch {
+    animation: glitch-player 0.3s ease-in-out;
+}

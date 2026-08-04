@@ -52,16 +52,22 @@ function createPlayer() {
 
 function createObstacle(data, fallbackId) {
     const hasImg = !!data.customIcon;
-    const size = hasImg ? 96 : (isMobile ? 48 : 64);
+    const badgeSize = hasImg ? 96 : (isMobile ? 48 : 64);
     const iconSize = isMobile ? 24 : 32;
     const elevation = data.elevation || 0;
+    const entranceDir = parseInt(data.entranceDir || 0, 10);
+    const hasFrame = entranceDir > 0;
+    
+    // 프레임이 있으면 wrapper가 더 커야 함
+    const wrapperSize = hasFrame ? 120 : badgeSize;
     const bottomStyle = `calc(35vh + ${elevation}px)`;
 
     const wrapper = document.createElement('div');
     wrapper.className = 'obstacle-wrapper obstacle-element';
     wrapper.setAttribute('data-id', data.id || fallbackId);
     wrapper.dataset.category = data.category || 'other';
-    wrapper.style.cssText = `position: absolute; left: ${data.pos}px; bottom: ${bottomStyle}; width: ${size}px; height: ${size}px; pointer-events: auto; cursor: pointer;`;
+    // wrapper 크기를 동적으로 설정
+    wrapper.style.cssText = `position: absolute; left: ${data.pos}px; bottom: ${bottomStyle}; width: ${wrapperSize}px; height: ${wrapperSize}px; pointer-events: auto; cursor: pointer;`;
 
     const catColor = data.colorOverride || getCategoryColor(data.category);
     wrapper.style.setProperty('--cat-color', catColor);
@@ -83,12 +89,11 @@ function createObstacle(data, fallbackId) {
 
     const obstacle = document.createElement('div');
     obstacle.className = `obstacle-badge${data.inProgress ? ' is-inprogress' : ''}`;
-    obstacle.style.width = data.customIcon ? '86px' : '100%';
-    obstacle.style.height = data.customIcon ? '64px' : '100%';
+    // 프레임 존재 여부와 관계없이 뱃지는 고유 크기를 가짐
+    obstacle.style.width = (data.customIcon ? 86 : badgeSize) + 'px';
+    obstacle.style.height = (data.customIcon ? 64 : badgeSize) + 'px';
     obstacle.style.borderRadius = data.customIcon ? '8px' : '0';
-    obstacle.style.position = 'relative';
-    obstacle.style.left = data.customIcon ? '-8px' : '0';
-
+    
     if (THEME === 'minimal' && !data.customIcon) {
         obstacle.style.background = 'rgba(30,41,59,0.8)';
         obstacle.style.backdropFilter = 'blur(8px)';
@@ -102,7 +107,44 @@ function createObstacle(data, fallbackId) {
     } else {
         obstacle.innerHTML = `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[data.category] || ICONS.other}</svg>`;
     }
-    wrapper.appendChild(obstacle);
+
+    if (hasFrame) {
+        const frame = document.createElement('div');
+        frame.className = 'cyber-frame';
+        // 프레임이 wrapper를 채우도록 설정
+        frame.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%;';
+        
+        // 뱃지에 중앙 정렬 및 애니메이션 스타일 적용
+        obstacle.style.position = 'absolute';
+        obstacle.style.top = '50%';
+        obstacle.style.left = '50%';
+        obstacle.style.transform = 'translate(-50%, -50%)';
+        obstacle.classList.add('floating');
+
+        frame.appendChild(obstacle);
+
+        const wallDefs = {
+            top: '<div class="frame-wall wall-horizontal wall-top"></div>',
+            bottom: '<div class="frame-wall wall-horizontal wall-bottom"></div>',
+            left: '<div class="frame-wall wall-vertical wall-left"></div>',
+            right: '<div class="frame-wall wall-vertical wall-right"></div>',
+        };
+        
+        let wallHtml = '';
+        if (entranceDir !== 1) wallHtml += wallDefs.top;
+        if (entranceDir !== 2) wallHtml += wallDefs.left;
+        if (entranceDir !== 3) wallHtml += wallDefs.bottom;
+        if (entranceDir !== 4) wallHtml += wallDefs.right;
+        frame.insertAdjacentHTML('beforeend', wallHtml);
+        
+        wrapper.walls = Array.from(frame.querySelectorAll('.frame-wall'));
+        wrapper.appendChild(frame);
+    } else {
+        obstacle.style.position = 'relative';
+        obstacle.style.left = data.customIcon ? '-8px' : '0';
+        wrapper.appendChild(obstacle);
+        wrapper.walls = [];
+    }
 
     const tag = document.createElement('div');
     tag.className = 'info-tag';
@@ -156,6 +198,8 @@ function finalizeCollection(obstacle, didAction) {
     const dataId = parseInt(obstacle.getAttribute('data-id'), 10);
     if (!dataId || locallyCollected.has(dataId)) return;
 
+    const obstacleBadge = obstacle.querySelector('.obstacle-badge');
+
     if (didAction) {
         state.comboCount++;
         state.maxCombo = Math.max(state.maxCombo, state.comboCount);
@@ -178,13 +222,39 @@ function finalizeCollection(obstacle, didAction) {
         state.totalScore += 100;
     }
 
-    triggerCollectEffect(obstacle, didAction, obstacle.dataset.category);
+    const frame = obstacle.querySelector('.cyber-frame');
+    if (frame && didAction) {
+        // For framed items, play a custom disintegration animation
+        triggerCollectEffect(obstacleBadge, didAction, obstacle.dataset.category);
+        
+        gsap.to(frame.querySelectorAll('.frame-wall'), {
+            opacity: 0,
+            scale: 1.5,
+            stagger: 0.05,
+            duration: 0.3,
+            ease: 'power2.out',
+        });
+        gsap.to(obstacleBadge, {
+            opacity: 0,
+            scale: 2,
+            duration: 0.4,
+            ease: 'power2.out',
+            delay: 0.1,
+            onComplete: () => {
+                obstacle.classList.add('collected');
+            }
+        });
+    } else {
+        // Default collection effect for non-framed items
+        triggerCollectEffect(obstacle, didAction, obstacle.dataset.category);
+        obstacle.classList.add('collected');
+    }
+
     playSound('./audio/coin.mp3');
 
     locallyCollected.add(dataId);
     state.collectedIds.add(dataId);
-    obstacle.classList.add('collected');
-
+    
     if (dataId === 1) {
         const tt = document.getElementById('tutorial-tooltip');
         if (tt) gsap.to(tt, { opacity: 0, y: -20, duration: 0.3, ease: "power1.out" });
@@ -208,7 +278,6 @@ function gameLoop(time, deltaTime) {
     if (state.keys.left) window.scrollBy({ top: -move, left: 0, behavior: 'instant' });
 
     playerInner.style.setProperty('--facing', state.keys.right ? '1' : (state.keys.left ? '-1' : playerInner.style.getPropertyValue('--facing') || '1'));
-    playerInner.style.transform = 'scaleX(var(--facing, 1))';
     playerInner.classList.toggle('player-running', state.keys.right || state.keys.left);
 
     const playerRect = player.getBoundingClientRect();
@@ -219,24 +288,74 @@ function gameLoop(time, deltaTime) {
         const obsRect = obstacle.getBoundingClientRect();
         
         // 뷰포트 범위를 벗어난 먼 요소는 충돌 계산 스킵 (최적화)
-        if (obsRect.right < -100 || obsRect.left > viewportWidth + 100) return;
-
-        const expand = 3;
-        const isOverlappingNow = (
-            playerRect.left < obsRect.right + expand &&
-            playerRect.right > obsRect.left - expand &&
-            playerRect.top < obsRect.bottom + expand &&
-            playerRect.bottom > obsRect.top - expand
-        );
-
-        if (isOverlappingNow) isAnythingOverlapping = true;
+        if (obsRect.right < -200 || obsRect.left > viewportWidth + 200) return;
 
         const dataId = parseInt(obstacle.getAttribute('data-id'), 10);
         if (!dataId || locallyCollected.has(dataId) || beingCollected.has(dataId)) return;
 
-        if (isOverlappingNow) {
+        let wallHit = false;
+        // 1. 벽 충돌 검사
+        if (obstacle.walls && obstacle.walls.length > 0) {
+            for (const wall of obstacle.walls) {
+                const wallRect = wall.getBoundingClientRect();
+                const isOverlappingWall = (
+                    playerRect.left < wallRect.right &&
+                    playerRect.right > wallRect.left &&
+                    playerRect.top < wallRect.bottom &&
+                    playerRect.bottom > wallRect.top
+                );
+
+                if (isOverlappingWall) {
+                    wallHit = true;
+                    // 충돌 피드백
+                    if (!player.classList.contains('glitch')) {
+                        document.body.classList.add('shake');
+                        player.classList.add('glitch');
+                        
+                        setTimeout(() => {
+                            document.body.classList.remove('shake');
+                            player.classList.remove('glitch');
+                        }, 500);
+
+                        // 콤보 초기화
+                        if (state.comboCount >= 5) {
+                            showComboBreakToast(state.comboCount);
+                        }
+                        state.lastComboBeforeReset = state.comboCount;
+                        state.comboCount = 0;
+                        hideComboCounter();
+
+                        // 뒤로 밀려남
+                        window.scrollBy({ top: -30, left: 0, behavior: 'smooth' });
+                    }
+                    break; // 한 프레임에 여러 벽 충돌 방지
+                }
+            }
+        }
+
+        if (wallHit) {
+            isAnythingOverlapping = true;
+            return; // 벽에 부딪혔으면 아이템 획득 로직은 건너뜀
+        }
+        
+        // 2. 뱃지 충돌 검사 (벽에 안 부딪혔을 때만)
+        const obstacleBadge = obstacle.querySelector('.obstacle-badge');
+        if (!obstacleBadge) return;
+
+        const badgeRect = obstacleBadge.getBoundingClientRect();
+        const expand = 3;
+        const isOverlappingBadge = (
+            playerRect.left < badgeRect.right + expand &&
+            playerRect.right > badgeRect.left - expand &&
+            playerRect.top < badgeRect.bottom + expand &&
+            playerRect.bottom > badgeRect.top - expand
+        );
+
+        if (isOverlappingBadge) {
+            isAnythingOverlapping = true;
             finalizeCollection(obstacle, actionJustPressed);
         } else if (playerRect.left > obsRect.right + 150) {
+            // 장애물을 완전히 지나친 경우 (Miss 처리)
             beingCollected.add(dataId);
             const delay = 300 + Math.random() * 200;
             const timeoutId = setTimeout(() => finalizeCollection(obstacle, false), delay);
@@ -244,8 +363,10 @@ function gameLoop(time, deltaTime) {
         }
     });
 
-    playerInner.style.color = isAnythingOverlapping ? '#fff' : '#22D3EE';
-    playerInner.style.filter = isAnythingOverlapping ? 'drop-shadow(0 0 16px #22D3EE)' : 'drop-shadow(0 0 8px #22D3EE)';
+    playerInner.style.color = isAnythingOverlapping ? '#fff' : 'var(--accent)';
+    playerInner.style.filter = isAnythingOverlapping 
+        ? 'drop-shadow(0 0 16px var(--accent))' 
+        : 'drop-shadow(0 0 8px var(--accent))';
 }
 
 function doJump() {

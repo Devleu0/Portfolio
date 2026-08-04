@@ -17,7 +17,8 @@
         "color": "#38BDF8",
         "category": "birth",
         "link": "https://www.gwangju.go.kr/",
-        "hidden": false
+        "hidden": false,
+        "entranceDir": 0
     },
     {
         "id": 2,
@@ -35,7 +36,8 @@
         },
         "color": "#38BDF8",
         "category": "enrollment",
-        "link": "http://jangdeok.gen.es.kr/"
+        "link": "http://jangdeok.gen.es.kr/",
+        "entranceDir": 0
     },
     {
         "id": 3,
@@ -53,7 +55,8 @@
         },
         "color": "#38BDF8",
         "category": "graduation",
-        "link": "http://jangdeok.gen.es.kr/"
+        "link": "http://jangdeok.gen.es.kr/",
+        "entranceDir": 1
     },
     {
         "id": 4,
@@ -71,7 +74,8 @@
         },
         "color": "#38BDF8",
         "category": "enrollment",
-        "link": "http://jangdeok.gen.ms.kr/"
+        "link": "http://jangdeok.gen.ms.kr/",
+        "entranceDir": 0
     },
     {
         "id": 5,
@@ -89,7 +93,8 @@
         },
         "color": "#38BDF8",
         "category": "graduation",
-        "link": "http://jangdeok.gen.ms.kr/"
+        "link": "http://jangdeok.gen.ms.kr/",
+        "entranceDir": 0
     },
     {
         "id": 6,
@@ -107,7 +112,8 @@
         },
         "color": "#38BDF8",
         "category": "enrollment",
-        "link": "http://jinheung.gen.hs.kr/"
+        "link": "http://jinheung.gen.hs.kr/",
+        "entranceDir": 0
     },
     {
         "id": 7,
@@ -125,7 +131,8 @@
         },
         "color": "#38BDF8",
         "category": "graduation",
-        "link": "http://jinheung.gen.hs.kr/"
+        "link": "http://jinheung.gen.hs.kr/",
+        "entranceDir": 0
     },
     {
         "id": 21,
@@ -145,7 +152,8 @@
         },
         "inProgress": true,
         "customIcon": null,
-        "link": ""
+        "link": "",
+        "entranceDir": 0
     },
     {
         "id": 8,
@@ -163,7 +171,8 @@
         },
         "color": "#38BDF8",
         "category": "certificate",
-        "link": "https://www.historyexam.go.kr/"
+        "link": "https://www.historyexam.go.kr/",
+        "entranceDir": 0
     },
     {
         "id": 23,
@@ -183,7 +192,8 @@
         },
         "inProgress": true,
         "customIcon": null,
-        "link": ""
+        "link": "",
+        "entranceDir": 0
     },
     {
         "id": 9,
@@ -201,7 +211,8 @@
         },
         "color": "#38BDF8",
         "category": "certificate",
-        "link": "https://www.kstqb.org/"
+        "link": "https://www.kstqb.org/",
+        "entranceDir": 0
     },
     {
         "id": 10,
@@ -219,7 +230,8 @@
         },
         "color": "#38BDF8",
         "category": "military",
-        "link": "https://rokaf.mil.kr/"
+        "link": "https://rokaf.mil.kr/",
+        "entranceDir": 0
     },
     {
         "id": 11,
@@ -237,7 +249,8 @@
         },
         "color": "#38BDF8",
         "category": "military",
-        "link": "https://rokaf.mil.kr/"
+        "link": "https://rokaf.mil.kr/",
+        "entranceDir": 0
     },
     {
         "id": 12,
@@ -255,7 +268,8 @@
         },
         "color": "#38BDF8",
         "category": "military",
-        "link": "https://rokaf.mil.kr/"
+        "link": "https://rokaf.mil.kr/",
+        "entranceDir": 0
     },
     {
         "id": 13,
@@ -273,7 +287,8 @@
         },
         "color": "#38BDF8",
         "category": "military",
-        "link": "https://rokaf.mil.kr/"
+        "link": "https://rokaf.mil.kr/",
+        "entranceDir": 0
     },
     {
         "id": 14,
@@ -291,7 +306,8 @@
         },
         "color": "#38BDF8",
         "category": "certificate",
-        "link": "https://www.jlpt.or.kr/"
+        "link": "https://www.jlpt.or.kr/",
+        "entranceDir": 0
     },
     {
         "id": 15,
@@ -309,7 +325,8 @@
         },
         "color": "#38BDF8",
         "category": "military",
-        "link": "https://rokaf.mil.kr/"
+        "link": "https://rokaf.mil.kr/",
+        "entranceDir": 0
     },
     {
         "id": 24,
@@ -328,7 +345,8 @@
         "color": "#38BDF8",
         "category": "project",
         "inProgress": false,
-        "link": "https://devleu.tistory.com/43"
+        "link": "https://devleu.tistory.com/43",
+        "entranceDir": 0
     },
     {
         "id": 26,
@@ -347,7 +365,8 @@
         "color": "#38BDF8",
         "category": "project",
         "inProgress": false,
-        "link": "https://devleu.tistory.com/45"
+        "link": "https://devleu.tistory.com/45",
+        "entranceDir": 0
     },
     {
         "id": 27,
@@ -366,7 +385,8 @@
         "color": "#38BDF8",
         "category": "project",
         "inProgress": false,
-        "link": "https://devleu.tistory.com/46"
+        "link": "https://devleu.tistory.com/46",
+        "entranceDir": 0
     },
     {
         "id": 25,
@@ -385,7 +405,8 @@
         "color": "#38BDF8",
         "category": "project",
         "inProgress": false,
-        "link": "https://devleu.tistory.com/44"
+        "link": "https://devleu.tistory.com/44",
+        "entranceDir": 0
     },
     {
         "id": 16,
@@ -403,7 +424,8 @@
         },
         "color": "#38BDF8",
         "category": "certificate",
-        "link": "https://www.dataq.or.kr/"
+        "link": "https://www.dataq.or.kr/",
+        "entranceDir": 0
     },
     {
         "id": 22,
@@ -423,7 +445,8 @@
         },
         "inProgress": true,
         "customIcon": null,
-        "link": ""
+        "link": "",
+        "entranceDir": 0
     },
     {
         "id": 17,
@@ -441,7 +464,8 @@
         },
         "color": "#38BDF8",
         "category": "certificate",
-        "link": "https://exam.toeic.co.kr/"
+        "link": "https://exam.toeic.co.kr/",
+        "entranceDir": 0
     },
     {
         "id": 18,
@@ -459,7 +483,8 @@
         },
         "color": "#38BDF8",
         "category": "certificate",
-        "link": "https://www.dataq.or.kr/"
+        "link": "https://www.dataq.or.kr/",
+        "entranceDir": 0
     },
     {
         "id": 20,
@@ -478,7 +503,8 @@
         "color": "#38BDF8",
         "category": "project",
         "inProgress": false,
-        "link": "https://devleu.tistory.com/42"
+        "link": "https://devleu.tistory.com/42",
+        "entranceDir": 0
     },
     {
         "id": 19,
@@ -497,6 +523,7 @@
         "color": "#38BDF8",
         "category": "internship",
         "link": "",
-        "inProgress": true
+        "inProgress": true,
+        "entranceDir": 0
     }
 ]
