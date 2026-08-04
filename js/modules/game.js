@@ -8,6 +8,7 @@ let gameContainer, player, playerWrapper, playerInner;
 
 let obstaclesData = [];
 let obstacleElements = [];
+let prevPlayerY = 0;
 
 const locallyCollected = new Set();
 const beingCollected = new Set();
@@ -124,7 +125,7 @@ function createObstacle(data, fallbackId) {
         frame.appendChild(obstacle);
 
         const wallDefs = {
-            top: '<div class="frame-wall wall-horizontal wall-top"></div>',
+            top: '<div class="frame-wall wall-horizontal wall-top platform-surface"></div>',
             bottom: '<div class="frame-wall wall-horizontal wall-bottom"></div>',
             left: '<div class="frame-wall wall-vertical wall-left"></div>',
             right: '<div class="frame-wall wall-vertical wall-right"></div>',
@@ -281,20 +282,21 @@ function gameLoop(time, deltaTime) {
     playerInner.classList.toggle('player-running', state.keys.right || state.keys.left);
 
     const playerRect = player.getBoundingClientRect();
+    const currentPlayerY = gsap.getProperty(player, "y");
+    const isFalling = currentPlayerY > prevPlayerY;
+
     let isAnythingOverlapping = false;
     const viewportWidth = window.innerWidth;
 
     obstacleElements.forEach(obstacle => {
         const obsRect = obstacle.getBoundingClientRect();
         
-        // 뷰포트 범위를 벗어난 먼 요소는 충돌 계산 스킵 (최적화)
         if (obsRect.right < -200 || obsRect.left > viewportWidth + 200) return;
 
         const dataId = parseInt(obstacle.getAttribute('data-id'), 10);
         if (!dataId || locallyCollected.has(dataId) || beingCollected.has(dataId)) return;
 
         let wallHit = false;
-        // 1. 벽 충돌 검사
         if (obstacle.walls && obstacle.walls.length > 0) {
             for (const wall of obstacle.walls) {
                 const wallRect = wall.getBoundingClientRect();
@@ -306,39 +308,43 @@ function gameLoop(time, deltaTime) {
                 );
 
                 if (isOverlappingWall) {
-                    wallHit = true;
-                    // 충돌 피드백
-                    if (!player.classList.contains('glitch')) {
-                        document.body.classList.add('shake');
-                        player.classList.add('glitch');
-                        
-                        setTimeout(() => {
-                            document.body.classList.remove('shake');
-                            player.classList.remove('glitch');
-                        }, 500);
+                    const isPlatformSurface = wall.classList.contains('platform-surface');
+                    const playerBottomAbsolute = playerRect.bottom;
+                    const wallTopAbsolute = wallRect.top;
+                    const landingTolerance = isMobile ? 5 : 10;
 
-                        // 콤보 초기화
+                    if (isPlatformSurface && isFalling && state.isJumping && 
+                        playerBottomAbsolute > wallTopAbsolute - landingTolerance && 
+                        playerBottomAbsolute < wallTopAbsolute + landingTolerance) {
+                        
+                        gsap.killTweensOf(player);
+                        state.isJumping = false;
+                        state.onPlatform = wall; // 플랫폼에 착지
+                        
+                        const playerInitialAbsoluteBottom = window.innerHeight * (1 - 0.35);
+                        const newPlayerTranslateY = wallTopAbsolute - playerInitialAbsoluteBottom;
+                        gsap.set(player, { y: newPlayerTranslateY });
+                        
+                        wallHit = false;
+                    } else {
+                        wallHit = true;
                         if (state.comboCount >= 5) {
                             showComboBreakToast(state.comboCount);
                         }
                         state.lastComboBeforeReset = state.comboCount;
                         state.comboCount = 0;
                         hideComboCounter();
-
-                        // 뒤로 밀려남
-                        window.scrollBy({ top: -30, left: 0, behavior: 'smooth' });
                     }
-                    break; // 한 프레임에 여러 벽 충돌 방지
+                    if (wallHit) break;
                 }
             }
         }
 
         if (wallHit) {
             isAnythingOverlapping = true;
-            return; // 벽에 부딪혔으면 아이템 획득 로직은 건너뜀
+            return;
         }
         
-        // 2. 뱃지 충돌 검사 (벽에 안 부딪혔을 때만)
         const obstacleBadge = obstacle.querySelector('.obstacle-badge');
         if (!obstacleBadge) return;
 
@@ -355,7 +361,6 @@ function gameLoop(time, deltaTime) {
             isAnythingOverlapping = true;
             finalizeCollection(obstacle, actionJustPressed);
         } else if (playerRect.left > obsRect.right + 150) {
-            // 장애물을 완전히 지나친 경우 (Miss 처리)
             beingCollected.add(dataId);
             const delay = 300 + Math.random() * 200;
             const timeoutId = setTimeout(() => finalizeCollection(obstacle, false), delay);
@@ -363,16 +368,27 @@ function gameLoop(time, deltaTime) {
         }
     });
 
+    // 플랫폼에서 벗어났는지 확인
+    if (state.onPlatform) {
+        const platformRect = state.onPlatform.getBoundingClientRect();
+        if (!(playerRect.right > platformRect.left && playerRect.left < platformRect.right)) {
+            fallToGround(); // 플랫폼에서 벗어나면 낙하
+        }
+    }
+
     playerInner.style.color = isAnythingOverlapping ? '#fff' : 'var(--accent)';
     playerInner.style.filter = isAnythingOverlapping 
         ? 'drop-shadow(0 0 16px var(--accent))' 
         : 'drop-shadow(0 0 8px var(--accent))';
+    
+    prevPlayerY = currentPlayerY;
 }
 
 function doJump() {
     if (state.isJumping) return;
     handleActionPress();
     state.isJumping = true;
+    state.onPlatform = null;
     playSound('./audio/jump.mp3');
     createJumpDust();
     gsap.to(player, {
@@ -381,10 +397,7 @@ function doJump() {
         yoyo: true,
         repeat: 1,
         ease: jumpEase,
-        onComplete: () => {
-            state.isJumping = false;
-            createJumpDust();
-        }
+        onComplete: fallToGround
     });
 }
 
@@ -447,6 +460,7 @@ export function resetGame() {
     state.maxCombo = 0;
     state.lastComboBeforeReset = 0;
     hideComboCounter();
+    state.onPlatform = null; // ADDED: Reset onPlatform
 
     obstacleElements.forEach(el => el.classList.remove('collected'));
     updateCounter();
@@ -510,4 +524,18 @@ export async function initGame() {
     } catch (error) {
         console.error("Failed to initialize game:", error);
     }
+}
+
+function fallToGround() {
+    gsap.killTweensOf(player); // 기존 플레이어 트윈 중지
+    state.isJumping = false;
+    state.onPlatform = null; // 플랫폼 상태 해제
+    
+    // Y를 0 (바닥)으로 돌려보내는 애니메이션 시작
+    gsap.to(player, {
+        y: 0,
+        duration: 0.3,
+        ease: "power1.in",
+        onComplete: createJumpDust // 착지 시 먼지 효과 재사용
+    });
 }

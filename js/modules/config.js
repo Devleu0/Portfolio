@@ -39,6 +39,7 @@ export const state = {
     // Game State
     isJumping: false,
     isDucking: false,
+    onPlatform: null,
     keys: { left: false, right: false },
     collectedIds: new Set(),
     totalScore: 0,
