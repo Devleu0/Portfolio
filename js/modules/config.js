@@ -37,6 +37,8 @@ export const state = {
     currentFinaleP: 0,
     LAST_ZONE_START: 0,
     // Game State
+    velocityY: 0,
+    onGround: true,
     isJumping: false,
     isDucking: false,
     onPlatform: null,

@@ -8,16 +8,15 @@ let gameContainer, player, playerWrapper, playerInner;
 
 let eventsData = [];
 let eventElements = [];
-let prevPlayerY = 0;
 
 const locallyCollected = new Set();
 const beingCollected = new Set();
 const pendingCollectTimeouts = new Map();
 let actionJustPressed = false;
 
-const jumpHeight = isMobile ? -75 : -150;
+const JUMP_INITIAL_VELOCITY = isMobile ? -16 : -20;
+const GRAVITY = isMobile ? 0.7 : 0.9;
 const duckScale = 0.5;
-const jumpEase = "power1.out";
 
 export function getEventData() { return eventsData; }
 export function getEventElements() { return eventElements; }
@@ -37,7 +36,17 @@ function createPlayer() {
     horizontalSection.appendChild(gameContainer);
 
     player = document.createElement('div');
-    player.style.cssText = `position:absolute; width:${isMobile ? 32 : 64}px; height:${isMobile ? 32 : 64}px; bottom:35vh; left:${isMobile ? 75 : 150}px; transform-origin:bottom center;`;
+    player.style.cssText = `position:absolute; width:${isMobile ? 32 : 64}px; height:${isMobile ? 32 : 64}px; bottom:35vh; left:${isMobile ? 75 : 150}px; transform-origin:bottom center; will-change: transform;`;
+    player.classList.add('debug-collision'); // Add this line
+    // Kill any existing tweens on the player element when re-creating
+    gsap.killTweensOf(player);
+    // Reset position and state
+    gsap.set(player, { y: 0 });
+    state.velocityY = 0;
+    state.onGround = true;
+    state.onPlatform = null;
+    state.isJumping = false;
+
 
     playerWrapper = document.createElement('div');
     playerWrapper.style.cssText = 'width:100%; height:100%; transform-origin:bottom center;';
@@ -126,9 +135,9 @@ function createEvent(data, fallbackId) {
 
         const wallDefs = {
             top: '<div class="frame-wall wall-horizontal wall-top platform-surface"></div>',
-            bottom: '<div class="frame-wall wall-horizontal wall-bottom"></div>',
-            left: '<div class="frame-wall wall-vertical wall-left"></div>',
-            right: '<div class="frame-wall wall-vertical wall-right"></div>',
+            bottom: '<div class="frame-wall wall-horizontal wall-bottom platform-surface"></div>',
+            left: '<div class="frame-wall wall-vertical wall-left platform-surface"></div>',
+            right: '<div class="frame-wall wall-vertical wall-right platform-surface"></div>',
         };
         
         let wallHtml = '';
@@ -139,6 +148,7 @@ function createEvent(data, fallbackId) {
         frame.insertAdjacentHTML('beforeend', wallHtml);
         
         wrapper.walls = Array.from(frame.querySelectorAll('.frame-wall'));
+        wrapper.walls.forEach(wall => wall.classList.add('debug-collision')); // Add this line
         wrapper.appendChild(frame);
     } else {
         event.style.position = 'relative';
@@ -273,94 +283,136 @@ function finalizeCollection(event, didAction) {
 }
 
 function gameLoop(time, deltaTime) {
-    const scrollSpeed = isMobile ? 16 : 24;
-    const move = scrollSpeed * (deltaTime / (1000 / 60));
-    if (state.keys.right) window.scrollBy({ top: move, left: 0, behavior: 'instant' });
-    if (state.keys.left) window.scrollBy({ top: -move, left: 0, behavior: 'instant' });
+    const timeScale = (deltaTime / (1000 / 60)); // Original deltaTime normalization
+
+    // --- Vertical Scrolling ---
+    const scrollSpeed = isMobile ? 16 : 24; // Reverted to original speed
+    const move = scrollSpeed * timeScale;
+    const originalScrollY = window.scrollY; // Capture original Y scroll
+
+    if (state.keys.right) window.scrollBy({ top: move, left: 0, behavior: 'instant' }); // Reverted to top
+    if (state.keys.left) window.scrollBy({ top: -move, left: 0, behavior: 'instant' }); // Reverted to top
 
     playerInner.style.setProperty('--facing', state.keys.right ? '1' : (state.keys.left ? '-1' : playerInner.style.getPropertyValue('--facing') || '1'));
     playerInner.classList.toggle('player-running', state.keys.right || state.keys.left);
 
-    const playerRect = player.getBoundingClientRect();
-    const currentPlayerY = gsap.getProperty(player, "y");
-    const isFalling = currentPlayerY > prevPlayerY;
+    // --- Vertical Physics ---
+    const prevY = gsap.getProperty(player, "y");
 
+    // Apply gravity
+    if (!state.onGround && !state.onPlatform) {
+        state.velocityY += GRAVITY * timeScale;
+    }
+    
+    let currentY = prevY + state.velocityY * timeScale;
+    const playerRectBeforeMove = player.getBoundingClientRect();
+
+    // --- Collision Detection & Resolution ---
+    let onAnyPlatform = null;
+    let horizontalCollision = false; // Still need this to detect if player is horizontally blocked
+    let verticalScrollBlocked = false;
+
+    for (const event of eventElements) {
+        if (!event.walls || event.walls.length === 0) continue;
+
+        const obsRect = event.getBoundingClientRect();
+        // Check if event is within a reasonable vertical range of the viewport
+        if (obsRect.bottom < 0 || obsRect.top > window.innerHeight) continue; 
+
+        for (const wall of event.walls) {
+            const wallRect = wall.getBoundingClientRect();
+            
+            // Create a predicted player rect for the new position
+            const playerRect = {
+                left: playerRectBeforeMove.left,
+                right: playerRectBeforeMove.right,
+                top: playerRectBeforeMove.top - (prevY - currentY),
+                bottom: playerRectBeforeMove.bottom - (prevY - currentY),
+            };
+
+            if (playerRect.left < wallRect.right && playerRect.right > wallRect.left &&
+                playerRect.top < wallRect.bottom && playerRect.bottom > wallRect.top) {
+                
+                const isPlatform = wall.classList.contains('platform-surface');
+                const prevPlayerBottom = playerRectBeforeMove.bottom;
+
+                // 1. Landing on a platform
+                if (isPlatform && state.velocityY >= 0 && prevPlayerBottom <= wallRect.top + 1) {
+                    currentY = prevY - (playerRectBeforeMove.bottom - wallRect.top);
+                    state.velocityY = 0;
+                    onAnyPlatform = wall;
+                    break; 
+                }
+
+                // 2. General collision resolution
+                const overlapX = Math.min(playerRect.right, wallRect.right) - Math.max(playerRect.left, wallRect.left);
+                const overlapY = Math.min(playerRect.bottom, wallRect.bottom) - Math.max(playerRect.top, wallRect.top);
+
+                if (overlapX < overlapY) { // Horizontal collision (wall passing through player's fixed X)
+                    horizontalCollision = true; // Mark that horizontal movement of wall is blocked
+                } else {
+                    // Hitting a ceiling
+                    if (state.velocityY < 0 && playerRect.top < wallRect.bottom) {
+                        currentY = prevY + (wallRect.bottom - playerRectBeforeMove.top);
+                        state.velocityY = 0;
+                    }
+                }
+            }
+        }
+        if (onAnyPlatform) break;
+    }
+
+    if(horizontalCollision) {
+        // If horizontal collision, it means a wall tried to pass through player's fixed X.
+        // This implies the vertical scroll should be blocked for this frame.
+        window.scrollTo({ top: originalScrollY, behavior: 'instant' });
+    }
+
+    // --- Update Player State & Position ---
+    state.onPlatform = onAnyPlatform;
+    if (state.onPlatform) {
+        state.onGround = false;
+        state.isJumping = false;
+    } else {
+        // Ground collision (player's y position is 0 relative to bottom:35vh)
+        if (currentY > 0) {
+            currentY = 0;
+            state.velocityY = 0;
+            state.onGround = true;
+            state.isJumping = false;
+        } else {
+            state.onGround = false;
+        }
+    }
+    gsap.set(player, { y: currentY });
+
+    // --- Badge Collection Logic ---
+    const finalPlayerRect = player.getBoundingClientRect();
     let isAnythingOverlapping = false;
-    const viewportWidth = window.innerWidth;
-
     eventElements.forEach(event => {
         const obsRect = event.getBoundingClientRect();
-        
-        if (obsRect.right < -200 || obsRect.left > viewportWidth + 200) return;
+        // Check if event is within a reasonable vertical range of the viewport for collection
+        if (obsRect.bottom < -200 || obsRect.top > window.innerHeight + 200) return;
 
         const dataId = parseInt(event.getAttribute('data-id'), 10);
         if (!dataId || locallyCollected.has(dataId) || beingCollected.has(dataId)) return;
 
-        let wallHit = false;
-        if (event.walls && event.walls.length > 0) {
-            for (const wall of event.walls) {
-                const wallRect = wall.getBoundingClientRect();
-                const isOverlappingWall = (
-                    playerRect.left < wallRect.right &&
-                    playerRect.right > wallRect.left &&
-                    playerRect.top < wallRect.bottom &&
-                    playerRect.bottom > wallRect.top
-                );
-
-                if (isOverlappingWall) {
-                    const isPlatformSurface = wall.classList.contains('platform-surface');
-                    const playerBottomAbsolute = playerRect.bottom;
-                    const wallTopAbsolute = wallRect.top;
-                    const landingTolerance = isMobile ? 5 : 10;
-
-                    if (isPlatformSurface && isFalling && state.isJumping && 
-                        playerBottomAbsolute > wallTopAbsolute - landingTolerance && 
-                        playerBottomAbsolute < wallTopAbsolute + landingTolerance) {
-                        
-                        gsap.killTweensOf(player);
-                        state.isJumping = false;
-                        state.onPlatform = wall; // 플랫폼에 착지
-                        
-                        const playerInitialAbsoluteBottom = window.innerHeight * (1 - 0.35);
-                        const newPlayerTranslateY = wallTopAbsolute - playerInitialAbsoluteBottom;
-                        gsap.set(player, { y: newPlayerTranslateY });
-                        
-                        wallHit = false;
-                    } else {
-                        wallHit = true;
-                        if (state.comboCount >= 5) {
-                            showComboBreakToast(state.comboCount);
-                        }
-                        state.lastComboBeforeReset = state.comboCount;
-                        state.comboCount = 0;
-                        hideComboCounter();
-                    }
-                    if (wallHit) break;
-                }
-            }
-        }
-
-        if (wallHit) {
-            isAnythingOverlapping = true;
-            return;
-        }
-        
         const eventBadge = event.querySelector('.event-badge');
         if (!eventBadge) return;
 
         const badgeRect = eventBadge.getBoundingClientRect();
         const expand = 3;
         const isOverlappingBadge = (
-            playerRect.left < badgeRect.right + expand &&
-            playerRect.right > badgeRect.left - expand &&
-            playerRect.top < badgeRect.bottom + expand &&
-            playerRect.bottom > badgeRect.top - expand
+            finalPlayerRect.left < badgeRect.right + expand &&
+            finalPlayerRect.right > badgeRect.left - expand &&
+            finalPlayerRect.top < badgeRect.bottom + expand &&
+            finalPlayerRect.bottom > badgeRect.top - expand
         );
 
         if (isOverlappingBadge) {
             isAnythingOverlapping = true;
             finalizeCollection(event, actionJustPressed);
-        } else if (playerRect.left > obsRect.right + 150) {
+        } else if (finalPlayerRect.left > obsRect.right + 150) { // Player passed event horizontally
             beingCollected.add(dataId);
             const delay = 300 + Math.random() * 200;
             const timeoutId = setTimeout(() => finalizeCollection(event, false), delay);
@@ -368,37 +420,22 @@ function gameLoop(time, deltaTime) {
         }
     });
 
-    // 플랫폼에서 벗어났는지 확인
-    if (state.onPlatform) {
-        const platformRect = state.onPlatform.getBoundingClientRect();
-        if (!(playerRect.right > platformRect.left && playerRect.left < platformRect.right)) {
-            fallToGround(); // 플랫폼에서 벗어나면 낙하
-        }
-    }
-
     playerInner.style.color = isAnythingOverlapping ? '#fff' : 'var(--accent)';
     playerInner.style.filter = isAnythingOverlapping 
         ? 'drop-shadow(0 0 16px var(--accent))' 
         : 'drop-shadow(0 0 8px var(--accent))';
-    
-    prevPlayerY = currentPlayerY;
 }
 
 function doJump() {
-    if (state.isJumping) return;
-    handleActionPress();
-    state.isJumping = true;
-    state.onPlatform = null;
-    playSound('./audio/jump.mp3');
-    createJumpDust();
-    gsap.to(player, {
-        y: jumpHeight,
-        duration: 0.35,
-        yoyo: true,
-        repeat: 1,
-        ease: jumpEase,
-        onComplete: fallToGround
-    });
+    if (state.onGround || state.onPlatform) {
+        handleActionPress();
+        state.isJumping = true;
+        state.onGround = false;
+        state.onPlatform = null;
+        state.velocityY = JUMP_INITIAL_VELOCITY;
+        playSound('./audio/jump.mp3');
+        createJumpDust();
+    }
 }
 
 function doDuckStart() {
@@ -460,7 +497,14 @@ export function resetGame() {
     state.maxCombo = 0;
     state.lastComboBeforeReset = 0;
     hideComboCounter();
-    state.onPlatform = null; // ADDED: Reset onPlatform
+    
+    // Reset physics state
+    gsap.set(player, { y: 0 });
+    state.velocityY = 0;
+    state.onGround = true;
+    state.onPlatform = null;
+    state.isJumping = false;
+    state.isDucking = false;
 
     eventElements.forEach(el => el.classList.remove('collected'));
     updateCounter();
@@ -495,6 +539,7 @@ export async function initGame() {
         eventsData = await response.json();
 
         // 기존 장애물 배열 초기화
+        eventElements.forEach(el => el.remove());
         eventElements = [];
 
         const totalItems = eventsData.length;
@@ -524,18 +569,4 @@ export async function initGame() {
     } catch (error) {
         console.error("Failed to initialize game:", error);
     }
-}
-
-function fallToGround() {
-    gsap.killTweensOf(player); // 기존 플레이어 트윈 중지
-    state.isJumping = false;
-    state.onPlatform = null; // 플랫폼 상태 해제
-    
-    // Y를 0 (바닥)으로 돌려보내는 애니메이션 시작
-    gsap.to(player, {
-        y: 0,
-        duration: 0.3,
-        ease: "power1.in",
-        onComplete: createJumpDust // 착지 시 먼지 효과 재사용
-    });
 }

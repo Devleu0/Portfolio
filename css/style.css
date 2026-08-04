@@ -2033,7 +2033,7 @@ button.action {
         rgba(255, 255, 255, 0.05) 16px
     );
     z-index: 40;
-    pointer-events: auto; /* 벽에서는 충돌 이벤트를 감지해야 함 */
+    pointer-events: none; /* 벽에서는 충돌 이벤트를 감지하지 않음 */
 }
 
 /* 벽 두께 */
@@ -2086,3 +2086,8 @@ button.action {
 .glitch {
     animation: glitch-player 0.3s ease-in-out;
 }
+
+/* --- DEBUG COLLISION --- */
+.debug-collision {
+    box-shadow: 0 0 0 2px red !important;
+ }
