@@ -1,6 +1,6 @@
 import { isMobile, state } from '../config.js';
 import { gameState } from './state.js';
-import { sweptAABB } from './collision.js';
+import { moveAxis, shiftRect, cacheWallRect } from './collision.js';
 import { finalizeCollection } from './events.js';
 import { doJump } from './player.js';
 
@@ -26,47 +26,56 @@ export function gameLoop(time, deltaTime) {
     playerInner.style.setProperty('--facing', state.keys.right ? '1' : (state.keys.left ? '-1' : playerInner.style.getPropertyValue('--facing') || '1'));
     playerInner.classList.toggle('player-running', state.keys.right || state.keys.left);
 
-    const prevY = gsap.getProperty(player, 'y');
     if (!state.onGround && !state.onPlatform) {
         state.velocityY += (isMobile ? 0.7 : 0.9) * timeScale;
     }
     const yDelta = state.velocityY * timeScale;
-    const playerVel = { x: scrollDelta, y: yDelta };
 
-    const playerRect = hitbox.getBoundingClientRect();
-    let minCollisionTime = 1.0;
-    let collisionNormal = { x: 0, y: 0 };
-    let collidedWall = null;
-
+    // 근처 이벤트의 벽 좌표를 프레임당 한 번만 읽어 캐싱한다. moveAxis는 이후
+    // 이 캐시된 사각형만 사용하므로, 서브스텝을 몇 번을 돌든 DOM 레이아웃을
+    // 다시 읽지 않고, 프레임 내내 좌표가 고정되어 있음이 보장된다.
+    const nearbyWalls = [];
     for (const event of gameState.eventElements) {
         if (!event.walls || event.walls.length === 0) continue;
         const obsRect = event.getBoundingClientRect();
         if (obsRect.right < -50 || obsRect.left > window.innerWidth + 50) continue;
-
         for (const wall of event.walls) {
-            const wallRect = wall.getBoundingClientRect();
-            const hit = sweptAABB(playerRect, playerVel, wallRect);
-            if (hit.time < minCollisionTime) {
-                minCollisionTime = hit.time;
-                collisionNormal = hit.normal;
-                collidedWall = wall;
-            }
+            nearbyWalls.push(cacheWallRect(wall));
         }
     }
 
-    if (scrollDelta !== 0) {
-        window.scrollBy({ top: scrollDelta * minCollisionTime, left: 0, behavior: 'instant' });
-    }
-    gsap.set(player, { y: prevY + yDelta * minCollisionTime });
+    const prevY = gsap.getProperty(player, 'y');
+    const playerRect = hitbox.getBoundingClientRect();
+    // 서브스텝 크기: 히트박스 크기의 절반 이하로 잡아, 그보다 얇지 않은 벽은
+    // 절대 건너뛸 수 없도록 한다(터널링 방지의 핵심).
+    const maxStep = Math.max(2, Math.min(playerRect.width, playerRect.height) / 2);
 
-    if (minCollisionTime < 1.0) {
-        if (collisionNormal.y === -1) {
+    // ---- 1) X축(수평) 이동 해석 ----
+    // 이 프로젝트의 "가로 이동"은 window.scrollBy({ top }) 을 통해 ScrollTrigger가
+    // .horizontal-section을 translateX 시키는 방식이므로 반드시 top으로 스크롤한다.
+    let xMoved = 0;
+    if (scrollDelta !== 0) {
+        const xResult = moveAxis(playerRect, scrollDelta, nearbyWalls, 'x', maxStep);
+        xMoved = xResult.delta;
+        window.scrollBy({ top: xMoved, left: 0, behavior: 'instant' });
+    }
+
+    // ---- 2) Y축(수직) 이동 해석 ----
+    // 실제 스크롤 후 DOM을 다시 읽지 않고, X 이동 결과(xMoved)를 반영한 좌표를
+    // 직접 계산해 사용한다 — ScrollTrigger의 transform 갱신 타이밍에 의존하지 않는
+    // 결정론적인 방식이며, X와 Y 축은 서로의 이동 결과에 전혀 간섭하지 않는다.
+    const playerRectAfterX = shiftRect(playerRect, xMoved, 0);
+    const yResult = moveAxis(playerRectAfterX, yDelta, nearbyWalls, 'y', maxStep);
+    gsap.set(player, { y: prevY + yResult.delta });
+
+    if (yResult.collided) {
+        if (yResult.normal === -1) {
             state.velocityY = 0;
-            state.onPlatform = collidedWall;
+            state.onPlatform = yResult.wall;
             state.onGround = false;
             state.isJumping = false;
         }
-        if (collisionNormal.y === 1) {
+        if (yResult.normal === 1) {
             state.velocityY = 0;
         }
     } else {

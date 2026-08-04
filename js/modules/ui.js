@@ -11,6 +11,11 @@ export function updateScoreDisplay() {
     if (scoreEl) scoreEl.textContent = state.totalScore;
 }
 
+export function updateComboDisplay() {
+    const comboEl = document.getElementById('combo-count');
+    if (comboEl) comboEl.textContent = state.comboCount;
+}
+
 export function triggerCollectEffect(eventEl, didAction = false, category = 'other') {
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave';
@@ -54,7 +59,7 @@ function createProgressMarkers() {
     const eventsData = getEventData();
     if (!progressBar || !eventsData || eventsData.length === 0) return;
 
-    const totalWidth = horizontalSection.scrollWidth - window.innerWidth;
+    const totalWidth = horizontalSection.scrollWidth - window.innerWIidth;
     if (totalWidth <= 0) return;
 
     eventsData.forEach(event => {
@@ -66,6 +71,19 @@ function createProgressMarkers() {
 
         const tooltip = document.createElement('div');
         tooltip.className = 'progress-tooltip';
+        
+        // Add data attributes for each language
+        if (typeof event.title === 'object' && event.title !== null) {
+            tooltip.dataset.ko = event.title.ko || '';
+            tooltip.dataset.en = event.title.en || event.title.ko || '';
+            tooltip.dataset.ja = event.title.ja || event.title.ko || '';
+        } else {
+            const titleStr = event.title || '';
+            tooltip.dataset.ko = titleStr;
+            tooltip.dataset.en = titleStr;
+            tooltip.dataset.ja = titleStr;
+        }
+
         tooltip.textContent = getStr(event.title, state.currentLang);
         marker.appendChild(tooltip);
 
@@ -297,7 +315,6 @@ export function initUI() {
 
     // Also initialize the counter display
     updateCounter();
-
     // Simple smooth scroll for resume link
     const resumeLink = document.querySelector('a[href="#resume-section"]');
     if (resumeLink) {
@@ -307,6 +324,7 @@ export function initUI() {
         });
     }
 }
+
 
 // Combo System UI Functions
 export function triggerComboEffect(combo) {

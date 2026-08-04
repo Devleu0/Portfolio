@@ -1980,8 +1980,6 @@ button.action {
     font-size: 13px;
     font-weight: 700;
     color: #FFF;
-    transform: scale(0);
-    opacity: 0;
     transition: transform 0.3s, opacity 0.3s;
 }
 
@@ -2089,20 +2087,17 @@ button.action {
     /* 벽(wall)에서만 충돌 판정 */
 }
 
-/* 뱃지에 플로팅 애니메이션 추가 (프레임과 무관하게) */
+/* 뱃지에 플로팅 애니메이션 추가 */
 .event-badge.floating {
     animation: float-item 3s ease-in-out infinite;
 }
 
 @keyframes float-item {
-
-    0%,
-    100% {
-        transform: translate(-50%, -50%) translateY(0);
+    0%, 100% {
+        margin-top: -5px; /* 중앙 기준 위로 5px */
     }
-
     50% {
-        transform: translate(-50%, -50%) translateY(-10px);
+        margin-top: 5px;  /* 중앙 기준 아래로 5px */
     }
 }
 
@@ -2280,7 +2275,8 @@ button.action {
     }
 }
 
-/* --- DEBUG COLLISION --- */
+/* --- DEBUG COLLISION ---
 .debug-collision {
     box-shadow: 0 0 0 2px red !important;
 }
+    */ 

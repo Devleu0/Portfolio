@@ -1,6 +1,6 @@
 import { THEME, ICONS, buildLangAttrs, getStr, getCategoryColor, state, isMobile } from '../config.js';
 import { playSound } from '../audio.js';
-import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from '../ui.js';
+import { updateCounter, updateScoreDisplay, updateComboDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from '../ui.js';
 import { gameState } from './state.js';
 
 export function createEvent(data, fallbackId) {
@@ -40,6 +40,7 @@ export function createEvent(data, fallbackId) {
     const event = document.createElement('div');
     event.className = `event-badge${data.inProgress ? ' is-inprogress' : ''}`;
     event.classList.add('debug-collision');
+    event.classList.add('floating');
     event.style.width = (data.customIcon ? 86 : badgeSize) + 'px';
     event.style.height = (data.customIcon ? 64 : badgeSize) + 'px';
     event.style.borderRadius = data.customIcon ? '8px' : '0';
@@ -159,6 +160,7 @@ export function finalizeCollection(event, didAction) {
 
     updateCounter();
     updateScoreDisplay();
+    updateComboDisplay();
     gameState.pendingCollectTimeouts.delete(dataId);
     gameState.beingCollected.delete(dataId);
 
