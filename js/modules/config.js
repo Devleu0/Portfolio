@@ -65,7 +65,7 @@ export const state = {
     isJumping: false,           // 플레이어가 점프 중인지 여부
     isDucking: false,           // 플레이어가 숙이는 중인지 여부
     onPlatform: null,           // 플레이어가 플랫폼 위에 있는지 여부
-    keys: { left: false, right: false }, // 키보드 입력 상태
+    keys: { left: false, right: false, up: false }, // 키보드 입력 상태
     
     // 게임 플레이 상태
     collectedIds: new Set(),    // 수집한 이벤트 ID 목록
@@ -73,6 +73,7 @@ export const state = {
     perfectCount: 0,            // 'Perfect' 판정 횟수
     comboCount: 0,              // 현재 콤보 수
     maxCombo: 0,                // 최대 콤보 수
+    lastComboBeforeReset: 0,    // 이전 콤보 상태 저장
     
     // UI 및 애니메이션 상태
     isGameHudVisible: false,    // 게임 HUD가 보이는지 여부
