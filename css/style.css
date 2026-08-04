@@ -88,7 +88,7 @@ body {
     line-height: 1.4;
 }
 
-.obstacle-badge {
+.event-badge {
     background: var(--accent);
     display: flex;
     align-items: center;
@@ -102,7 +102,7 @@ body {
     will-change: transform;
 }
 
-.obstacle-badge svg {
+.event-badge svg {
     pointer-events: none;
 }
 
@@ -320,21 +320,21 @@ body {
     preserveAspectRatio: none;
 }
 
-.obstacle-wrapper {
+.event-wrapper {
     pointer-events: auto;
     transition: z-index 0.2s;
 }
 
-.obstacle-wrapper:hover {
+.event-wrapper:hover {
     z-index: 100;
 }
 
-.obstacle-wrapper:hover .obstacle-badge {
+.event-wrapper:hover .event-badge {
     transform: scale(2);
     z-index: 150;
 }
 
-.obstacle-pole {
+.event-pole {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -615,6 +615,7 @@ body {
     overflow: hidden;
     /* margin-right: 16px; This is now handled by the grid layout */
 }
+
 .mode-switch .header-btn {
     border: none;
     box-shadow: none;
@@ -622,18 +623,19 @@ body {
     margin: 0;
     padding: 6px 12px;
 }
+
 .mode-switch .header-btn.active {
     background: var(--accent);
     color: #020617;
 }
 
-.obstacle-wrapper.collected {
+.event-wrapper.collected {
     opacity: 0.85;
     filter: grayscale(100%);
     transition: all 0.3s ease;
 }
 
-.obstacle-wrapper.collected:hover {
+.event-wrapper.collected:hover {
     opacity: 1 !important;
     filter: grayscale(0%) !important;
 }
@@ -1242,8 +1244,10 @@ body {
     left: 0;
     width: 100%;
     z-index: 50;
-    display: grid; /* Changed to grid */
-    grid-template-columns: 1fr auto 1fr; /* Left, Center, Right */
+    display: grid;
+    /* Changed to grid */
+    grid-template-columns: 1fr auto 1fr;
+    /* Left, Center, Right */
     align-items: center;
     padding: 16px 24px;
     background: rgba(2, 6, 23, 0.85);
@@ -1252,7 +1256,8 @@ body {
     box-sizing: border-box;
 }
 
-.top-header > div:first-child { /* Target the logo/title div */
+.top-header>div:first-child {
+    /* Target the logo/title div */
     grid-column: 1 / 2;
     justify-self: start;
 }
@@ -1267,7 +1272,8 @@ body {
 .header-controls {
     grid-column: 3 / 4;
     justify-self: end;
-    display: flex; /* Keep flex for its internal items */
+    display: flex;
+    /* Keep flex for its internal items */
     gap: 16px;
     align-items: center;
 }
@@ -1736,23 +1742,22 @@ button.action {
     transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.card-wide {
-}
+.card-wide {}
 
-.card-tall {
-}
+.card-tall {}
 
-.card-large {
-}
+.card-large {}
 
 /* Hamburger Menu Styles */
 .hamburger-btn {
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
-    z-index: 1051; /* Above mobile nav */
+    z-index: 1051;
+    /* Above mobile nav */
     position: relative;
     width: 44px;
     height: 44px;
@@ -1796,8 +1801,10 @@ button.action {
     backdrop-filter: blur(10px);
     z-index: 1050;
     display: flex;
-    align-items: center;      /* Re-center the content vertically */
-    justify-content: center;   /* Re-center the content horizontally */
+    align-items: center;
+    /* Re-center the content vertically */
+    justify-content: center;
+    /* Re-center the content horizontally */
     padding: 20px;
     opacity: 0;
     visibility: hidden;
@@ -1813,7 +1820,8 @@ button.action {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px; /* Reduced gap */
+    gap: 20px;
+    /* Reduced gap */
 }
 
 .mobile-nav-content .mode-switch,
@@ -1823,6 +1831,7 @@ button.action {
     align-items: center;
     gap: 24px;
 }
+
 .mobile-nav-content .header-btn {
     font-size: 1rem;
     padding: 10px 16px;
@@ -1852,10 +1861,12 @@ button.action {
 
     .hamburger-btn {
         display: block;
-        position: fixed; /* Position it on the viewport */
+        position: fixed;
+        /* Position it on the viewport */
         top: 16px;
         right: 24px;
-        z-index: 1060; /* Make sure it's above other content */
+        z-index: 1060;
+        /* Make sure it's above other content */
     }
 
     .hidden-mobile {
@@ -1912,7 +1923,8 @@ button.action {
 /* 튜토리얼 툴팁 스타일 */
 .tutorial-tooltip {
     position: absolute;
-    bottom: calc(100% + 130px); /* 노드 상단에 위치 */
+    bottom: calc(100% + 130px);
+    /* 노드 상단에 위치 */
 
     left: 50%;
     transform: translateX(-50%);
@@ -1945,8 +1957,15 @@ button.action {
 }
 
 @keyframes bounceTooltip {
-    0% { transform: translate(-50%, 0); text-shadow: 0 0 5px transparent; }
-    100% { transform: translate(-50%, -8px); text-shadow: 0 0 8px var(--accent); }
+    0% {
+        transform: translate(-50%, 0);
+        text-shadow: 0 0 5px transparent;
+    }
+
+    100% {
+        transform: translate(-50%, -8px);
+        text-shadow: 0 0 8px var(--accent);
+    }
 }
 
 /* Combo System */
@@ -1976,22 +1995,292 @@ button.action {
     font-weight: 900;
 }
 
-.combo-display[data-tier="mid"] #combo-count { color: var(--accent); }
-.combo-display[data-tier="high"] #combo-count { color: #FDE047; }
-.combo-display[data-tier="max"] #combo-count { color: #FDE047; text-shadow: 0 0 8px #FDE047; }
+.combo-display[data-tier="mid"] #combo-count {
+    color: var(--accent);
+}
+
+.combo-display[data-tier="high"] #combo-count {
+    color: #FDE047;
+}
+
+.combo-display[data-tier="max"] #combo-count {
+    color: #FDE047;
+    text-shadow: 0 0 8px #FDE047;
+}
 
 
 #combo-flash {
-    position: fixed; inset: 0; pointer-events: none; z-index: 15;
-    opacity: 0; mix-blend-mode: screen;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 15;
+    opacity: 0;
+    mix-blend-mode: screen;
     transition: opacity 0.1s ease-out;
 }
 
 /* Screen Shake Animations */
-@keyframes shake-mid  { 0%,100% { transform: translate(0,0);} 25% { transform: translate(2px,-1px);} 75% { transform: translate(-2px,1px);} }
-@keyframes shake-high { 0%,100% { transform: translate(0,0);} 20% { transform: translate(4px,-3px);} 60% { transform: translate(-4px,2px);} }
-@keyframes shake-max  { 0%,100% { transform: translate(0,0) scale(1);} 30% { transform: translate(6px,-4px) scale(1.015);} 70% { transform: translate(-6px,3px) scale(1.015);} }
+@keyframes shake-mid {
 
-.shake-mid  { animation: shake-mid 0.1s ease-in-out; }
-.shake-high { animation: shake-high 0.15s ease-in-out; }
-.shake-max  { animation: shake-max 0.2s ease-in-out; }
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(2px, -1px);
+    }
+
+    75% {
+        transform: translate(-2px, 1px);
+    }
+}
+
+@keyframes shake-high {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    20% {
+        transform: translate(4px, -3px);
+    }
+
+    60% {
+        transform: translate(-4px, 2px);
+    }
+}
+
+@keyframes shake-max {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    30% {
+        transform: translate(6px, -4px) scale(1.015);
+    }
+
+    70% {
+        transform: translate(-6px, 3px) scale(1.015);
+    }
+}
+
+.shake-mid {
+    animation: shake-mid 0.1s ease-in-out;
+}
+
+.shake-high {
+    animation: shake-high 0.15s ease-in-out;
+}
+
+.shake-max {
+    animation: shake-max 0.2s ease-in-out;
+}
+
+/* --- Cyber Frame --- */
+.cyber-frame {
+    position: absolute;
+    inset: 0;
+    /* top, right, bottom, left = 0 */
+    pointer-events: none;
+    /* 벽(wall)에서만 충돌 판정 */
+}
+
+/* 뱃지에 플로팅 애니메이션 추가 (프레임과 무관하게) */
+.event-badge.floating {
+    animation: float-item 3s ease-in-out infinite;
+}
+
+@keyframes float-item {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) translateY(-10px);
+    }
+}
+
+
+/* 방화벽(벽면) 기본 스타일 */
+.frame-wall {
+    position: absolute;
+    background-color: rgba(2, 6, 23, 0.85);
+    /* var(--bg-color) 활용 */
+    border: 2px solid var(--cat-color);
+    /* 카테고리 색상 기반 네온 테두리 */
+    box-shadow: 0 0 10px var(--cat-color), inset 0 0 8px var(--cat-color);
+    /* 사이버틱한 해저드(경고) 빗금 패턴 */
+    background-image: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 8px,
+            rgba(255, 255, 255, 0.05) 8px,
+            rgba(255, 255, 255, 0.05) 16px);
+    z-index: 40;
+    pointer-events: none;
+    /* 벽에서는 충돌 이벤트를 감지하지 않음 */
+}
+
+/* 벽 두께 */
+.wall-horizontal {
+    height: 20px;
+    width: 100%;
+    left: 0;
+}
+
+.wall-vertical {
+    width: 20px;
+    height: 100%;
+    top: 0;
+}
+
+/* 위치 지정 */
+.wall-top {
+    top: 0;
+}
+
+.wall-bottom {
+    bottom: 0;
+}
+
+.wall-left {
+    left: 0;
+}
+
+.wall-right {
+    right: 0;
+}
+
+/* --- Collision Feedback --- */
+
+/* 카메라 흔들림 */
+@keyframes shake-body {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.shake {
+    animation: shake-body 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+/* 플레이어 글리치 효과 */
+@keyframes glitch-player {
+
+    0%,
+    100% {
+        filter: none;
+        opacity: 1;
+    }
+
+    25% {
+        filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff0000);
+        opacity: 0.8;
+        transform: translate3d(5px, 0, 0) scaleX(var(--facing, 1));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 5px #00ff00) drop-shadow(0 0 10px #00ff00);
+        opacity: 1;
+        transform: translate3d(-5px, 0, 0) scaleX(var(--facing, 1));
+    }
+
+    75% {
+        filter: drop-shadow(0 0 5px #0000ff) drop-shadow(0 0 10px #0000ff);
+        opacity: 0.8;
+        transform: translate3d(0, 5px, 0) scaleX(var(--facing, 1));
+    }
+}
+
+.glitch {
+    animation: glitch-player 0.3s ease-in-out;
+}
+
+
+@media print {
+    /* 1. 스크롤바가 있는 내부 영역을 해제하여 내용이 전부 늘어나도록 설정 */
+    .scrollable-container {
+        overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    /* 2. 네비게이션, 버튼, 불필요한 UI 숨기기 */
+    .no-print,
+    header,
+    footer,
+    sidebar {
+        display: none !important;
+    }
+
+    /* 3. 배경색과 이미지 forced print 유지 */
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* 4. 페이지가 어디서 끊어질지 제어 */
+    .page-break {
+        page-break-before: always;
+        /* 또는 break-before: page; */
+    }
+
+    /* 1. GSAP가 pinned(고정) 처리한 래퍼와 가로 트랙의 고정 해제 */
+    .gsap-pin-wrap,
+    .gsap-track,
+    .horizontal-container {
+        /* GSAP가 강제로 넣은 transform 및 위치값 무력화 */
+        transform: none !important;
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+
+        /* flex가 가로(row)로 되어 있다면 세로(column)로 변경 */
+        display: block !important;
+        /* 또는 flex-direction: column !important; */
+    }
+
+    /* 2. 가로로 늘어서 있던 각각의 카드/섹션 아이템들 세로 배치 */
+    .horizontal-item,
+    .panel,
+    .card {
+        width: 100% !important;
+        height: auto !important;
+        position: static !important;
+
+        /* 인쇄 시 페이지 경계에서 카드가 잘리지 않도록 방지 */
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+
+        /* 각 아이템 사이 적절한 여백 */
+        margin-bottom: 20px !important;
+    }
+}
+
+/* --- DEBUG COLLISION --- */
+.debug-collision {
+    box-shadow: 0 0 0 2px red !important;
+}
