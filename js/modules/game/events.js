@@ -40,6 +40,7 @@ export function createEvent(data, fallbackId) {
     const event = document.createElement('div');
     event.className = `event-badge${data.inProgress ? ' is-inprogress' : ''}`;
     event.classList.add('debug-collision');
+    event.classList.add('floating');
     event.style.width = (data.customIcon ? 86 : badgeSize) + 'px';
     event.style.height = (data.customIcon ? 64 : badgeSize) + 'px';
     event.style.borderRadius = data.customIcon ? '8px' : '0';
