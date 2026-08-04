@@ -2219,10 +2219,6 @@ button.action {
     animation: glitch-player 0.3s ease-in-out;
 }
 
-/* --- DEBUG COLLISION --- */
-.debug-collision {
-    box-shadow: 0 0 0 2px red !important;
-}
 
 @media print {
     /* 1. 스크롤바가 있는 내부 영역을 해제하여 내용이 전부 늘어나도록 설정 */
@@ -2282,4 +2278,9 @@ button.action {
         /* 각 아이템 사이 적절한 여백 */
         margin-bottom: 20px !important;
     }
+}
+
+/* --- DEBUG COLLISION --- */
+.debug-collision {
+    box-shadow: 0 0 0 2px red !important;
 }

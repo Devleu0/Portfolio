@@ -1,3 +1,4 @@
+
 // =================================================================================
 // 게임 로직 및 상태 관리를 담당하는 모듈
 // =================================================================================
@@ -14,7 +15,7 @@ import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEf
 // ---------------------------------------------------------------------------------
 // 전역 변수 및 상태
 // ---------------------------------------------------------------------------------
-let gameContainer, player, playerWrapper, playerInner; // 게임 및 플레이어 DOM 요소
+let gameContainer, player, playerWrapper, playerInner, hitbox; // 게임 및 플레이어 DOM 요소
 let eventsData = []; // events.json에서 로드된 이벤트 데이터 배열
 let eventElements = []; // 생성된 이벤트 DOM 요소 배열
 
@@ -43,7 +44,7 @@ export function getPlayerWrapper() { return playerWrapper; }
 // ---------------------------------------------------------------------------------
 function createPlayer() {
     const horizontalSection = document.querySelector('.horizontal-section');
-    
+
     // 기존 플레이어가 있다면 제거 (재시작 시 중복 생성 방지)
     if (gameContainer && gameContainer.parentNode) {
         gameContainer.parentNode.removeChild(gameContainer);
@@ -57,7 +58,17 @@ function createPlayer() {
     // 플레이어 요소 생성
     player = document.createElement('div');
     player.style.cssText = `position:absolute; width:${isMobile ? 32 : 64}px; height:${isMobile ? 32 : 64}px; bottom:35vh; left:${isMobile ? 75 : 150}px; transform-origin:bottom center; will-change: transform;`;
-    player.classList.add('debug-collision');
+
+    // 정확한 충돌 판정을 위한 hitbox 요소 생성
+    const hitboxWidth = isMobile ? 16 : 32;
+    const hitboxHeight = isMobile ? 26 : 52;
+    const hitboxLeft = isMobile ? (32 - 16) / 2 : (64 - 32) / 2;
+    const hitboxTop = isMobile ? 2 : 8; // SVG내부의 스프라이트 위치에 맞게 상단 오프셋 조정
+
+    hitbox = document.createElement('div');
+    hitbox.style.cssText = `position:absolute; width:${hitboxWidth}px; height:${hitboxHeight}px; left:${hitboxLeft}px; top:${hitboxTop}px;`;
+    hitbox.classList.add('debug-collision');
+    player.appendChild(hitbox);
 
     // GSAP 애니메이션 초기화 및 상태 리셋
     gsap.killTweensOf(player);
@@ -91,7 +102,7 @@ function createEvent(data, fallbackId) {
     const elevation = data.elevation || 0; // 지면으로부터의 높이
     const entranceDir = parseInt(data.entranceDir || 0, 10); // 프레임 입구 방향
     const hasFrame = entranceDir > 0; // 프레임(벽) 존재 여부
-    
+
     // 프레임이 있는 경우 래퍼 크기 확장
     const wrapperSize = hasFrame ? 120 : badgeSize;
     const bottomStyle = `calc(35vh + ${elevation}px)`;
@@ -126,10 +137,11 @@ function createEvent(data, fallbackId) {
     // 이벤트 뱃지 (아이콘/이미지 표시 부분)
     const event = document.createElement('div');
     event.className = `event-badge${data.inProgress ? ' is-inprogress' : ''}`;
+    event.classList.add('debug-collision');
     event.style.width = (data.customIcon ? 86 : badgeSize) + 'px';
     event.style.height = (data.customIcon ? 64 : badgeSize) + 'px';
     event.style.borderRadius = data.customIcon ? '8px' : '0';
-    
+
     if (THEME === 'minimal' && !data.customIcon) {
         event.style.background = 'rgba(30,41,59,0.8)';
         event.style.backdropFilter = 'blur(8px)';
@@ -150,7 +162,7 @@ function createEvent(data, fallbackId) {
         const frame = document.createElement('div');
         frame.className = 'cyber-frame';
         frame.style.cssText = 'position:absolute; top:0; left:0; width:100%; height:100%;';
-        
+
         event.style.position = 'absolute';
         event.style.top = '50%';
         event.style.left = '50%';
@@ -166,14 +178,14 @@ function createEvent(data, fallbackId) {
             left: '<div class="frame-wall wall-vertical wall-left platform-surface"></div>',
             right: '<div class="frame-wall wall-vertical wall-right platform-surface"></div>',
         };
-        
+
         let wallHtml = '';
         if (entranceDir !== 1) wallHtml += wallDefs.top;
         if (entranceDir !== 2) wallHtml += wallDefs.left;
         if (entranceDir !== 3) wallHtml += wallDefs.bottom;
         if (entranceDir !== 4) wallHtml += wallDefs.right;
         frame.insertAdjacentHTML('beforeend', wallHtml);
-        
+
         // 충돌 감지를 위해 벽 요소들을 저장
         wrapper.walls = Array.from(frame.querySelectorAll('.frame-wall'));
         wrapper.walls.forEach(wall => wall.classList.add('debug-collision'));
@@ -258,9 +270,9 @@ function finalizeCollection(event, didAction) {
 
         // 콤보에 따른 점수 배율
         const multiplier = state.comboCount >= 10 ? 2.0
-                         : state.comboCount >= 5  ? 1.5
-                         : state.comboCount >= 3  ? 1.2
-                         : 1.0;
+            : state.comboCount >= 5 ? 1.5
+                : state.comboCount >= 3 ? 1.2
+                    : 1.0;
         state.totalScore += Math.round(500 * multiplier);
         state.perfectCount++;
 
@@ -280,7 +292,7 @@ function finalizeCollection(event, didAction) {
     if (frame && didAction) {
         // 프레임이 있는 아이템은 프레임과 뱃지가 함께 부서지는 효과
         triggerCollectEffect(eventBadge, didAction, event.dataset.category);
-        
+
         // gsap.to(frame.querySelectorAll('.frame-wall'), {
         //     opacity: 0, scale: 1.5, stagger: 0.05, duration: 0.3, ease: 'power2.out',
         // }); // 프레임 벽이 사라지는 애니메이션 주석 처리
@@ -301,7 +313,7 @@ function finalizeCollection(event, didAction) {
     // 상태 업데이트
     locallyCollected.add(dataId);
     state.collectedIds.add(dataId);
-    
+
     // 튜토리얼 툴팁 숨기기
     if (dataId === 1) {
         const tt = document.getElementById('tutorial-tooltip');
@@ -322,6 +334,83 @@ function finalizeCollection(event, didAction) {
 
 
 // ---------------------------------------------------------------------------------
+// 연속적인 충돌 감지 (Swept AABB)
+// ---------------------------------------------------------------------------------
+
+/**
+ * Swept AABB 충돌 감지 함수. 움직이는 사각형의 이동 경로와 고정된 사각형의 충돌을 검사합니다.
+ * @param {DOMRect} r1 움직이는 사각형의 경계
+ * @param {{x: number, y: number}} vel 움직이는 사각형의 속도 벡터
+ * @param {DOMRect} r2 고정된 사각형의 경계
+ * @returns {{time: number, normal: {x: number, y: number}}} 충돌 시간(0-1)과 충돌 표면의 법선 벡터
+ */
+function sweptAABB(r1, vel, r2) {
+    // 이동 경로를 포함하는 넓은 범위(Broad-phase)에서 먼저 검사합니다.
+    const broadphaseBox = {
+        left: vel.x > 0 ? r1.left : r1.left + vel.x,
+        top: vel.y > 0 ? r1.top : r1.top + vel.y,
+        right: vel.x > 0 ? r1.right + vel.x : r1.right,
+        bottom: vel.y > 0 ? r1.bottom + vel.y : r1.bottom
+    };
+
+    if (broadphaseBox.right < r2.left || broadphaseBox.left > r2.right || broadphaseBox.bottom < r2.top || broadphaseBox.top > r2.bottom) {
+        return { time: 1, normal: { x: 0, y: 0 } }; // 충돌 없음
+    }
+
+    // 각 축에 대해 충돌 시작과 끝까지의 거리를 계산합니다.
+    let dx_entry, dy_entry;
+    let dx_exit, dy_exit;
+
+    if (vel.x > 0) {
+        dx_entry = r2.left - r1.right;
+        dx_exit = r2.right - r1.left;
+    } else {
+        dx_entry = r2.right - r1.left;
+        dx_exit = r2.left - r1.right;
+    }
+
+    if (vel.y > 0) {
+        dy_entry = r2.top - r1.bottom;
+        dy_exit = r2.bottom - r1.top;
+    } else {
+        dy_entry = r2.bottom - r1.top;
+        dy_exit = r2.top - r1.bottom;
+    }
+
+    // 각 축에 대해 충돌 시작과 끝까지의 시간을 계산합니다.
+    let tx_entry, ty_entry;
+    let tx_exit, ty_exit;
+
+    tx_entry = vel.x === 0 ? -Infinity : dx_entry / vel.x;
+    tx_exit = vel.x === 0 ? Infinity : dx_exit / vel.x;
+    ty_entry = vel.y === 0 ? -Infinity : dy_entry / vel.y;
+    ty_exit = vel.y === 0 ? Infinity : dy_exit / vel.y;
+
+    // 가장 늦은 충돌 시작 시간과 가장 이른 충돌 종료 시간을 찾습니다.
+    const entryTime = Math.max(tx_entry, ty_entry);
+    const exitTime = Math.min(tx_exit, ty_exit);
+
+    // 충돌이 없다고 판단되는 경우:
+    // - 충돌 진입 시간이 충돌 이탈 시간보다 늦을 경우 (충돌 간격이 없음)
+    // - 충돌 진입 시간이 1 이상일 경우 (이번 프레임 이후에 충돌)
+    // - 충돌 이탈 시간이 0 이하일 경우 (이번 프레임 이전에 이미 충돌이 끝남)
+    if (entryTime > exitTime || entryTime >= 1 || exitTime <= 0) {
+        return { time: 1, normal: { x: 0, y: 0 } };
+    }
+
+    // 충돌이 있다면, 충돌면의 법선(normal) 벡터를 계산합니다.
+    let normal = { x: 0, y: 0 };
+    if (tx_entry > ty_entry) {
+        normal.x = vel.x > 0 ? -1 : 1;
+    } else {
+        normal.y = vel.y > 0 ? -1 : 1;
+    }
+
+    return { time: entryTime, normal: normal };
+}
+
+
+// ---------------------------------------------------------------------------------
 // 메인 게임 루프 (GSAP Ticker로 매 프레임 실행)
 // ---------------------------------------------------------------------------------
 function gameLoop(time, deltaTime) {
@@ -332,109 +421,96 @@ function gameLoop(time, deltaTime) {
         doJump();
     }
 
-    // --- 2. 수직 스크롤 (카메라 이동) ---
+    // --- 2. 수평 이동 계산 ---
     const scrollSpeed = isMobile ? 16 : 24;
-    const move = scrollSpeed * timeScale;
-    
-    if (state.keys.right) window.scrollBy({ top: move, left: 0, behavior: 'instant' });
-    if (state.keys.left) window.scrollBy({ top: -move, left: 0, behavior: 'instant' });
+    const horizontalMove = scrollSpeed * timeScale;
+
+    let scrollDelta = 0;
+    if (state.keys.right) scrollDelta = horizontalMove;
+    if (state.keys.left) scrollDelta = -horizontalMove;
 
     // 이동 방향에 따라 플레이어 방향 전환
     playerInner.style.setProperty('--facing', state.keys.right ? '1' : (state.keys.left ? '-1' : playerInner.style.getPropertyValue('--facing') || '1'));
     playerInner.classList.toggle('player-running', state.keys.right || state.keys.left);
 
-    // --- 3. 물리 및 수직 이동 ---
+    // --- 3. 수직 이동 및 물리 계산 ---
     const prevY = gsap.getProperty(player, "y");
-
-    // 중력 적용
     if (!state.onGround && !state.onPlatform) {
         state.velocityY += GRAVITY * timeScale;
     }
-    
-    let currentY = prevY + state.velocityY * timeScale;
-    const playerRectBeforeMove = player.getBoundingClientRect();
+    const yDelta = state.velocityY * timeScale;
 
-    // --- 4. 충돌 감지 및 처리 ---
-    let onAnyPlatform = null;
-    let horizontalCollision = false;
-    let horizontalPenetration = 0; // 수평 충돌 시 밀어낼 값
+    // 플레이어의 최종 이동 벡터 (수평 이동은 스크롤과 같은 방향으로 적용)
+    const playerVel = { x: scrollDelta, y: yDelta };
+
+    // --- 4. 충돌 감지 및 처리 (Swept AABB) ---
+    const playerRect = hitbox.getBoundingClientRect();
+    let minCollisionTime = 1.0;
+    let collisionNormal = { x: 0, y: 0 };
+    let collidedWall = null;
 
     for (const event of eventElements) {
-        if (!event.walls || event.walls.length === 0) continue; // 벽이 없는 이벤트는 스킵
+        if (!event.walls || event.walls.length === 0) continue;
 
+        // 화면에 보이지 않는 이벤트는 대략적으로 건너뛰기 (성능 최적화)
         const obsRect = event.getBoundingClientRect();
-        if (obsRect.bottom < 0 || obsRect.top > window.innerHeight) continue; // 화면 밖 이벤트 스킵
+        if (obsRect.right < -50 || obsRect.left > window.innerWidth + 50) continue;
 
         for (const wall of event.walls) {
             const wallRect = wall.getBoundingClientRect();
-            
-            // 다음 프레임의 플레이어 위치 예측
-            const playerRect = {
-                left: playerRectBeforeMove.left,
-                right: playerRectBeforeMove.right,
-                top: playerRectBeforeMove.top - (prevY - currentY),
-                bottom: playerRectBeforeMove.bottom - (prevY - currentY),
-                width: playerRectBeforeMove.width,
-            };
 
-            // 플레이어와 벽의 충돌 검사
-            if (playerRect.left < wallRect.right && playerRect.right > wallRect.left &&
-                playerRect.top < wallRect.bottom && playerRect.bottom > wallRect.top) {
-                
-                const prevPlayerBottom = playerRectBeforeMove.bottom;
-                const isHorizontalWall = wall.classList.contains('wall-horizontal');
+            // 플레이어 이동 경로와 벽의 충돌을 검사
+            const hit = sweptAABB(playerRect, playerVel, wallRect);
 
-                if (isHorizontalWall) { // 수직 충돌 (벽 위 또는 아래)
-                    if (state.velocityY >= 0 && prevPlayerBottom <= wallRect.top + 1) { // 위에서 아래로 떨어질 때
-                        currentY = prevY - (playerRectBeforeMove.bottom - wallRect.top);
-                        state.velocityY = 0;
-                        onAnyPlatform = wall; // 플랫폼에 착지
-                        break; 
-                    }
-                    if (state.velocityY < 0 && playerRectBeforeMove.top >= wallRect.bottom - 1) { // 아래에서 위로 점프할 때
-                        currentY = prevY + (wallRect.bottom - playerRectBeforeMove.top);
-                        state.velocityY = 0; // 머리 박음
-                    }
-                } else { // 수평 충돌 (벽 좌우)
-                    horizontalCollision = true;
-                    const playerCenter = playerRect.left + playerRect.width / 2;
-                    const wallCenter = wallRect.left + wallRect.width / 2;
-                    
-                    if (playerCenter < wallCenter) {
-                        horizontalPenetration = playerRect.right - wallRect.left;
-                    } else {
-                        horizontalPenetration = playerRect.left - wallRect.right;
-                    }
-                }
+            if (hit.time < minCollisionTime) {
+                minCollisionTime = hit.time;
+                collisionNormal = hit.normal;
+                collidedWall = wall;
             }
         }
-        if (onAnyPlatform) break; // 플랫폼에 착지했으면 더 이상 검사 안 함
     }
 
-    // 수평 충돌 시 플레이어가 벽에 끼지 않도록 스크롤 위치 보정
-    if (horizontalCollision) {
-        window.scrollTo({ top: window.scrollY - horizontalPenetration, behavior: 'instant' });
+    // --- 5. 위치 업데이트 및 충돌 반응 ---
+    // 충돌 지점까지만 이동
+    if (scrollDelta !== 0) {
+        window.scrollBy({ top: scrollDelta * minCollisionTime, left: 0, behavior: 'instant' });
     }
+    gsap.set(player, { y: prevY + yDelta * minCollisionTime });
 
-    // --- 5. 플레이어 상태 및 위치 업데이트 ---
-    state.onPlatform = onAnyPlatform;
-    if (state.onPlatform) {
-        state.onGround = false;
-        state.isJumping = false;
-    } else {
-        if (currentY > 0) { // 바닥 아래로 떨어지지 않도록
-            currentY = 0;
+    // 충돌이 발생했을 경우의 처리
+    if (minCollisionTime < 1.0) {
+        if (collisionNormal.y === -1) { // 위에서 아래로 충돌 (착지)
             state.velocityY = 0;
-            state.onGround = true;
-            state.isJumping = false;
-        } else {
+            state.onPlatform = collidedWall;
             state.onGround = false;
+            state.isJumping = false;
         }
+        if (collisionNormal.y === 1) { // 아래에서 위로 충돌 (머리 박음)
+            state.velocityY = 0;
+        }
+        // 수평 충돌의 경우, 이동을 제한했으므로 별도의 속도 처리는 불필요.
+    } else {
+        // 충돌이 없었으면, 플랫폼 상태를 리셋
+        state.onPlatform = null;
     }
-    gsap.set(player, { y: currentY }); // 최종 위치 적용
+
+    // 바닥 충돌 및 공중 상태 처리
+    const finalPlayerY = gsap.getProperty(player, "y");
+    // 떨어지는 중이고(velocityY >= 0) 바닥에 닿거나 통과했다면(finalPlayerY >= 0)
+    if (state.velocityY >= 0 && finalPlayerY >= 0) {
+        gsap.set(player, { y: 0 });
+        state.velocityY = 0;
+        state.onGround = true;
+        state.isJumping = false;
+        state.onPlatform = null;
+    } else {
+        // 그 외의 경우 (점프 중이거나 아직 떨어지지 않은 경우)
+        state.onGround = false;
+    }
+
 
     // --- 6. 수집품 획득 로직 ---
-    const finalPlayerRect = player.getBoundingClientRect();
+    const finalPlayerRect = hitbox.getBoundingClientRect();
     let isAnythingOverlapping = false;
     eventElements.forEach(event => {
         const obsRect = event.getBoundingClientRect();
@@ -469,8 +545,8 @@ function gameLoop(time, deltaTime) {
 
     // 뱃지와 겹쳤을 때 플레이어 시각 효과
     playerInner.style.color = isAnythingOverlapping ? '#fff' : 'var(--accent)';
-    playerInner.style.filter = isAnythingOverlapping 
-        ? 'drop-shadow(0 0 16px var(--accent))' 
+    playerInner.style.filter = isAnythingOverlapping
+        ? 'drop-shadow(0 0 16px var(--accent))'
         : 'drop-shadow(0 0 8px var(--accent))';
 }
 
@@ -511,7 +587,7 @@ function setupControls() {
         const k = e.key.toLowerCase();
         // 기본 브라우저 동작(스크롤 등) 방지
         if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) e.preventDefault();
-        
+
         if (k === 'd' || k === 'arrowright') state.keys.right = true;
         if (k === 'a' || k === 'arrowleft') state.keys.left = true;
         if (k === 'w' || k === 'arrowup') state.keys.up = true;
@@ -537,7 +613,7 @@ function setupControls() {
 
     attachTouch('btn-left', () => { state.keys.left = true; }, () => { state.keys.left = false; });
     attachTouch('btn-right', () => { state.keys.right = true; }, () => { state.keys.right = false; });
-    
+
     attachTouch('btn-jump', () => doJump());
     attachTouch('btn-duck', () => doDuckStart(), () => doDuckEnd());
 }
@@ -562,7 +638,7 @@ export function resetGame() {
     state.maxCombo = 0;
     state.lastComboBeforeReset = 0;
     hideComboCounter();
-    
+
     // 플레이어 물리 상태 리셋
     gsap.set(player, { y: 0 });
     state.velocityY = 0;
@@ -621,7 +697,7 @@ export async function initGame() {
         const totalItems = eventsData.length;
         const counterTotalEl = document.getElementById('counter-total');
         if (counterTotalEl) counterTotalEl.textContent = totalItems;
-        
+
         const milestonesStatEl = document.getElementById('milestones-stat');
         if (milestonesStatEl) milestonesStatEl.dataset.target = totalItems;
 
@@ -641,7 +717,7 @@ export async function initGame() {
 
         // 6. 컨트롤 설정 및 게임 루프 시작
         setupControls();
-        
+
         gsap.ticker.remove(gameLoop); // 중복 등록 방지
         gsap.ticker.add(gameLoop);
 
