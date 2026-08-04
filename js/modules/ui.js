@@ -66,6 +66,19 @@ function createProgressMarkers() {
 
         const tooltip = document.createElement('div');
         tooltip.className = 'progress-tooltip';
+        
+        // Add data attributes for each language
+        if (typeof event.title === 'object' && event.title !== null) {
+            tooltip.dataset.ko = event.title.ko || '';
+            tooltip.dataset.en = event.title.en || event.title.ko || '';
+            tooltip.dataset.ja = event.title.ja || event.title.ko || '';
+        } else {
+            const titleStr = event.title || '';
+            tooltip.dataset.ko = titleStr;
+            tooltip.dataset.en = titleStr;
+            tooltip.dataset.ja = titleStr;
+        }
+
         tooltip.textContent = getStr(event.title, state.currentLang);
         marker.appendChild(tooltip);
 

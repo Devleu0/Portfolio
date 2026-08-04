@@ -20,6 +20,14 @@ export function updateLanguage(lang, rerenderFull = true) {
         }
     });
 
+    // Update all tooltip elements with '.progress-tooltip'
+    document.querySelectorAll('.progress-tooltip').forEach(function (el) {
+        const newText = el.getAttribute(`data-${lang}`) || el.getAttribute('data-ko') || '';
+        if (newText && el.textContent !== newText) {
+            el.textContent = newText;
+        }
+    });
+
     // Update the skip button text immediately
     const skipBtn = document.getElementById('skip-game-btn');
     if (skipBtn) {
