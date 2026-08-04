@@ -2090,4 +2090,29 @@ button.action {
 /* --- DEBUG COLLISION --- */
 .debug-collision {
     box-shadow: 0 0 0 2px red !important;
- }
+}
+
+@media print {
+  /* 1. 스크롤바가 있는 내부 영역을 해제하여 내용이 전부 늘어나도록 설정 */
+  .scrollable-container {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  /* 2. 네비게이션, 버튼, 불필요한 UI 숨기기 */
+  .no-print, header, footer, sidebar {
+    display: none !important;
+  }
+
+  /* 3. 배경색과 이미지 forced print 유지 */
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 4. 페이지가 어디서 끊어질지 제어 */
+  .page-break {
+    page-break-before: always; /* 또는 break-before: page; */
+  }
+}
