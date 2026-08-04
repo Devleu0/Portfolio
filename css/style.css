@@ -2277,7 +2277,8 @@ button.action {
     }
 }
 
-/* --- DEBUG COLLISION ---*/ 
+/* --- DEBUG COLLISION ---
 .debug-collision {
     box-shadow: 0 0 0 2px red !important;
 }
+    */ 

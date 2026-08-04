@@ -296,12 +296,7 @@
         {
           "name": "HLSL",
           "level": 7,
-          "width": "75%"
-        },
-        {
-          "name": "ShaderLab",
-          "level": 7,
-          "width": "75%"
+          "width": "70%"
         },
         {
           "name": "DirectX 11",
@@ -321,12 +316,12 @@
         {
           "name": "C#",
           "level": 9,
-          "width": "95%"
+          "width": "90%"
         },
         {
           "name": "C++",
-          "level": 8,
-          "width": "80%"
+          "level": 7,
+          "width": "70%"
         },
         {
           "name": "Python",
@@ -344,9 +339,19 @@
       "layout": "",
       "items": [
         {
+          "name": "HTML, CSS",
+          "level": 8,
+          "width": "80%"
+        },
+        {
+          "name": "javascript",
+          "level": 7,
+          "width": "70%"
+        },
+        {
           "name": "Node.js",
           "level": 3,
-          "width": "50%"
+          "width": "33%"
         }
       ]
     },
@@ -360,8 +365,8 @@
       "items": [
         {
           "name": "MySQL",
-          "level": 6,
-          "width": "60%"
+          "level": 7,
+          "width": "70%"
         }
       ]
     },
@@ -374,14 +379,14 @@
       "layout": "card-wide",
       "items": [
         {
-          "name": "Git, VS Code",
+          "name": "Git",
           "level": 9,
           "width": "90%"
         },
         {
-          "name": "Jira, Notion",
+          "name": "Jira",
           "level": 6,
-          "width": "85%"
+          "width": "60%"
         }
       ]
     }
