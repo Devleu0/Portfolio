@@ -288,10 +288,12 @@ function gameLoop(time, deltaTime) {
     // --- Vertical Scrolling ---
     const scrollSpeed = isMobile ? 16 : 24; // Reverted to original speed
     const move = scrollSpeed * timeScale;
-    const originalScrollY = window.scrollY; // Capture original Y scroll
+    
+    // N.B. scrollY is captured *before* movement
+    const originalScrollY = window.scrollY; 
 
-    if (state.keys.right) window.scrollBy({ top: move, left: 0, behavior: 'instant' }); // Reverted to top
-    if (state.keys.left) window.scrollBy({ top: -move, left: 0, behavior: 'instant' }); // Reverted to top
+    if (state.keys.right) window.scrollBy({ top: move, left: 0, behavior: 'instant' });
+    if (state.keys.left) window.scrollBy({ top: -move, left: 0, behavior: 'instant' });
 
     playerInner.style.setProperty('--facing', state.keys.right ? '1' : (state.keys.left ? '-1' : playerInner.style.getPropertyValue('--facing') || '1'));
     playerInner.classList.toggle('player-running', state.keys.right || state.keys.left);
@@ -309,52 +311,54 @@ function gameLoop(time, deltaTime) {
 
     // --- Collision Detection & Resolution ---
     let onAnyPlatform = null;
-    let horizontalCollision = false; // Still need this to detect if player is horizontally blocked
-    let verticalScrollBlocked = false;
+    let horizontalCollision = false;
+    let horizontalPenetration = 0; // For push-out calculation
 
     for (const event of eventElements) {
         if (!event.walls || event.walls.length === 0) continue;
 
         const obsRect = event.getBoundingClientRect();
-        // Check if event is within a reasonable vertical range of the viewport
         if (obsRect.bottom < 0 || obsRect.top > window.innerHeight) continue; 
 
         for (const wall of event.walls) {
             const wallRect = wall.getBoundingClientRect();
             
-            // Create a predicted player rect for the new position
             const playerRect = {
                 left: playerRectBeforeMove.left,
                 right: playerRectBeforeMove.right,
                 top: playerRectBeforeMove.top - (prevY - currentY),
                 bottom: playerRectBeforeMove.bottom - (prevY - currentY),
+                width: playerRectBeforeMove.width,
             };
 
             if (playerRect.left < wallRect.right && playerRect.right > wallRect.left &&
                 playerRect.top < wallRect.bottom && playerRect.bottom > wallRect.top) {
                 
-                const isPlatform = wall.classList.contains('platform-surface');
                 const prevPlayerBottom = playerRectBeforeMove.bottom;
+                const isHorizontalWall = wall.classList.contains('wall-horizontal');
 
-                // 1. Landing on a platform
-                if (isPlatform && state.velocityY >= 0 && prevPlayerBottom <= wallRect.top + 1) {
-                    currentY = prevY - (playerRectBeforeMove.bottom - wallRect.top);
-                    state.velocityY = 0;
-                    onAnyPlatform = wall;
-                    break; 
-                }
-
-                // 2. General collision resolution
-                const overlapX = Math.min(playerRect.right, wallRect.right) - Math.max(playerRect.left, wallRect.left);
-                const overlapY = Math.min(playerRect.bottom, wallRect.bottom) - Math.max(playerRect.top, wallRect.top);
-
-                if (overlapX < overlapY) { // Horizontal collision (wall passing through player's fixed X)
-                    horizontalCollision = true; // Mark that horizontal movement of wall is blocked
-                } else {
-                    // Hitting a ceiling
-                    if (state.velocityY < 0 && playerRect.top < wallRect.bottom) {
+                if (isHorizontalWall) {
+                    // Vertical collision logic
+                    if (state.velocityY >= 0 && prevPlayerBottom <= wallRect.top + 1) {
+                        currentY = prevY - (playerRectBeforeMove.bottom - wallRect.top);
+                        state.velocityY = 0;
+                        onAnyPlatform = wall;
+                        break; 
+                    }
+                    if (state.velocityY < 0 && playerRectBeforeMove.top >= wallRect.bottom - 1) {
                         currentY = prevY + (wallRect.bottom - playerRectBeforeMove.top);
                         state.velocityY = 0;
+                    }
+                } else {
+                    // Horizontal collision logic
+                    horizontalCollision = true;
+                    const playerCenter = playerRect.left + playerRect.width / 2;
+                    const wallCenter = wallRect.left + wallRect.width / 2;
+                    
+                    if (playerCenter < wallCenter) {
+                        horizontalPenetration = playerRect.right - wallRect.left;
+                    } else {
+                        horizontalPenetration = playerRect.left - wallRect.right;
                     }
                 }
             }
@@ -362,10 +366,10 @@ function gameLoop(time, deltaTime) {
         if (onAnyPlatform) break;
     }
 
-    if(horizontalCollision) {
-        // If horizontal collision, it means a wall tried to pass through player's fixed X.
-        // This implies the vertical scroll should be blocked for this frame.
-        window.scrollTo({ top: originalScrollY, behavior: 'instant' });
+    if (horizontalCollision) {
+        // Push out based on penetration depth to prevent getting stuck.
+        // This adjusts the scroll position that was just set.
+        window.scrollTo({ top: window.scrollY - horizontalPenetration, behavior: 'instant' });
     }
 
     // --- Update Player State & Position ---
@@ -374,7 +378,6 @@ function gameLoop(time, deltaTime) {
         state.onGround = false;
         state.isJumping = false;
     } else {
-        // Ground collision (player's y position is 0 relative to bottom:35vh)
         if (currentY > 0) {
             currentY = 0;
             state.velocityY = 0;
@@ -391,7 +394,6 @@ function gameLoop(time, deltaTime) {
     let isAnythingOverlapping = false;
     eventElements.forEach(event => {
         const obsRect = event.getBoundingClientRect();
-        // Check if event is within a reasonable vertical range of the viewport for collection
         if (obsRect.bottom < -200 || obsRect.top > window.innerHeight + 200) return;
 
         const dataId = parseInt(event.getAttribute('data-id'), 10);
@@ -412,7 +414,7 @@ function gameLoop(time, deltaTime) {
         if (isOverlappingBadge) {
             isAnythingOverlapping = true;
             finalizeCollection(event, actionJustPressed);
-        } else if (finalPlayerRect.left > obsRect.right + 150) { // Player passed event horizontally
+        } else if (finalPlayerRect.left > obsRect.right + 150) { 
             beingCollected.add(dataId);
             const delay = 300 + Math.random() * 200;
             const timeoutId = setTimeout(() => finalizeCollection(event, false), delay);
