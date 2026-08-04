@@ -238,7 +238,7 @@
       },
       "description": {
         "ko": "전남대학교 인공지능학부 (2022.03~)",
-        "en": "Chonnam National University, School of Artificial Intelligence (2022.03~)",
+        "en": "Chonnam National University, Artificial Intelligence (2022.03~)",
         "ja": "全南大学 人工知能学科 (2022.03~)"
       }
     },
@@ -345,7 +345,7 @@
       "items": [
         {
           "name": "Node.js",
-          "level": 5,
+          "level": 3,
           "width": "50%"
         }
       ]
@@ -379,8 +379,8 @@
           "width": "90%"
         },
         {
-          "name": "Jira, Slack, Notion",
-          "level": 8,
+          "name": "Jira, Notion",
+          "level": 6,
           "width": "85%"
         }
       ]
