@@ -1980,8 +1980,6 @@ button.action {
     font-size: 13px;
     font-weight: 700;
     color: #FFF;
-    transform: scale(0);
-    opacity: 0;
     transition: transform 0.3s, opacity 0.3s;
 }
 

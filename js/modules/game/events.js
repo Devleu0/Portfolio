@@ -1,6 +1,6 @@
 import { THEME, ICONS, buildLangAttrs, getStr, getCategoryColor, state, isMobile } from '../config.js';
 import { playSound } from '../audio.js';
-import { updateCounter, updateScoreDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from '../ui.js';
+import { updateCounter, updateScoreDisplay, updateComboDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from '../ui.js';
 import { gameState } from './state.js';
 
 export function createEvent(data, fallbackId) {
@@ -160,6 +160,7 @@ export function finalizeCollection(event, didAction) {
 
     updateCounter();
     updateScoreDisplay();
+    updateComboDisplay();
     gameState.pendingCollectTimeouts.delete(dataId);
     gameState.beingCollected.delete(dataId);
 

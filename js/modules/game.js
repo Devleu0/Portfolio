@@ -58,6 +58,7 @@ export function resetGame() {
     gameState.eventElements.forEach(el => el.classList.remove('collected'));
     updateCounter();
     updateScoreDisplay();
+    updateComboDisplay();
 
     const finalRankEl = document.getElementById('final-rank');
     if (finalRankEl) {

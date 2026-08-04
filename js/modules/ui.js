@@ -11,6 +11,11 @@ export function updateScoreDisplay() {
     if (scoreEl) scoreEl.textContent = state.totalScore;
 }
 
+export function updateComboDisplay() {
+    const comboEl = document.getElementById('combo-count');
+    if (comboEl) comboEl.textContent = state.comboCount;
+}
+
 export function triggerCollectEffect(eventEl, didAction = false, category = 'other') {
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave';
@@ -54,7 +59,7 @@ function createProgressMarkers() {
     const eventsData = getEventData();
     if (!progressBar || !eventsData || eventsData.length === 0) return;
 
-    const totalWidth = horizontalSection.scrollWidth - window.innerWidth;
+    const totalWidth = horizontalSection.scrollWidth - window.innerWIidth;
     if (totalWidth <= 0) return;
 
     eventsData.forEach(event => {
@@ -310,7 +315,6 @@ export function initUI() {
 
     // Also initialize the counter display
     updateCounter();
-
     // Simple smooth scroll for resume link
     const resumeLink = document.querySelector('a[href="#resume-section"]');
     if (resumeLink) {
@@ -320,6 +324,7 @@ export function initUI() {
         });
     }
 }
+
 
 // Combo System UI Functions
 export function triggerComboEffect(combo) {
