@@ -9,6 +9,10 @@
 //    그보다 얇지 않은 벽은 절대 건너뛸 수 없다.
 //  - 끼임(stuck) 방지: 판정이 "겹침 여부"(부등식)일 뿐 시간(time)을 나누는 수식이
 //    아니라서, 경계에 닿아만 있는 상태(overlap=false)는 충돌로 취급되지 않는다.
+//  - 성능/정확성: cacheWallRect로 벽 좌표를 프레임당 한 번만 읽어 캐싱한 뒤
+//    moveAxis에 넘긴다. moveAxis 내부(서브스텝 루프)에서는 getBoundingClientRect를
+//    전혀 호출하지 않으므로, 불필요한 레이아웃 재계산이 없고 프레임 내내 벽
+//    좌표가 고정된 값으로 유지된다는 것이 보장된다.
 
 /**
  * 두 사각형이 겹치는지 검사한다. 경계가 맞닿기만 한 경우(등호)는 겹침으로 보지
@@ -29,10 +33,21 @@ export function shiftRect(rect, dx, dy) {
 }
 
 /**
+ * 벽 DOM 요소의 화면 좌표를 한 번만 읽어 순수 객체로 캐싱한다.
+ * moveAxis는 이 캐시된 사각형만 사용하므로, 서브스텝을 아무리 많이 돌아도
+ * getBoundingClientRect()가 다시 호출되지 않는다.
+ */
+export function cacheWallRect(wallEl) {
+    const r = wallEl.getBoundingClientRect();
+    return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, el: wallEl };
+}
+
+/**
  * 한 축(x 또는 y)으로 delta만큼 이동을 시도하고 벽들과의 충돌을 해석한다.
  * @param {{left,right,top,bottom}} rect - 이동 시작 시점의 플레이어 사각형
  * @param {number} delta - 이번 프레임에 이동하려는 거리(부호 있음)
- * @param {Element[]} walls - 충돌 대상 벽 요소 목록
+ * @param {{left,right,top,bottom,el}[]} cachedWalls - cacheWallRect로 미리 캐싱한
+ *   벽 사각형 배열. DOM을 다시 읽지 않고 순수 수학 연산만 수행한다.
  * @param {'x'|'y'} axis - 이동시킬 축
  * @param {number} maxStep - 서브스텝 최대 크기(px). 벽을 건너뛰지 않으려면
  *   충돌 가능한 오브젝트 중 가장 얇은 두께보다 작아야 한다. 보통 플레이어
@@ -40,9 +55,10 @@ export function shiftRect(rect, dx, dy) {
  * @returns {{delta:number, collided:boolean, normal:number, wall:Element|null}}
  *   delta: 실제로 이동 가능했던 거리(막히면 벽 바로 앞에서 멈춘 값)
  *   normal: y축 기준 -1=바닥에 착지, 1=천장에 부딪힘 (x축은 참고용, 좌우 -1/1)
+ *   wall: 충돌한 벽의 원본 DOM 요소(cachedWalls[i].el)
  */
-export function moveAxis(rect, delta, walls, axis, maxStep = 8) {
-    if (delta === 0 || walls.length === 0) {
+export function moveAxis(rect, delta, cachedWalls, axis, maxStep = 8) {
+    if (delta === 0 || cachedWalls.length === 0) {
         return { delta, collided: false, normal: 0, wall: null };
     }
 
@@ -61,11 +77,10 @@ export function moveAxis(rect, delta, walls, axis, maxStep = 8) {
             : shiftRect(rect, 0, nextMoved);
 
         let blocked = false;
-        for (const wall of walls) {
-            const wallRect = wall.getBoundingClientRect();
+        for (const wallRect of cachedWalls) {
             if (rectsOverlap(testRect, wallRect)) {
                 blocked = true;
-                hitWall = wall;
+                hitWall = wallRect.el;
                 break;
             }
         }

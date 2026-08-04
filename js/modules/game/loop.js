@@ -1,6 +1,6 @@
 import { isMobile, state } from '../config.js';
 import { gameState } from './state.js';
-import { moveAxis, shiftRect } from './collision.js';
+import { moveAxis, shiftRect, cacheWallRect } from './collision.js';
 import { finalizeCollection } from './events.js';
 import { doJump } from './player.js';
 
@@ -31,14 +31,16 @@ export function gameLoop(time, deltaTime) {
     }
     const yDelta = state.velocityY * timeScale;
 
-    // 근처 이벤트의 벽들을 한 번만 모아서 X축/Y축 이동 해석에 재사용한다.
+    // 근처 이벤트의 벽 좌표를 프레임당 한 번만 읽어 캐싱한다. moveAxis는 이후
+    // 이 캐시된 사각형만 사용하므로, 서브스텝을 몇 번을 돌든 DOM 레이아웃을
+    // 다시 읽지 않고, 프레임 내내 좌표가 고정되어 있음이 보장된다.
     const nearbyWalls = [];
     for (const event of gameState.eventElements) {
         if (!event.walls || event.walls.length === 0) continue;
         const obsRect = event.getBoundingClientRect();
         if (obsRect.right < -50 || obsRect.left > window.innerWidth + 50) continue;
         for (const wall of event.walls) {
-            nearbyWalls.push(wall);
+            nearbyWalls.push(cacheWallRect(wall));
         }
     }
 
@@ -55,6 +57,7 @@ export function gameLoop(time, deltaTime) {
     if (scrollDelta !== 0) {
         const xResult = moveAxis(playerRect, scrollDelta, nearbyWalls, 'x', maxStep);
         xMoved = xResult.delta;
+        window.scrollBy({ top: xMoved, left: 0, behavior: 'instant' });
     }
 
     // ---- 2) Y축(수직) 이동 해석 ----
@@ -64,9 +67,6 @@ export function gameLoop(time, deltaTime) {
     const playerRectAfterX = shiftRect(playerRect, xMoved, 0);
     const yResult = moveAxis(playerRectAfterX, yDelta, nearbyWalls, 'y', maxStep);
     gsap.set(player, { y: prevY + yResult.delta });
-    if (xMoved !== 0) {
-        window.scrollBy({ top: xMoved, left: 0, behavior: 'instant' });
-    }
 
     if (yResult.collided) {
         if (yResult.normal === -1) {
