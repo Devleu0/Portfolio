@@ -1,5 +1,5 @@
 import { state, THEME, getStr, mobileScale, getCategoryColor, effectOffset } from './app-config.js';
-import { getEventData, getEventElements, resetGame, getPlayerElement } from './game-core.js';
+import { getEventData, getEventElements, resetGame, getPlayerElement } from './game-manager.js';
 
 export function updateCounter() {
     const counterEl = document.getElementById('counter-current');
