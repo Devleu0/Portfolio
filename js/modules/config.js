@@ -54,7 +54,7 @@ export const SKY_STOPS = THEME === 'minimal' ? ['#020617', '#0F172A', '#1E293B',
 // 애플리케이션의 모든 모듈이 공유하는 상태값들을 담고 있습니다.
 export const state = {
     // 시스템 상태
-    currentLang: 'ko',          // 현재 선택된 언어
+    currentLang: 'en',          // 현재 선택된 언어
     isScrolledToEnd: false,     // 스크롤이 끝까지 도달했는지 여부
     currentFinaleP: 0,          // 피날레 구간 진행률 (0 to 1)
     LAST_ZONE_START: 0,         // 피날레 구역이 시작되는 스크롤 위치
@@ -85,6 +85,7 @@ export const state = {
 // ---------------------------------------------------------------------------------
 // 게임플레이 상수
 // ---------------------------------------------------------------------------------
+export const effectOffset = { x: 80, y: -80 }; // 이펙트 위치 오프셋
 export const PERFECT_THRESHOLD_MS = 120; // 'Perfect' 판정을 위한 최대 시간 (ms)
 export const GOOD_THRESHOLD_MS = 200;  // 'Good' 판정을 위한 최대 시간 (ms)
 

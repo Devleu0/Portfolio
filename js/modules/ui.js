@@ -1,5 +1,5 @@
-import { state, THEME, getStr, mobileScale, getCategoryColor } from './config.js';
-import { getEventData, getEventElements, resetGame } from './game.js';
+import { state, THEME, getStr, mobileScale, getCategoryColor, effectOffset } from './config.js';
+import { getEventData, getEventElements, resetGame, getPlayerElement } from './game.js';
 
 export function updateCounter() {
     const counterEl = document.getElementById('counter-current');
@@ -17,6 +17,7 @@ export function updateComboDisplay() {
 }
 
 export function triggerCollectEffect(eventEl, judgement = 'miss', category = 'other') {
+    // 사각 애니메이션 (이벤트 기준)
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave';
     
@@ -32,6 +33,7 @@ export function triggerCollectEffect(eventEl, judgement = 'miss', category = 'ot
     eventEl.appendChild(wave);
     setTimeout(() => wave.remove(), 500);
 
+    // 텍스트 이펙트 (플레이어 기준)
     let popupText = '';
     let popupColor = '';
     let popupSize = '1.5em';
@@ -47,19 +49,22 @@ export function triggerCollectEffect(eventEl, judgement = 'miss', category = 'ot
             popupSize = '1.2em';
             break;
         case 'miss':
-            popupText = 'MISS';
+            popupText = 'NORMAL';
             popupColor = '#94A3B8'; // Slate 400
             popupSize = '1.0em';
             break;
     }
 
     if (popupText) {
+        const playerEl = getPlayerElement();
+        if (!playerEl) return;
+        const playerRect = playerEl.getBoundingClientRect();
+
         const popup = document.createElement('div');
         popup.className = `score-popup score-popup-${judgement}`;
         popup.textContent = popupText;
 
-        const obsRect = eventEl.getBoundingClientRect();
-        popup.style.cssText = `position: fixed; left: ${obsRect.right}px; top: ${obsRect.top + obsRect.height / 2}px; transform: translateX(10px) translateY(-90%); color: ${popupColor}; font-weight: bold; white-space: nowrap; font-size: ${popupSize}; z-index: 100; pointer-events: none;`;
+        popup.style.cssText = `position: fixed; left: ${playerRect.right + effectOffset.x}px; top: ${playerRect.top + playerRect.height / 2 + effectOffset.y}px; transform: translateX(10px) translateY(-90%); color: ${popupColor}; font-weight: bold; white-space: nowrap; font-size: ${popupSize}; z-index: 100; pointer-events: none;`;
         document.body.appendChild(popup);
 
         gsap.fromTo(popup,
