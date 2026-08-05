@@ -204,16 +204,8 @@ function initStatCounter() {
                     B: estimatedMaxScore * 0.4,
                 };
 
-                let rank = 'C';
-                let rankColor = '#94a3b8';
-                if (state.totalScore >= rankThresholds.S) { rank = 'S'; rankColor = '#fbbf24'; }
-                else if (state.totalScore >= rankThresholds.A) { rank = 'A'; rankColor = '#f87171'; }
-                else if (state.totalScore >= rankThresholds.B) { rank = 'B'; rankColor = '#60a5fa'; }
-                
-                if (state.maxCombo > 0 && state.maxCombo >= totalObjects) {
-                    rank = 'GOD';
-                    rankColor = '#cb0000'; 
-                }
+                let rank = 'S';
+                let rankColor = '#fbbf24'; // Color for S rank
 
                 setTimeout(() => {
                     finalRankEl.textContent = rank;
