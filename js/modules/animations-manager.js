@@ -2,8 +2,8 @@
 // GSAP를 사용한 스크롤 기반 애니메이션 관리 모듈
 // =================================================================================
 
-import { isMobile, mobileScale, getSkyColor, state } from './config.js';
-import { getPlayerElement, getPlayerWrapper } from './game.js';
+import { isMobile, mobileScale, getSkyColor, state } from './app-config.js';
+import { getPlayerElement, getPlayerWrapper } from './game-core.js';
 
 /**
  * 모바일 환경에서 각종 요소(구역, 배경 등)의 크기를 조정합니다.

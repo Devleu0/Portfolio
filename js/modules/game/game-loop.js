@@ -1,9 +1,9 @@
-import { isMobile, state, PERFECT_THRESHOLD_MS, GOOD_THRESHOLD_MS } from '../config.js';
-import { gameState } from './state.js';
-import { moveAxis, shiftRect, cacheWallRect } from './collision.js';
-import { processInteraction } from './events.js';
-import { doJump } from './player.js';
-import { playSound } from '../audio.js';
+import { isMobile, state, PERFECT_THRESHOLD_MS, GOOD_THRESHOLD_MS } from '../app-config.js';
+import { gameState } from './game-state.js';
+import { moveAxis, shiftRect, cacheWallRect } from './collision-system.js';
+import { processInteraction } from './game-events.js';
+import { doJump } from './player-entity.js';
+import { playSound } from '../audio-manager.js';
 
 export function gameLoop(time, deltaTime) {
     const timeScale = (deltaTime / (1000 / 60));

@@ -2,13 +2,13 @@
 // 게임 모듈 진입점
 // =================================================================================
 
-import { state, isMobile, mobileScale } from './config.js';
-import { createPlayer, getPlayerElement as getPlayerElementInternal, getPlayerWrapper as getPlayerWrapperInternal } from './game/player.js';
-import { createEvent } from './game/events.js';
-import { setupControls } from './game/controls.js';
-import { gameLoop } from './game/loop.js';
-import { gameState } from './game/state.js';
-import { hideComboCounter, updateCounter, updateScoreDisplay } from './ui.js';
+import { state, isMobile, mobileScale } from './app-config.js';
+import { createPlayer, getPlayerElement as getPlayerElementInternal, getPlayerWrapper as getPlayerWrapperInternal } from './game/player-entity.js';
+import { createEvent } from './game/game-events.js';
+import { setupControls } from './game/input-controls.js';
+import { gameLoop } from './game/game-loop.js';
+import { gameState } from './game/game-state.js';
+import { hideComboCounter, updateCounter, updateScoreDisplay } from './ui-components.js';
 
 export function getEventData() {
     return gameState.eventsData;

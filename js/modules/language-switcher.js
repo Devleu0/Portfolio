@@ -1,6 +1,6 @@
-import { state } from './config.js';
-import { update as updateRenderer } from './renderer.js';
-import { initSkillBarAnimations } from './animations.js';
+import { state } from './app-config.js';
+import { update as updateRenderer } from './rendering.js';
+import { initSkillBarAnimations } from './animations-manager.js';
 
 export function updateLanguage(lang, rerenderFull = true) {
     state.currentLang = lang;

@@ -1,7 +1,7 @@
-import { THEME, ICONS, buildLangAttrs, getStr, getCategoryColor, state, isMobile } from '../config.js';
-import { playSound } from '../audio.js';
-import { updateCounter, updateScoreDisplay, updateComboDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from '../ui.js';
-import { gameState } from './state.js';
+import { THEME, ICONS, buildLangAttrs, getStr, getCategoryColor, state, isMobile } from '../app-config.js';
+import { playSound } from '../audio-manager.js';
+import { updateCounter, updateScoreDisplay, updateComboDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from '../ui-components.js';
+import { gameState } from './game-state.js';
 
 export function createEvent(data, fallbackId) {
     const hasImg = !!data.customIcon;

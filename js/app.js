@@ -6,13 +6,13 @@
 // ---------------------------------------------------------------------------------
 // 모듈 임포트
 // ---------------------------------------------------------------------------------
-import { initLanguageSwitcher } from './modules/language.js';
-import { initAudio } from './modules/audio.js';
-import { initGame } from './modules/game.js';
-import { initUI } from './modules/ui.js';
-import { initAnimations } from './modules/animations.js';
-import { init as initRenderer } from './modules/renderer.js';
-import { state } from './modules/config.js';
+import { initLanguageSwitcher } from './modules/language-switcher.js';
+import { initAudio } from './modules/audio-manager.js';
+import { initGame } from './modules/game-core.js';
+import { initUI } from './modules/ui-components.js';
+import { initAnimations } from './modules/animations-manager.js';
+import { init as initRenderer } from './modules/rendering.js';
+import { state } from './modules/app-config.js';
 
 // ---------------------------------------------------------------------------------
 // Zone(구역) 요소 생성 함수

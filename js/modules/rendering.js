@@ -1,4 +1,4 @@
-import { state } from './config.js';
+import { state } from './app-config.js';
 
 let resumeData = null;
 let uiTextData = null;

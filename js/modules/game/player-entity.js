@@ -1,6 +1,6 @@
-import { isMobile, state } from '../config.js';
-import { playSound } from '../audio.js';
-import { gameState } from './state.js';
+import { isMobile, state } from '../app-config.js';
+import { playSound } from '../audio-manager.js';
+import { gameState } from './game-state.js';
 
 const JUMP_INITIAL_VELOCITY = isMobile ? -16 : -20;
 const GRAVITY = isMobile ? 0.7 : 0.9;
