@@ -30,11 +30,17 @@ export function createEvent(data, fallbackId) {
     };
 
     if (elevation > 0) {
-        const pole = document.createElement('div');
-        pole.className = 'event-pole';
-        pole.style.bottom = `-${elevation}px`;
-        pole.style.height = `${elevation}px`;
-        wrapper.appendChild(pole);
+        if (data.isFloatingPlatform) {
+            const platform = document.createElement('div');
+            platform.className = 'floating-platform debug-collision platform-surface frame-wall wall-horizontal wall-top';
+            wrapper.appendChild(platform);
+        } else {
+            const pole = document.createElement('div');
+            pole.className = 'event-pole';
+            pole.style.bottom = `-${elevation}px`;
+            pole.style.height = `${elevation}px`;
+            wrapper.appendChild(pole);
+        }
     }
 
     const event = document.createElement('div');
@@ -73,7 +79,7 @@ export function createEvent(data, fallbackId) {
         frame.appendChild(event);
 
         const wallDefs = {
-            top: '<div class="frame-wall wall-horizontal wall-top platform-surface"></div>',
+            top: `<div class="frame-wall wall-horizontal wall-top platform-surface"${data.category === 'jump_pad' ? ' data-is-jump-pad="true"' : ''}></div>`,
             bottom: '<div class="frame-wall wall-horizontal wall-bottom platform-surface"></div>',
             left: '<div class="frame-wall wall-vertical wall-left platform-surface"></div>',
             right: '<div class="frame-wall wall-vertical wall-right platform-surface"></div>',
@@ -96,6 +102,17 @@ export function createEvent(data, fallbackId) {
         wrapper.walls = [];
     }
 
+    // 부유 발판이 있을 경우, 충돌 감지 대상에 추가
+    if (data.isFloatingPlatform) {
+        const platform = wrapper.querySelector('.floating-platform');
+        if (platform) {
+            if (!wrapper.walls) {
+                wrapper.walls = [];
+            }
+            wrapper.walls.push(platform);
+        }
+    }
+
     const tag = document.createElement('div');
     tag.className = 'info-tag';
     const catName = (data.category || 'milestone').toUpperCase();
@@ -106,10 +123,10 @@ export function createEvent(data, fallbackId) {
         const tooltip = document.createElement('div');
         tooltip.id = 'tutorial-tooltip';
         tooltip.className = 'tutorial-tooltip lang-text';
-        tooltip.setAttribute('data-ko', '타이밍에 맞춰 점프/숙이기(W,S) 입력!');
-        tooltip.setAttribute('data-en', 'Jump or Duck (W/S) at the exact timing!');
-        tooltip.setAttribute('data-ja', 'タイミングに合わせてジャンプ/しゃがむ(W/S)入力！');
-        tooltip.innerHTML = getStr({ ko: '타이밍에 맞춰 점프/숙이기(W,S) 입력!', en: 'Jump or Duck (W/S) at the exact timing!', ja: 'タイミングに合わせてジャンプ/しゃがむ(W/S)入力！' }, state.currentLang);
+        tooltip.setAttribute('data-ko', '점프/숙이기(W,S) 입력!');
+        tooltip.setAttribute('data-en', 'Jump or Duck (W/S)!');
+        tooltip.setAttribute('data-ja', 'ジャンプ/しゃがむ(W/S)入力！');
+        tooltip.innerHTML = getStr({ ko: '점프/숙이기(W,S) 입력!', en: 'Jump or Duck (W/S)!', ja: 'ジャンプ/しゃがむ(W/S)入力！' }, state.currentLang);
         wrapper.appendChild(tooltip);
     }
 
@@ -124,39 +141,17 @@ export function processInteraction(event, judgement) {
     gameState.beingCollected.delete(dataId);
     gameState.pendingCollectTimeouts.delete(dataId);
 
-    const isSuccess = judgement === 'perfect' || judgement === 'good';
+    // 모든 상호작용을 'perfect'로 처리
+    state.comboCount++;
+    state.maxCombo = Math.max(state.maxCombo, state.comboCount);
 
-    if (isSuccess) {
-        state.comboCount++;
-        state.maxCombo = Math.max(state.maxCombo, state.comboCount);
-    }
+    const multiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
+    state.totalScore += Math.round(500 * multiplier);
+    state.perfectCount++;
+    triggerComboEffect(state.comboCount);
 
-    switch (judgement) {
-        case 'perfect':
-            const multiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
-            state.totalScore += Math.round(500 * multiplier);
-            state.perfectCount++;
-            triggerComboEffect(state.comboCount);
-            break;
-        case 'good':
-            state.totalScore += 250;
-            state.goodCount++;
-            break;
-        case 'miss':
-            if (state.comboCount >= 5) {
-                showComboBreakToast(state.comboCount);
-            }
-            state.lastComboBeforeReset = state.comboCount;
-            state.comboCount = 0;
-            hideComboCounter();
-            state.totalScore += 50;
-            state.missCount++;
-            break;
-    }
-    
-    const eventBadge = event.querySelector('.event-badge');
     const targetEl = event.querySelector('.cyber-frame') || event;
-    triggerCollectEffect(targetEl, judgement, event.dataset.category);
+    triggerCollectEffect(targetEl, 'perfect', event.dataset.category);
     event.classList.add('collected');
 
     playSound('./audio/coin.mp3');
@@ -173,11 +168,6 @@ export function processInteraction(event, judgement) {
     updateComboDisplay();
 
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        try { navigator.vibrate(isSuccess ? 80 : 40); } catch (err) { }
+        try { navigator.vibrate(80); } catch (err) { }
     }
-}
-
-
-export function finalizeCollection(event, isMiss) {
-    processInteraction(event, isMiss ? 'miss' : 'miss');
 }

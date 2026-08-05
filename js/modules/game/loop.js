@@ -1,8 +1,9 @@
 import { isMobile, state, PERFECT_THRESHOLD_MS, GOOD_THRESHOLD_MS } from '../config.js';
 import { gameState } from './state.js';
 import { moveAxis, shiftRect, cacheWallRect } from './collision.js';
-import { finalizeCollection, processInteraction } from './events.js';
+import { processInteraction } from './events.js';
 import { doJump } from './player.js';
+import { playSound } from '../audio.js';
 
 export function gameLoop(time, deltaTime) {
     const timeScale = (deltaTime / (1000 / 60));
@@ -57,13 +58,20 @@ export function gameLoop(time, deltaTime) {
     gsap.set(player, { y: prevY + yResult.delta });
 
     if (yResult.collided) {
-        if (yResult.normal === -1) {
+        // 점프 패드 로직
+        if (yResult.wall.dataset.isJumpPad === 'true' && yResult.normal === -1) {
+            state.velocityY = -25; // 강력한 점프
+            playSound('./audio/jump.mp3');
+            state.onPlatform = null;
+            state.onGround = false;
+            state.isJumping = true; // 점프 상태로 설정
+        } else if (yResult.normal === -1) { // 일반 플랫폼에 착지
             state.velocityY = 0;
             state.onPlatform = yResult.wall;
             state.onGround = false;
             state.isJumping = false;
         }
-        if (yResult.normal === 1) {
+        if (yResult.normal === 1) { // 천장에 머리 부딪힘
             state.velocityY = 0;
         }
     } else {
@@ -104,30 +112,11 @@ export function gameLoop(time, deltaTime) {
         );
 
         if (isOverlappingBadge) {
-            // 충돌 발생! 이제 액션 타이밍을 확인한다.
-            const timeDiff = Math.abs(performance.now() - gameState.actionTimestamp);
-            let judgement;
-
-            if (gameState.actionJustPressed && timeDiff <= GOOD_THRESHOLD_MS) {
-                // 액션이 제시간에 이루어짐
-                judgement = (timeDiff <= PERFECT_THRESHOLD_MS) ? 'perfect' : 'good';
-            } else {
-                // 액션이 없었거나 너무 늦음
-                judgement = 'miss';
-            }
-            
-            processInteraction(event, judgement);
-
-            // 판정에 사용된 액션 플래그를 즉시 리셋하여,
-            // 하나의 액션이 여러 이벤트에 중복으로 적용되지 않도록 한다.
-            gameState.actionJustPressed = false;
-            
+            // 충돌 시 즉시 'perfect'로 처리
+            processInteraction(event, 'perfect');
         } else if (finalPlayerRect.left > obsRect.right + 150) {
-            // 이벤트를 완전히 지나친 경우 'miss' 처리
-            gameState.beingCollected.add(dataId);
-            const delay = 300 + Math.random() * 200;
-            const timeoutId = setTimeout(() => finalizeCollection(event, true), delay); // true for miss
-            gameState.pendingCollectTimeouts.set(dataId, timeoutId);
+            // 이벤트를 완전히 지나친 경우에도 'perfect'로 자동 획득 처리
+            processInteraction(event, 'perfect');
         }
     });
 

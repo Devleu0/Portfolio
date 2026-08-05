@@ -742,7 +742,7 @@
       function emptyLang() { return { ko: '', en: '', ja: '' }; }
       function uid(prefix) { return prefix + '-' + Date.now().toString(36) + Math.floor(Math.random() * 1000); }
 
-      const CATEGORY_OPTIONS = ['birth', 'enrollment', 'graduation', 'military', 'certificate', 'project', 'internship', 'other'];
+      const CATEGORY_OPTIONS = ['birth', 'enrollment', 'graduation', 'military', 'certificate', 'project', 'internship', 'jump_pad', 'other'];
 
       // ---- schemas describe how to render list rows + edit forms for each array item ----
 
@@ -772,6 +772,7 @@
           { key: 'id', type: 'number', label: 'ID' },
           { key: 'pos', type: 'number', label: 'Position (pos)' },
           { key: 'elevation', type: 'number', label: 'Elevation' },
+          { key: 'isFloatingPlatform', type: 'checkbox', label: '부유 발판 (isFloatingPlatform)' },
           { key: 'color', type: 'color', label: 'Color' },
           { key: 'category', type: 'select', label: 'Category', options: CATEGORY_OPTIONS },
           { key: 'title', type: 'lang', label: 'Title' },
@@ -1334,13 +1335,24 @@
         }
 
         if (field.type === 'select') {
-          const val = item[field.key] ?? 0;
+          const val = item[field.key];
+          const isNumeric = !isNaN(parseInt(field.options[0].split(':')[0], 10));
+
           wrap.innerHTML = `
       <label>${field.label}</label>
-      <select>${field.options.map(o => `<option value="${o}" ${val === parseInt(o.split(':')[0], 10) ? 'selected' : ''}>${o}</option>`).join('')}</select>
+      <select>${field.options.map(o => {
+        const currentOptionValue = isNumeric ? parseInt(o.split(':')[0], 10) : o;
+        // For numeric, if val is undefined, default to 0. For string, if undefined, it won't match anything which is fine.
+        const selected = (val ?? (isNumeric ? 0 : '')) === currentOptionValue;
+        return `<option value="${o}" ${selected ? 'selected' : ''}>${o}</option>`;
+      }).join('')}</select>
     `;
           wrap.querySelector('select').addEventListener('change', (e) => {
-            item[field.key] = parseInt(e.target.value.split(':')[0], 10);
+            if (isNumeric) {
+              item[field.key] = parseInt(e.target.value.split(':')[0], 10);
+            } else {
+              item[field.key] = e.target.value;
+            }
             markDirty(tab.file);
             updateListRowLabel(item, tab);
           });
