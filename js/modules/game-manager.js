@@ -74,12 +74,7 @@ export function resetGame() {
         gsap.set(tt, { opacity: 1, y: 0 });
     }
 
-    state.isStatSectionCounted = false;
-    const maxComboStatEl = document.getElementById('max-combo-stat');
-    if (maxComboStatEl) {
-        maxComboStatEl.textContent = '0';
-        maxComboStatEl.dataset.target = '0';
-    }
+
 }
 
 export async function initGame() {

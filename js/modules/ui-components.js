@@ -175,10 +175,7 @@ function initStatCounter() {
         if (entries[0].isIntersecting && !state.isStatSectionCounted) {
             state.isStatSectionCounted = true;
 
-            const maxComboStatEl = document.getElementById('max-combo-stat');
-            if (maxComboStatEl) {
-                maxComboStatEl.dataset.target = state.maxCombo;
-            }
+
 
             document.querySelectorAll('.stat-num:not(#final-rank)').forEach(el => {
                 const target = parseInt(el.getAttribute('data-target'), 10) || 0;
