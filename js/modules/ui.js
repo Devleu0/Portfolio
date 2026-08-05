@@ -16,70 +16,45 @@ export function updateComboDisplay() {
     if (comboEl) comboEl.textContent = state.comboCount;
 }
 
-export function triggerCollectEffect(eventEl, judgement = 'miss', category = 'other') {
+export function triggerCollectEffect(eventEl, judgement = 'perfect', category = 'other') {
     // 사각 애니메이션 (이벤트 기준)
     const wave = document.createElement('div');
-    wave.className = 'collect-shockwave';
+    wave.className = 'collect-shockwave is-perfect';
     
     const catColor = getCategoryColor(category);
     wave.style.setProperty('--wave-color', catColor);
-
-    if (judgement === 'perfect') {
-        wave.classList.add('is-perfect');
-    } else if (judgement === 'good') {
-        wave.classList.add('is-good');
-    }
 
     eventEl.appendChild(wave);
     setTimeout(() => wave.remove(), 500);
 
     // 텍스트 이펙트 (플레이어 기준)
-    let popupText = '';
-    let popupColor = '';
-    let popupSize = '1.5em';
+    const popupText = 'PERFECT!';
+    const popupColor = 'gold';
+    const popupSize = '1.5em';
 
-    switch (judgement) {
-        case 'perfect':
-            popupText = 'PERFECT!';
-            popupColor = 'gold';
-            break;
-        case 'good':
-            popupText = 'GOOD';
-            popupColor = '#C0C0C0'; // Silver
-            popupSize = '1.2em';
-            break;
-        case 'miss':
-            popupText = 'NORMAL';
-            popupColor = '#94A3B8'; // Slate 400
-            popupSize = '1.0em';
-            break;
-    }
+    const playerEl = getPlayerElement();
+    if (!playerEl) return;
+    const playerRect = playerEl.getBoundingClientRect();
 
-    if (popupText) {
-        const playerEl = getPlayerElement();
-        if (!playerEl) return;
-        const playerRect = playerEl.getBoundingClientRect();
+    const popup = document.createElement('div');
+    popup.className = `score-popup score-popup-perfect`;
+    popup.textContent = popupText;
 
-        const popup = document.createElement('div');
-        popup.className = `score-popup score-popup-${judgement}`;
-        popup.textContent = popupText;
+    popup.style.cssText = `position: fixed; left: ${playerRect.right + effectOffset.x}px; top: ${playerRect.top + playerRect.height / 2 + effectOffset.y}px; transform: translateX(10px) translateY(-90%); color: ${popupColor}; font-weight: bold; white-space: nowrap; font-size: ${popupSize}; z-index: 100; pointer-events: none;`;
+    document.body.appendChild(popup);
 
-        popup.style.cssText = `position: fixed; left: ${playerRect.right + effectOffset.x}px; top: ${playerRect.top + playerRect.height / 2 + effectOffset.y}px; transform: translateX(10px) translateY(-90%); color: ${popupColor}; font-weight: bold; white-space: nowrap; font-size: ${popupSize}; z-index: 100; pointer-events: none;`;
-        document.body.appendChild(popup);
-
-        gsap.fromTo(popup,
-            { opacity: 0, yPercent: 50, scale: 0.8 },
-            {
-                opacity: 1, yPercent: -50, scale: 1, duration: 0.3, ease: 'power2.out',
-                onComplete: () => {
-                    gsap.to(popup, {
-                        opacity: 0, yPercent: -100, duration: 0.5, delay: 0.5, ease: 'power1.in',
-                        onComplete: () => popup.remove()
-                    });
-                }
+    gsap.fromTo(popup,
+        { opacity: 0, yPercent: 50, scale: 0.8 },
+        {
+            opacity: 1, yPercent: -50, scale: 1, duration: 0.3, ease: 'power2.out',
+            onComplete: () => {
+                gsap.to(popup, {
+                    opacity: 0, yPercent: -100, duration: 0.5, delay: 0.5, ease: 'power1.in',
+                    onComplete: () => popup.remove()
+                });
             }
-        );
-    }
+        }
+    );
 }
 
 function createProgressMarkers() {

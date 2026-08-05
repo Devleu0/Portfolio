@@ -114,6 +114,9 @@ export function gameLoop(time, deltaTime) {
         if (isOverlappingBadge) {
             // 충돌 시 즉시 'perfect'로 처리
             processInteraction(event, 'perfect');
+        } else if (finalPlayerRect.left > obsRect.right + 150) {
+            // 이벤트를 완전히 지나친 경우에도 'perfect'로 자동 획득 처리
+            processInteraction(event, 'perfect');
         }
     });
 

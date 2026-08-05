@@ -106,10 +106,10 @@ export function createEvent(data, fallbackId) {
         const tooltip = document.createElement('div');
         tooltip.id = 'tutorial-tooltip';
         tooltip.className = 'tutorial-tooltip lang-text';
-        tooltip.setAttribute('data-ko', '타이밍에 맞춰 점프/숙이기(W,S) 입력!');
-        tooltip.setAttribute('data-en', 'Jump or Duck (W/S) at the exact timing!');
-        tooltip.setAttribute('data-ja', 'タイミングに合わせてジャンプ/しゃがむ(W/S)入力！');
-        tooltip.innerHTML = getStr({ ko: '타이밍에 맞춰 점프/숙이기(W,S) 입력!', en: 'Jump or Duck (W/S) at the exact timing!', ja: 'タイミングに合わせてジャンプ/しゃがむ(W/S)入力！' }, state.currentLang);
+        tooltip.setAttribute('data-ko', '점프/숙이기(W,S) 입력!');
+        tooltip.setAttribute('data-en', 'Jump or Duck (W/S)!');
+        tooltip.setAttribute('data-ja', 'ジャンプ/しゃがむ(W/S)入力！');
+        tooltip.innerHTML = getStr({ ko: '점프/숙이기(W,S) 입력!', en: 'Jump or Duck (W/S)!', ja: 'ジャンプ/しゃがむ(W/S)入力！' }, state.currentLang);
         wrapper.appendChild(tooltip);
     }
 
@@ -124,39 +124,17 @@ export function processInteraction(event, judgement) {
     gameState.beingCollected.delete(dataId);
     gameState.pendingCollectTimeouts.delete(dataId);
 
-    const isSuccess = judgement === 'perfect' || judgement === 'good';
+    // 모든 상호작용을 'perfect'로 처리
+    state.comboCount++;
+    state.maxCombo = Math.max(state.maxCombo, state.comboCount);
 
-    if (isSuccess) {
-        state.comboCount++;
-        state.maxCombo = Math.max(state.maxCombo, state.comboCount);
-    }
+    const multiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
+    state.totalScore += Math.round(500 * multiplier);
+    state.perfectCount++;
+    triggerComboEffect(state.comboCount);
 
-    switch (judgement) {
-        case 'perfect':
-            const multiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
-            state.totalScore += Math.round(500 * multiplier);
-            state.perfectCount++;
-            triggerComboEffect(state.comboCount);
-            break;
-        case 'good':
-            state.totalScore += 250;
-            state.goodCount++;
-            break;
-        case 'miss':
-            if (state.comboCount >= 5) {
-                showComboBreakToast(state.comboCount);
-            }
-            state.lastComboBeforeReset = state.comboCount;
-            state.comboCount = 0;
-            hideComboCounter();
-            state.totalScore += 50;
-            state.missCount++;
-            break;
-    }
-    
-    const eventBadge = event.querySelector('.event-badge');
     const targetEl = event.querySelector('.cyber-frame') || event;
-    triggerCollectEffect(targetEl, judgement, event.dataset.category);
+    triggerCollectEffect(targetEl, 'perfect', event.dataset.category);
     event.classList.add('collected');
 
     playSound('./audio/coin.mp3');
@@ -173,6 +151,6 @@ export function processInteraction(event, judgement) {
     updateComboDisplay();
 
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        try { navigator.vibrate(isSuccess ? 80 : 40); } catch (err) { }
+        try { navigator.vibrate(80); } catch (err) { }
     }
 }
