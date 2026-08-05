@@ -1,7 +1,7 @@
 import { isMobile, state, PERFECT_THRESHOLD_MS, GOOD_THRESHOLD_MS } from '../config.js';
 import { gameState } from './state.js';
 import { moveAxis, shiftRect, cacheWallRect } from './collision.js';
-import { finalizeCollection, processInteraction } from './events.js';
+import { processInteraction } from './events.js';
 import { doJump } from './player.js';
 
 export function gameLoop(time, deltaTime) {
@@ -124,10 +124,7 @@ export function gameLoop(time, deltaTime) {
             
         } else if (finalPlayerRect.left > obsRect.right + 150) {
             // 이벤트를 완전히 지나친 경우 'miss' 처리
-            gameState.beingCollected.add(dataId);
-            const delay = 300 + Math.random() * 200;
-            const timeoutId = setTimeout(() => finalizeCollection(event, true), delay); // true for miss
-            gameState.pendingCollectTimeouts.set(dataId, timeoutId);
+            processInteraction(event, 'miss');
         }
     });
 

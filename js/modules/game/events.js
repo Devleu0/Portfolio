@@ -176,8 +176,3 @@ export function processInteraction(event, judgement) {
         try { navigator.vibrate(isSuccess ? 80 : 40); } catch (err) { }
     }
 }
-
-
-export function finalizeCollection(event, isMiss) {
-    processInteraction(event, isMiss ? 'miss' : 'miss');
-}
