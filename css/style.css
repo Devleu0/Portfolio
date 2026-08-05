@@ -205,7 +205,6 @@ body {
     z-index: 3;
 }
 
-}
 
 .zone-building--small {
     width: calc(100px + 4vw);
@@ -223,8 +222,9 @@ body {
 }
 
 .zone-building--tower {
-    width: calc(260px + 11.5vw);
-    height: calc(200px + 7.5vw);
+    width: calc(1500px + 11.5vw);
+    height: calc(260px + 10.5vw);
+    background-repeat: repeat;
 }
 
 .zone-building--university {

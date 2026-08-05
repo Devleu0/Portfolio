@@ -63,7 +63,7 @@
   },
   {
     "id": 4,
-    "pos": 3322,
+    "pos": 3410,
     "elevation": 0,
     "title": {
       "ko": "중학교 입학",
@@ -104,7 +104,7 @@
   },
   {
     "id": 6,
-    "pos": 4904,
+    "pos": 5000,
     "elevation": 0,
     "title": {
       "ko": "고등학교 입학",
@@ -144,7 +144,7 @@
   },
   {
     "id": 21,
-    "pos": 6696,
+    "pos": 6596,
     "elevation": 0,
     "color": "#38BDF8",
     "category": "jump_pad",
@@ -166,7 +166,7 @@
   },
   {
     "id": 8,
-    "pos": 7900,
+    "pos": 8000,
     "elevation": 100,
     "title": {
       "ko": "한국사 3급",
