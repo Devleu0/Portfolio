@@ -16,36 +16,60 @@ export function updateComboDisplay() {
     if (comboEl) comboEl.textContent = state.comboCount;
 }
 
-export function triggerCollectEffect(eventEl, didAction = false, category = 'other') {
+export function triggerCollectEffect(eventEl, judgement = 'miss', category = 'other') {
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave';
     
     const catColor = getCategoryColor(category);
     wave.style.setProperty('--wave-color', catColor);
 
-    if (didAction) {
+    if (judgement === 'perfect') {
         wave.classList.add('is-perfect');
+    } else if (judgement === 'good') {
+        wave.classList.add('is-good');
     }
+
     eventEl.appendChild(wave);
     setTimeout(() => wave.remove(), 500);
 
-    if (didAction) {
-        const score = document.createElement('div');
-        score.className = 'score-popup-perfect';
-        score.textContent = 'PERFECT!';
+    let popupText = '';
+    let popupColor = '';
+    let popupSize = '1.5em';
+
+    switch (judgement) {
+        case 'perfect':
+            popupText = 'PERFECT!';
+            popupColor = 'gold';
+            break;
+        case 'good':
+            popupText = 'GOOD';
+            popupColor = '#C0C0C0'; // Silver
+            popupSize = '1.2em';
+            break;
+        case 'miss':
+            popupText = 'MISS';
+            popupColor = '#94A3B8'; // Slate 400
+            popupSize = '1.0em';
+            break;
+    }
+
+    if (popupText) {
+        const popup = document.createElement('div');
+        popup.className = `score-popup score-popup-${judgement}`;
+        popup.textContent = popupText;
 
         const obsRect = eventEl.getBoundingClientRect();
-        score.style.cssText = `position: fixed; left: ${obsRect.right}px; top: ${obsRect.top + obsRect.height / 2}px; transform: translateX(10px) translateY(-90%); color: gold; font-weight: bold; white-space: nowrap; font-size: 1.5em; z-index: 100; pointer-events: none;`;
-        document.body.appendChild(score);
+        popup.style.cssText = `position: fixed; left: ${obsRect.right}px; top: ${obsRect.top + obsRect.height / 2}px; transform: translateX(10px) translateY(-90%); color: ${popupColor}; font-weight: bold; white-space: nowrap; font-size: ${popupSize}; z-index: 100; pointer-events: none;`;
+        document.body.appendChild(popup);
 
-        gsap.fromTo(score,
-            { opacity: 0, yPercent: 50 },
+        gsap.fromTo(popup,
+            { opacity: 0, yPercent: 50, scale: 0.8 },
             {
-                opacity: 1, yPercent: -50, duration: 0.3, ease: 'power2.out',
+                opacity: 1, yPercent: -50, scale: 1, duration: 0.3, ease: 'power2.out',
                 onComplete: () => {
-                    gsap.to(score, {
+                    gsap.to(popup, {
                         opacity: 0, yPercent: -100, duration: 0.5, delay: 0.5, ease: 'power1.in',
-                        onComplete: () => score.remove()
+                        onComplete: () => popup.remove()
                     });
                 }
             }

@@ -1,7 +1,7 @@
-import { isMobile, state } from '../config.js';
+import { isMobile, state, PERFECT_THRESHOLD_MS, GOOD_THRESHOLD_MS } from '../config.js';
 import { gameState } from './state.js';
 import { moveAxis, shiftRect, cacheWallRect } from './collision.js';
-import { finalizeCollection } from './events.js';
+import { finalizeCollection, processInteraction } from './events.js';
 import { doJump } from './player.js';
 
 export function gameLoop(time, deltaTime) {
@@ -31,9 +31,6 @@ export function gameLoop(time, deltaTime) {
     }
     const yDelta = state.velocityY * timeScale;
 
-    // 근처 이벤트의 벽 좌표를 프레임당 한 번만 읽어 캐싱한다. moveAxis는 이후
-    // 이 캐시된 사각형만 사용하므로, 서브스텝을 몇 번을 돌든 DOM 레이아웃을
-    // 다시 읽지 않고, 프레임 내내 좌표가 고정되어 있음이 보장된다.
     const nearbyWalls = [];
     for (const event of gameState.eventElements) {
         if (!event.walls || event.walls.length === 0) continue;
@@ -46,13 +43,8 @@ export function gameLoop(time, deltaTime) {
 
     const prevY = gsap.getProperty(player, 'y');
     const playerRect = hitbox.getBoundingClientRect();
-    // 서브스텝 크기: 히트박스 크기의 절반 이하로 잡아, 그보다 얇지 않은 벽은
-    // 절대 건너뛸 수 없도록 한다(터널링 방지의 핵심).
     const maxStep = Math.max(2, Math.min(playerRect.width, playerRect.height) / 2);
 
-    // ---- 1) X축(수평) 이동 해석 ----
-    // 이 프로젝트의 "가로 이동"은 window.scrollBy({ top }) 을 통해 ScrollTrigger가
-    // .horizontal-section을 translateX 시키는 방식이므로 반드시 top으로 스크롤한다.
     let xMoved = 0;
     if (scrollDelta !== 0) {
         const xResult = moveAxis(playerRect, scrollDelta, nearbyWalls, 'x', maxStep);
@@ -60,10 +52,6 @@ export function gameLoop(time, deltaTime) {
         window.scrollBy({ top: xMoved, left: 0, behavior: 'instant' });
     }
 
-    // ---- 2) Y축(수직) 이동 해석 ----
-    // 실제 스크롤 후 DOM을 다시 읽지 않고, X 이동 결과(xMoved)를 반영한 좌표를
-    // 직접 계산해 사용한다 — ScrollTrigger의 transform 갱신 타이밍에 의존하지 않는
-    // 결정론적인 방식이며, X와 Y 축은 서로의 이동 결과에 전혀 간섭하지 않는다.
     const playerRectAfterX = shiftRect(playerRect, xMoved, 0);
     const yResult = moveAxis(playerRectAfterX, yDelta, nearbyWalls, 'y', maxStep);
     gsap.set(player, { y: prevY + yResult.delta });
@@ -107,7 +95,7 @@ export function gameLoop(time, deltaTime) {
         if (!eventBadge) return;
 
         const badgeRect = eventBadge.getBoundingClientRect();
-        const expand = 3;
+        const expand = 5; // 충돌 감지 영역을 약간 확장
         const isOverlappingBadge = (
             finalPlayerRect.left < badgeRect.right + expand &&
             finalPlayerRect.right > badgeRect.left - expand &&
@@ -116,13 +104,53 @@ export function gameLoop(time, deltaTime) {
         );
 
         if (isOverlappingBadge) {
-            isAnythingOverlapping = true;
-            finalizeCollection(event, gameState.actionJustPressed);
+            // 충돌 발생! 이제 액션 타이밍을 확인한다.
+            const timeDiff = Math.abs(performance.now() - gameState.actionTimestamp);
+            let judgement;
+
+            if (gameState.actionJustPressed && timeDiff <= GOOD_THRESHOLD_MS) {
+                // 액션이 제시간에 이루어짐
+                judgement = (timeDiff <= PERFECT_THRESHOLD_MS) ? 'perfect' : 'good';
+            } else {
+                // 액션이 없었거나 너무 늦음
+                judgement = 'miss';
+            }
+            
+            processInteraction(event, judgement);
+
+            // 판정에 사용된 액션 플래그를 즉시 리셋하여,
+            // 하나의 액션이 여러 이벤트에 중복으로 적용되지 않도록 한다.
+            gameState.actionJustPressed = false;
+            
         } else if (finalPlayerRect.left > obsRect.right + 150) {
+            // 이벤트를 완전히 지나친 경우 'miss' 처리
             gameState.beingCollected.add(dataId);
             const delay = 300 + Math.random() * 200;
-            const timeoutId = setTimeout(() => finalizeCollection(event, false), delay);
+            const timeoutId = setTimeout(() => finalizeCollection(event, true), delay); // true for miss
             gameState.pendingCollectTimeouts.set(dataId, timeoutId);
+        }
+    });
+
+    // 시각적 피드백을 위한 중첩 확인 로직 (판정 로직과 분리)
+    // 참고: 위에서 이미 수집된 이벤트는 locallyCollected에 추가되므로,
+    // 이 로직은 아직 수집되지 않은 이벤트에 대해서만 중첩을 감지하게 된다.
+    gameState.eventElements.forEach(event => {
+        const dataId = parseInt(event.getAttribute('data-id'), 10);
+        if (!dataId || gameState.locallyCollected.has(dataId) || gameState.beingCollected.has(dataId)) return;
+        
+        const eventBadge = event.querySelector('.event-badge');
+        if (!eventBadge) return;
+
+        const badgeRect = eventBadge.getBoundingClientRect();
+        const expand = 3;
+        const isOverlappingBadge = (
+            finalPlayerRect.left < badgeRect.right + expand &&
+            finalPlayerRect.right > badgeRect.left - expand &&
+            finalPlayerRect.top < badgeRect.bottom + expand &&
+            finalPlayerRect.bottom > badgeRect.top - expand
+        );
+        if (isOverlappingBadge) {
+            isAnythingOverlapping = true;
         }
     });
 

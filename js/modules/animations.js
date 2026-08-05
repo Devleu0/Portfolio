@@ -4,7 +4,6 @@
 
 import { isMobile, mobileScale, getSkyColor, state } from './config.js';
 import { getPlayerElement, getPlayerWrapper } from './game.js';
-import { updateLanguage } from './language.js';
 
 /**
  * 모바일 환경에서 각종 요소(구역, 배경 등)의 크기를 조정합니다.
@@ -62,7 +61,17 @@ function initMainScrollAnimation() {
             onUpdate: (self) => {
                 const p = self.progress; // 전체 스크롤 진행률 (0 to 1)
                 state.isScrolledToEnd = p > 0.998;
-                updateLanguage(state.currentLang, false); // 건너뛰기 버튼 텍스트 업데이트
+                
+                // Manually update skip button text to avoid circular dependency
+                const skipBtn = document.getElementById('skip-game-btn');
+                if (skipBtn) {
+                    const attr = state.isScrolledToEnd ? `data-${state.currentLang}-return` : `data-${state.currentLang}`;
+                    const fallbackAttr = state.isScrolledToEnd ? 'data-ko-return' : 'data-ko';
+                    const newText = skipBtn.getAttribute(attr) || skipBtn.getAttribute(fallbackAttr);
+                    if (newText && skipBtn.innerHTML !== newText) {
+                        skipBtn.innerHTML = newText;
+                    }
+                }
 
                 // --- 1. 시각적 요소 업데이트 ---
                 skyOverlay.style.background = `linear-gradient(to bottom, ${getSkyColor(p)}D0 0%, transparent 90%)`;
@@ -155,7 +164,7 @@ function initMainScrollAnimation() {
 /**
  * '기술' 섹션의 스킬 바가 화면에 나타날 때 채워지는 애니메이션을 설정합니다.
  */
-function initSkillBarAnimations() {
+export function initSkillBarAnimations() {
     gsap.utils.toArray('.skill-card').forEach(card => {
         ScrollTrigger.create({
             trigger: card,

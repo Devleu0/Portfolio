@@ -72,14 +72,10 @@ export function createJumpDust() {
     }
 }
 
-export function handleActionPress() {
-    gameState.actionJustPressed = true;
-    setTimeout(() => { gameState.actionJustPressed = false; }, 230);
-}
-
 export function doJump() {
     if (state.onGround || state.onPlatform) {
-        handleActionPress();
+        gameState.actionJustPressed = true;
+        gameState.actionTimestamp = performance.now();
         state.isJumping = true;
         state.onGround = false;
         state.onPlatform = null;
@@ -91,7 +87,8 @@ export function doJump() {
 
 export function doDuckStart() {
     if (state.isDucking) return;
-    handleActionPress();
+    gameState.actionJustPressed = true;
+    gameState.actionTimestamp = performance.now();
     state.isDucking = true;
     gsap.to(gameState.player, { scaleY: duckScale, transformOrigin: 'bottom center', duration: 0.1 });
 }

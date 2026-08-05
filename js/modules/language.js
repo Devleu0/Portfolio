@@ -1,5 +1,6 @@
 import { state } from './config.js';
 import { update as updateRenderer } from './renderer.js';
+import { initSkillBarAnimations } from './animations.js';
 
 export function updateLanguage(lang, rerenderFull = true) {
     state.currentLang = lang;
@@ -8,6 +9,8 @@ export function updateLanguage(lang, rerenderFull = true) {
     // Render dynamic resume sections with the new language
     if (rerenderFull) {
         updateRenderer(lang);
+        // Re-initialize skill bar animations for the new elements
+        initSkillBarAnimations();
     }
 
     // Update all other elements with '.lang-text'

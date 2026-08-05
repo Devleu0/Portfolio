@@ -388,6 +388,10 @@ body {
     box-shadow: 0 0 12px 2px #FBBF24;
 }
 
+.collect-shockwave.is-good {
+    box-shadow: 0 0 10px 1px #C0C0C0;
+}
+
 @keyframes scoreFloat {
     0% {
         opacity: 1;
