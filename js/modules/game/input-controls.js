@@ -1,5 +1,5 @@
-import { state } from '../config.js';
-import { doJump, doDuckStart, doDuckEnd } from './player.js';
+import { state } from '../app-config.js';
+import { doJump, doDuckStart, doDuckEnd } from './player-entity.js';
 
 export function setupControls() {
     window.addEventListener('keydown', (e) => {

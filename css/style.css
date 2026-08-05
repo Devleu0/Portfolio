@@ -54,7 +54,7 @@ body {
     position: relative;
     z-index: 10;
     font-family: var(--font-title);
-    font-size: 3rem;
+    font-size: clamp(2rem, 1rem + 4vw, 3rem);
     font-weight: normal;
     letter-spacing: normal;
     padding-left: 50px;
@@ -67,7 +67,7 @@ body {
     position: relative;
     z-index: 10;
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 0.7rem + 0.5vw, 1rem);
     font-weight: 600;
     color: var(--text-sub);
     padding-left: 55px;
@@ -205,39 +205,40 @@ body {
     z-index: 3;
 }
 
+
 .zone-building--small {
-    width: 140px;
-    height: 112px;
+    width: clamp(120px, calc(100px + 4vw), 200px);
+    height: clamp(120px, calc(105px + 3vw), 180px);
 }
 
 .zone-building--medium {
-    width: 200px;
-    height: 140px;
+    width: clamp(170px, calc(150px + 4.5vw), 280px);
+    height: clamp(120px, calc(100px + 3.5vw), 200px);
 }
 
 .zone-building--large {
-    width: 340px;
-    height: 220px;
+    width: clamp(250px, calc(200px + 10vw), 400px);
+    height: clamp(180px, calc(140px + 6vw), 260px);
 }
 
 .zone-building--tower {
-    width: 420px;
-    height: 300px;
+    width: clamp(1500px, calc(1500px + 11.5vw), 3000px);
+    height: clamp(280px, calc(260px + 10.5vw), 400px);
+    background-repeat: repeat;
 }
 
 .zone-building--university {
-    width: 520px;
-    height: 380px;
+    width: clamp(350px, calc(310px + 14vw), 550px);
+    height: clamp(260px, calc(230px + 10vw), 400px);
 }
 
-/* scramble crossing overlay for Shibuya internship zone */
 .zone-overlay--scramble {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     bottom: 20vh;
-    width: 420px;
-    height: 220px;
+    width: clamp(280px, calc(260px + 11.5vw), 450px);
+    height: clamp(160px, calc(140px + 6vw), 240px);
     background-repeat: no-repeat;
     background-size: contain;
     z-index: 10;
@@ -248,38 +249,59 @@ body {
 /* small responsiveness tweaks */
 @media (max-width: 600px) {
     .zone-building--small {
-        width: 92px;
+        height: 76px;
+        bottom: 35vh;
+    }
+
+    .zone-overlay--scramble {
+        bottom: 35vh;
+    }
+}
+
+
+/* scramble crossing overlay for Shibuya internship zone */
+.zone-overlay--scramble {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20vh;
+    width: clamp(900px, calc(828px + 50vw), 1800px);
+    height: clamp(140px, calc(124px + 5vw), 220px);
+    background-repeat: repeat;
+    background-size: contain;
+    z-index: 10;
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+/* small responsiveness tweaks */
+@media (max-width: 600px) {
+    .zone-building--small { /* width and height are now handled by calc() in base styles */
         height: 76px;
         bottom: 35vh;
     }
 
     .zone-building--medium {
-        width: 140px;
         height: 96px;
         bottom: 35vh;
     }
 
     .zone-building--large {
-        width: 200px;
         height: 140px;
         bottom: 35vh;
     }
 
     .zone-building--tower {
-        width: 260px;
         height: 200px;
         bottom: 35vh;
     }
 
     .zone-building--university {
-        width: 320px;
         height: 240px;
         bottom: 35vh;
     }
 
-    .zone-overlay--scramble {
-        width: 260px;
-        height: 140px;
+    .zone-overlay--scramble { /* width and height are now handled by calc() in base styles */
         bottom: 35vh;
     }
 }
@@ -344,24 +366,131 @@ body {
     width: 6px;
 }
 
+/* 1. 기계식 점프 패드 베이스 (두께감 및 형태) */
+.event-wrapper .jump-pad-platform, 
+.frame-wall[data-is-jump-pad="true"] {
+    width: 110px; /* 기존 뱃지(96px)보다 살짝 더 넓게 하여 지탱하는 안정감 부여 */
+    height: 26px; /* 두께감을 위해 높이 증가 */
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto !important; /* 기존에 있던 top: -26px을 지우wd거나 무효화(auto) 합니다 */
+    bottom: -25px; /* 배지 아래쪽으로 배치합니다. (배지 크기에 따라 -10px ~ -25px 사이로 예쁘게 조절해 보세요) */
+    position: absolute;
+    z-index: 49;
+    
+    /* 단단한 기계 프레임 느낌 */
+    border: 3px solid #0F172A !important;
+    border-radius: 6px;
+    background-color: #334155 !important; /* 어두운 철판 색상 (하단 베이스 역할) */
+    
+    /* 핵심: inset 그림자로 윗부분은 노란색 탄성 패드로, 아랫부분은 프레임으로 분리 */
+    box-shadow: 
+        inset 0 12px 0 #fde047, /* 위쪽 절반: 두꺼운 노란색 점프 패드 */
+        inset 0 14px 0 rgba(255, 255, 255, 0.5), /* 하이라이트 효과 (반사광) */
+        0 8px 20px -4px rgba(253, 224, 71, 0.4) !important; /* 바닥으로 퍼지는 네온 글로우 */
+        
+    overflow: hidden; /* 빗금 패턴이 둥근 모서리를 튀어나오지 않게 함 */
+    background-image: none !important;
+}
+
+/* 2. 밟는 부분의 '시각적 단서' (아케이드 게임 특유의 빗금 패턴) */
+.event-wrapper .jump-pad-platform::before,
+.frame-wall[data-is-jump-pad="true"]::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; 
+    height: 12px; /* 상단 노란색 패드 부분에만 빗금 적용 */
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 8px,
+        rgba(0, 0, 0, 0.15) 8px,
+        rgba(0, 0, 0, 0.15) 16px
+    );
+}
+
+/* 3. 공중 부양/에너지가 흐르는 느낌의 사이버 부스터 (하단) */
+.event-wrapper .jump-pad-platform::after,
+.frame-wall[data-is-jump-pad="true"]::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 20%;
+    width: 60%;
+    height: 4px;
+    background: #22D3EE; /* 메인 색상 중 하나인 시안색 에너지 */
+    border-radius: 4px;
+    box-shadow: 0 0 8px #22D3EE;
+    animation: booster-pulse 1s infinite alternate;
+}
+
+/* 부스터 호흡 애니메이션 */
+@keyframes booster-pulse {
+    0% { 
+        opacity: 0.5; 
+        transform: scaleX(0.9); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scaleX(1.1); 
+        box-shadow: 0 0 12px #22D3EE, 0 0 16px #22D3EE; 
+    }
+}
+
+/* 1. 단단한 강철 베이스 및 두께감 */
 .event-wrapper .frame-wall.floating-platform {
-    width: 100px;
-    /* Override wall-horizontal's width: 100% */
-    height: 20px;
-    /* Be explicit */
+    width: 200px; /* 점프 패드와 너비 통일 */
+    height: 22px;
     left: 50%;
     transform: translateX(-50%);
     top: auto;
-    /* Crucial: unset top from .wall-top */
     bottom: -20px;
-    /* Position it so its top aligns with the wrapper's bottom */
-
-    /* Visual styles copied from previous attempt for safety */
-    background: #334155;
-    border: 3px solid #0F172A;
-    box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.2), inset -3px -3px 0 rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
+    position: absolute;
     z-index: 49;
+    
+    /* 어두운 기계식 하단 베이스 */
+    background-color: #1E293B; 
+    border: 3px solid #0F172A;
+    border-radius: 4px;
+    
+    /* 상단(밟는 면)은 차분한 강철 느낌의 회색(Slate 500)으로 처리하고,
+       아래쪽엔 묵직한 그림자를 주어 공중에 안정적으로 떠 있는 느낌을 줍니다. */
+    box-shadow: 
+        inset 0 6px 0 #64748B, /* 두꺼운 강철 상판 */
+        inset 0 8px 0 rgba(255, 255, 255, 0.4), /* 반사광 하이라이트 */
+        0 10px 20px -5px rgba(0, 0, 0, 0.6); /* 바닥을 향한 깊은 그림자 */
+        
+    overflow: hidden;
+}
+
+/* 2. 상판의 미끄럼 방지 철망(그레이팅) 패턴 */
+.event-wrapper .frame-wall.floating-platform::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    /* 점프 패드의 사선(위험/경고) 대신 수직 철망 느낌을 주어 안정감 부여 */
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 8px,
+        rgba(0, 0, 0, 0.25) 8px,
+        rgba(0, 0, 0, 0.25) 10px
+    );
+}
+
+/* 3. 공중에 띄워주는 은은한 반중력 추진체 (하단) */
+.event-wrapper .frame-wall.floating-platform::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 15%;
+    width: 70%;
+    height: 2px;
+    background: #38BDF8; /* 차분하고 안정적인 스카이블루 색상 */
+    box-shadow: 0 0 6px #38BDF8;
+    opacity: 0.8;
+    /* 점프 패드처럼 요동치지 않고 정적인 불빛으로 유지 */
 }
 
 @keyframes shockwaveMinimal {
@@ -447,7 +576,7 @@ body {
 
 .info-tag {
     position: absolute;
-    bottom: 100%;
+    bottom: calc(100%);
     left: 50%;
     transform: translateX(-50%);
     margin-bottom: 16px;
@@ -465,6 +594,7 @@ body {
     white-space: normal;
     word-break: keep-all;
 }
+
 
 .info-tag::after {
     content: '';
@@ -1947,7 +2077,7 @@ button.action {
 /* 튜토리얼 툴팁 스타일 */
 .tutorial-tooltip {
     position: absolute;
-    bottom: calc(100% + 130px);
+    bottom: calc(100% + 150px);
     /* 노드 상단에 위치 */
 
     left: 50%;
@@ -1967,6 +2097,8 @@ button.action {
     z-index: 100;
     opacity: 1;
 }
+
+
 
 /* 말풍선 꼬리 */
 .tutorial-tooltip::after {
@@ -2118,10 +2250,10 @@ button.action {
 
 @keyframes float-item {
     0%, 100% {
-        margin-top: -5px; /* 중앙 기준 위로 5px */
+        margin-top: -10px; /* 중앙 기준 위로 5px */
     }
     50% {
-        margin-top: 5px;  /* 중앙 기준 아래로 5px */
+        margin-top: 0;  /* 중앙 기준 아래로 5px */
     }
 }
 

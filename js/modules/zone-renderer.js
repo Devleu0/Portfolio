@@ -1,18 +1,4 @@
-// =================================================================================
-// 애플리케이션 메인 진입점 (Entry Point)
-// =================================================================================
-// 이 파일은 모든 모듈을 가져와 순서대로 초기화하는 역할을 합니다.
-
-// ---------------------------------------------------------------------------------
-// 모듈 임포트
-// ---------------------------------------------------------------------------------
-import { initLanguageSwitcher } from './modules/language.js';
-import { initAudio } from './modules/audio.js';
-import { initGame } from './modules/game.js';
-import { initUI } from './modules/ui.js';
-import { initAnimations } from './modules/animations.js';
-import { init as initRenderer } from './modules/renderer.js';
-import { state } from './modules/config.js';
+import { state } from './app-config.js';
 
 // ---------------------------------------------------------------------------------
 // Zone(구역) 요소 생성 함수
@@ -21,7 +7,7 @@ import { state } from './modules/config.js';
  * `zones.json` 데이터를 기반으로 각 구역(Zone)의 DOM 요소를 생성하고,
  * 패럴랙스 배경, 제목, 특수 효과 등을 설정합니다.
  */
-async function createZoneElements() {
+export async function createZoneElements() {
     try {
         // 1. 구역 데이터 로드
         const response = await fetch('js/data/zones.json');
@@ -149,27 +135,3 @@ async function createZoneElements() {
         console.error('구역 요소 생성 중 오류 발생:', error);
     }
 }
-
-// ---------------------------------------------------------------------------------
-// DOM 로드 완료 후 초기화 실행
-// ---------------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', async () => {
-    // 1. 데이터 의존성이 없는 기본 시스템 초기화
-    initLanguageSwitcher(); // 다국어 지원
-    initAudio();            // 오디오 시스템
-
-    // 2. JSON 데이터 로드 및 렌더링
-    await initRenderer(); // 이력서 데이터 등
-
-    // 3. 'zone' 데이터 기반으로 게임 세계 구성
-    await createZoneElements();
-
-    // 4. 게임 로직 초기화 (플레이어, 이벤트 등 생성)
-    await initGame();
-
-    // 5. 모든 DOM 요소가 준비된 후 애니메이션 초기화
-    initAnimations();
-
-    // 6. UI 컴포넌트 초기화
-    initUI();
-});

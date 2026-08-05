@@ -1,18 +1,7 @@
 // =================================================================================
 // 게임 충돌 검사 모듈
 // =================================================================================
-// 방식: 이산(discrete) AABB + 서브스텝(substep) 기반 축 분리 이동 해석.
-// 2D 플랫포머에서 널리 쓰이는 검증된 패턴으로, X/Y 두 축을 완전히 독립적으로
-// 처리하고(축간 간섭 없음), 이동량을 히트박스 크기 절반 이하의 작은 단위로 쪼개어
-// 한 걸음씩 겹침을 검사한다.
-//  - 터널링(고속 통과) 방지: 한 스텝의 이동량이 항상 자신의 절반 크기보다 작으므로,
-//    그보다 얇지 않은 벽은 절대 건너뛸 수 없다.
-//  - 끼임(stuck) 방지: 판정이 "겹침 여부"(부등식)일 뿐 시간(time)을 나누는 수식이
-//    아니라서, 경계에 닿아만 있는 상태(overlap=false)는 충돌로 취급되지 않는다.
-//  - 성능/정확성: cacheWallRect로 벽 좌표를 프레임당 한 번만 읽어 캐싱한 뒤
-//    moveAxis에 넘긴다. moveAxis 내부(서브스텝 루프)에서는 getBoundingClientRect를
-//    전혀 호출하지 않으므로, 불필요한 레이아웃 재계산이 없고 프레임 내내 벽
-//    좌표가 고정된 값으로 유지된다는 것이 보장된다.
+
 
 /**
  * 두 사각형이 겹치는지 검사한다. 경계가 맞닿기만 한 경우(등호)는 겹침으로 보지
@@ -62,6 +51,31 @@ export function moveAxis(rect, delta, cachedWalls, axis, maxStep = 8) {
         return { delta, collided: false, normal: 0, wall: null };
     }
 
+    // --- [1단계: 끼임 방지 및 일방통행(통과형 발판) 처리] ---
+    const ignoredWalls = new Set();
+    
+    for (const wallRect of cachedWalls) {
+        const isJumpPad = wallRect.el.classList.contains('jump-pad-platform') || 
+                          wallRect.el.dataset.isJumpPad === 'true';
+
+        // 1. 끼임 방지(Anti-Stuck): 이동을 시작하기도 전에 이미 겹쳐있는 벽이라면 무시합니다.
+        // 이렇게 하면 벽에 끼이더라도 바깥으로 자유롭게 걸어 나오거나 떨어질 수 있습니다.
+        if (rectsOverlap(rect, wallRect)) {
+            ignoredWalls.add(wallRect);
+            continue;
+        }
+
+        // 2. 일방통행 발판(One-Way Platform): 발판/점프대의 경우 '위에서 아래로 떨어질 때'만 충돌합니다.
+        // 즉, 옆으로 지나가거나 아래에서 위로 점프할 때는 발판을 유령처럼 통과하게 만듭니다.
+        if (isJumpPad) {
+            // X축 이동이거나, Y축으로 점프 중(위로 올라가는 중)일 때는 충돌을 무시합니다.
+            if (axis === 'x' || (axis === 'y' && delta <= 0)) {
+                ignoredWalls.add(wallRect);
+            }
+        }
+    }
+    // --------------------------------------------------
+
     const steps = Math.min(64, Math.max(1, Math.ceil(Math.abs(delta) / maxStep)));
     const stepDelta = delta / steps;
 
@@ -78,6 +92,9 @@ export function moveAxis(rect, delta, cachedWalls, axis, maxStep = 8) {
 
         let blocked = false;
         for (const wallRect of cachedWalls) {
+            // 위에서 무시하기로 결정한 벽(이미 끼어있거나, 아래서 뚫고 올라가는 발판)은 충돌을 무시합니다.
+            if (ignoredWalls.has(wallRect)) continue;
+
             if (rectsOverlap(testRect, wallRect)) {
                 blocked = true;
                 hitWall = wallRect.el;
