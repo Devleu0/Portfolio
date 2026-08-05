@@ -104,27 +104,8 @@ export function gameLoop(time, deltaTime) {
         );
 
         if (isOverlappingBadge) {
-            // 충돌 발생! 이제 액션 타이밍을 확인한다.
-            const timeDiff = Math.abs(performance.now() - gameState.actionTimestamp);
-            let judgement;
-
-            if (gameState.actionJustPressed && timeDiff <= GOOD_THRESHOLD_MS) {
-                // 액션이 제시간에 이루어짐
-                judgement = (timeDiff <= PERFECT_THRESHOLD_MS) ? 'perfect' : 'good';
-            } else {
-                // 액션이 없었거나 너무 늦음
-                judgement = 'miss';
-            }
-            
-            processInteraction(event, judgement);
-
-            // 판정에 사용된 액션 플래그를 즉시 리셋하여,
-            // 하나의 액션이 여러 이벤트에 중복으로 적용되지 않도록 한다.
-            gameState.actionJustPressed = false;
-            
-        } else if (finalPlayerRect.left > obsRect.right + 150) {
-            // 이벤트를 완전히 지나친 경우 'miss' 처리
-            processInteraction(event, 'miss');
+            // 충돌 시 즉시 'perfect'로 처리
+            processInteraction(event, 'perfect');
         }
     });
 
