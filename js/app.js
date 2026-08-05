@@ -90,7 +90,7 @@ async function createZoneElements() {
                 zoneEl.style.borderRight = 'none';
             }
 
-            // 4. 패럴랙스(시차) 배경 레이어 생성
+            // 4. 패럴랙스 배경 레이어 생성
             if (zoneData.scenery && zoneData.scenery.type !== 'none' && zoneData.scenery.parallax) {
                 const parallaxLayers = [
                     { speed: 0.1, class: 'parallax-bg-far', key: 'far' },
