@@ -2045,8 +2045,8 @@ button.action {
 
     /* Mobile adjustments for game elements */
     .info-tag {
-        max-width: 150px;
-        max-height: 100px;
+        max-width: 100px;
+        max-height: 80px;
         padding: 3px 7px;
         opacity: 0.7;
     }
@@ -2060,6 +2060,8 @@ button.action {
     }
 
     .cat-badge {
+        max-width: 60px;
+        max-height: 40px;
         font-size: 8px;
         margin-bottom: 2px;
         padding: 2px 2px;
@@ -2067,10 +2069,15 @@ button.action {
 
     .zone-title {
         font-size: 1.4rem;
+        margin-top: -60px;
     }
 
     .zone-subtitle {
         font-size: 0.9rem;
+    }
+
+    #hud-overlay {
+        margin-top: -60px;
     }
 }
 
