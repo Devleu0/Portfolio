@@ -51,6 +51,31 @@ export function moveAxis(rect, delta, cachedWalls, axis, maxStep = 8) {
         return { delta, collided: false, normal: 0, wall: null };
     }
 
+    // --- [1단계: 끼임 방지 및 일방통행(통과형 발판) 처리] ---
+    const ignoredWalls = new Set();
+    
+    for (const wallRect of cachedWalls) {
+        const isJumpPad = wallRect.el.classList.contains('jump-pad-platform') || 
+                          wallRect.el.dataset.isJumpPad === 'true';
+
+        // 1. 끼임 방지(Anti-Stuck): 이동을 시작하기도 전에 이미 겹쳐있는 벽이라면 무시합니다.
+        // 이렇게 하면 벽에 끼이더라도 바깥으로 자유롭게 걸어 나오거나 떨어질 수 있습니다.
+        if (rectsOverlap(rect, wallRect)) {
+            ignoredWalls.add(wallRect);
+            continue;
+        }
+
+        // 2. 일방통행 발판(One-Way Platform): 발판/점프대의 경우 '위에서 아래로 떨어질 때'만 충돌합니다.
+        // 즉, 옆으로 지나가거나 아래에서 위로 점프할 때는 발판을 유령처럼 통과하게 만듭니다.
+        if (isJumpPad) {
+            // X축 이동이거나, Y축으로 점프 중(위로 올라가는 중)일 때는 충돌을 무시합니다.
+            if (axis === 'x' || (axis === 'y' && delta <= 0)) {
+                ignoredWalls.add(wallRect);
+            }
+        }
+    }
+    // --------------------------------------------------
+
     const steps = Math.min(64, Math.max(1, Math.ceil(Math.abs(delta) / maxStep)));
     const stepDelta = delta / steps;
 
@@ -67,6 +92,9 @@ export function moveAxis(rect, delta, cachedWalls, axis, maxStep = 8) {
 
         let blocked = false;
         for (const wallRect of cachedWalls) {
+            // 위에서 무시하기로 결정한 벽(이미 끼어있거나, 아래서 뚫고 올라가는 발판)은 충돌을 무시합니다.
+            if (ignoredWalls.has(wallRect)) continue;
+
             if (rectsOverlap(testRect, wallRect)) {
                 blocked = true;
                 hitWall = wallRect.el;

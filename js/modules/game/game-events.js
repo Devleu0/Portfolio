@@ -29,6 +29,13 @@ export function createEvent(data, fallbackId) {
         window.open(targetUrl, '_blank');
     };
 
+    if (data.isJumpPad) {
+        const jumpPad = document.createElement('div');
+        jumpPad.className = 'jump-pad-platform debug-collision platform-surface frame-wall wall-horizontal';
+        jumpPad.dataset.isJumpPad = 'true';
+        wrapper.appendChild(jumpPad);
+    }
+
     if (elevation > 0) {
         if (data.isFloatingPlatform) {
             const platform = document.createElement('div');
@@ -79,7 +86,7 @@ export function createEvent(data, fallbackId) {
         frame.appendChild(event);
 
         const wallDefs = {
-            top: `<div class="frame-wall wall-horizontal wall-top platform-surface"${data.category === 'jump_pad' ? ' data-is-jump-pad="true"' : ''}></div>`,
+            top: `<div class="frame-wall wall-horizontal wall-top platform-surface"${data.isJumpPad ? ' data-is-jump-pad="true"' : ''}></div>`,
             bottom: '<div class="frame-wall wall-horizontal wall-bottom platform-surface"></div>',
             left: '<div class="frame-wall wall-vertical wall-left platform-surface"></div>',
             right: '<div class="frame-wall wall-vertical wall-right platform-surface"></div>',
@@ -102,15 +109,13 @@ export function createEvent(data, fallbackId) {
         wrapper.walls = [];
     }
 
-    // 부유 발판이 있을 경우, 충돌 감지 대상에 추가
-    if (data.isFloatingPlatform) {
-        const platform = wrapper.querySelector('.floating-platform');
-        if (platform) {
-            if (!wrapper.walls) {
-                wrapper.walls = [];
-            }
-            wrapper.walls.push(platform);
+    // 부유 발판, 점프 패드가 있을 경우, 충돌 감지 대상에 추가
+    const platformElements = wrapper.querySelectorAll('.floating-platform, .jump-pad-platform');
+    if (platformElements.length > 0) {
+        if (!wrapper.walls) {
+            wrapper.walls = [];
         }
+        platformElements.forEach(p => wrapper.walls.push(p));
     }
 
     const tag = document.createElement('div');

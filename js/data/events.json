@@ -17,7 +17,8 @@
     "category": "jump_pad",
     "link": "https://www.gwangju.go.kr/",
     "hidden": false,
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 2,
@@ -37,7 +38,8 @@
     "category": "jump_pad",
     "link": "http://jangdeok.gen.es.kr/",
     "entranceDir": 0,
-    "isFloatingPlatform": false
+    "isFloatingPlatform": false,
+    "isJumpPad": true
   },
   {
     "id": 3,
@@ -77,7 +79,8 @@
     "category": "jump_pad",
     "link": "http://jangdeok.gen.ms.kr/",
     "entranceDir": 0,
-    "isFloatingPlatform": false
+    "isFloatingPlatform": false,
+    "isJumpPad": true
   },
   {
     "id": 5,
@@ -96,7 +99,8 @@
     "color": "#38BDF8",
     "category": "graduation",
     "link": "http://jangdeok.gen.ms.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 6,
@@ -115,7 +119,8 @@
     "color": "#38BDF8",
     "category": "jump_pad",
     "link": "http://jinheung.gen.hs.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 7,
@@ -134,7 +139,8 @@
     "color": "#38BDF8",
     "category": "graduation",
     "link": "http://jinheung.gen.hs.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 21,
@@ -155,7 +161,8 @@
     "inProgress": true,
     "customIcon": null,
     "link": "",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 8,
@@ -174,7 +181,8 @@
     "color": "#38BDF8",
     "category": "certificate",
     "link": "https://www.historyexam.go.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 23,
@@ -195,7 +203,8 @@
     "inProgress": true,
     "customIcon": null,
     "link": "",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 9,
@@ -214,7 +223,8 @@
     "color": "#38BDF8",
     "category": "certificate",
     "link": "https://www.kstqb.org/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 10,
@@ -233,7 +243,8 @@
     "color": "#38BDF8",
     "category": "military",
     "link": "https://rokaf.mil.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 11,
@@ -252,7 +263,8 @@
     "color": "#38BDF8",
     "category": "military",
     "link": "https://rokaf.mil.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 12,
@@ -271,7 +283,8 @@
     "color": "#38BDF8",
     "category": "military",
     "link": "https://rokaf.mil.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 13,
@@ -290,7 +303,8 @@
     "color": "#38BDF8",
     "category": "military",
     "link": "https://rokaf.mil.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 14,
@@ -309,7 +323,8 @@
     "color": "#38BDF8",
     "category": "certificate",
     "link": "https://www.jlpt.or.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 15,
@@ -328,7 +343,8 @@
     "color": "#38BDF8",
     "category": "jump_pad",
     "link": "https://rokaf.mil.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 24,
@@ -348,7 +364,8 @@
     "category": "project",
     "inProgress": false,
     "link": "https://devleu.tistory.com/43",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 26,
@@ -368,7 +385,8 @@
     "category": "project",
     "inProgress": false,
     "link": "https://devleu.tistory.com/45",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 27,
@@ -388,7 +406,8 @@
     "category": "project",
     "inProgress": false,
     "link": "https://devleu.tistory.com/46",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 25,
@@ -408,7 +427,8 @@
     "category": "project",
     "inProgress": false,
     "link": "https://devleu.tistory.com/44",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 16,
@@ -427,7 +447,8 @@
     "color": "#38BDF8",
     "category": "certificate",
     "link": "https://www.dataq.or.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 22,
@@ -448,7 +469,8 @@
     "inProgress": true,
     "customIcon": null,
     "link": "",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   },
   {
     "id": 17,
@@ -467,7 +489,8 @@
     "color": "#38BDF8",
     "category": "certificate",
     "link": "https://exam.toeic.co.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 18,
@@ -486,7 +509,8 @@
     "color": "#38BDF8",
     "category": "certificate",
     "link": "https://www.dataq.or.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 20,
@@ -506,7 +530,8 @@
     "category": "project",
     "inProgress": false,
     "link": "https://devleu.tistory.com/42",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 19,
@@ -526,6 +551,7 @@
     "category": "jump_pad",
     "link": "",
     "inProgress": true,
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isJumpPad": true
   }
 ]
