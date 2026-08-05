@@ -5,10 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Portfolio</title>
-    <!-- 
-        SEO & Open Graph Meta Tags 
-        - favicon.ico 파일을 준비하여 root에 두거나 경로를 수정해주세요.
-    -->
     <meta name="description" content="게임 컨셉의 인터랙티브 웹 포트폴리오. 개발자의 프로젝트, 기술 스택, 성장 과정.">
     <meta name="keywords"
         content="포트폴리오, 이력서, 게임 개발자, 웹 개발자, 인터랙티브, Wi Jeongwoo, Portfolio, Resume, Game Developer, Web Developer, Interactive">
@@ -84,9 +80,7 @@
             <h2 id="about-title" class="reveal-on-scroll lang-text"></h2>
             <p id="about-intro" class="about-intro reveal-on-scroll lang-text"></p>
             <h2 id="skills-title" class="reveal-on-scroll lang-text"></h2>
-            <div id="skills-grid" class="skills-bento-grid">
-                <!-- Skills will be rendered here by JavaScript -->
-            </div>
+            <div id="skills-grid" class="skills-bento-grid"></div>
         </div>
     </section>
     <header id="top-header" class="top-header">
@@ -225,21 +219,15 @@
         <h1 class="lang-text" data-ko="Career Resume" data-en="Career Resume" data-ja="Career Resume">Career Resume</h1>
         <section class="tr-chapter">
             <h3 class="lang-text" data-ko="포트폴리오" data-en="Portfolio" data-ja="ポートフォリオ">포트폴리오</h3>
-            <ul id="portfolio-list">
-                <!-- Portfolio items will be rendered here by JavaScript -->
-            </ul>
+            <ul id="portfolio-list"></ul>
         </section>
         <section class="tr-chapter">
             <h3 class="lang-text" data-ko="자격증" data-en="Certifications" data-ja="資格">자격증</h3>
-            <ul id="certifications-list">
-                <!-- Certifications will be rendered here by JavaScript -->
-            </ul>
+            <ul id="certifications-list"></ul>
         </section>
         <section class="tr-chapter">
             <h3 class="lang-text" data-ko="주요 이력" data-en="Key Experience" data-ja="主な経歴">주요 이력</h3>
-            <ul id="experience-list">
-                <!-- Experience items will be rendered here by JavaScript -->
-            </ul>
+            <ul id="experience-list"></ul>
         </section>
     </section>
 
@@ -255,7 +243,6 @@
                 <div class="dpad-half left"><span class="dpad-arrow">◀</span></div>
                 <div class="dpad-half right"><span class="dpad-arrow">▶</span></div>
             </div>
-            <!-- left/right action areas sit over the left/right halves of the image -->
             <button id="btn-left" class="dpad-action left" aria-label="Left"></button>
             <button id="btn-right" class="dpad-action right" aria-label="Right"></button>
         </div>
@@ -276,8 +263,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"
         integrity="sha384-aO2rdje/BwxNeovaVnYCA1OUtEWaqumve5UCMUMEM9/kKJM/c9NyqDGmgPuJz8eQ"
         crossorigin="anonymous"></script>
-
-
 </body>
 
 </html>
