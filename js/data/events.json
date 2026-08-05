@@ -34,9 +34,10 @@
       "ja": "長徳小学校 (2010年3月)"
     },
     "color": "#38BDF8",
-    "category": "enrollment",
+    "category": "jump_pad",
     "link": "http://jangdeok.gen.es.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": false
   },
   {
     "id": 3,
@@ -55,7 +56,8 @@
     "color": "#38BDF8",
     "category": "graduation",
     "link": "http://jangdeok.gen.es.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": true
   },
   {
     "id": 4,
@@ -72,9 +74,10 @@
       "ja": "長徳中学校 (2016年3月)"
     },
     "color": "#38BDF8",
-    "category": "enrollment",
+    "category": "jump_pad",
     "link": "http://jangdeok.gen.ms.kr/",
-    "entranceDir": 0
+    "entranceDir": 0,
+    "isFloatingPlatform": false
   },
   {
     "id": 5,
@@ -110,7 +113,7 @@
       "ja": "光州進興高校 (2019年3月)"
     },
     "color": "#38BDF8",
-    "category": "enrollment",
+    "category": "jump_pad",
     "link": "http://jinheung.gen.hs.kr/",
     "entranceDir": 0
   },
@@ -138,7 +141,7 @@
     "pos": 6696,
     "elevation": 0,
     "color": "#38BDF8",
-    "category": "other",
+    "category": "jump_pad",
     "title": {
       "ko": "대학교 입학",
       "en": "University Entrance",
@@ -323,7 +326,7 @@
       "ja": "韓国空軍兵長 (851期, 2025年6月)"
     },
     "color": "#38BDF8",
-    "category": "military",
+    "category": "jump_pad",
     "link": "https://rokaf.mil.kr/",
     "entranceDir": 0
   },
@@ -520,7 +523,7 @@
       "ja": "グローバルイノベーションハンドル（2026年6月）"
     },
     "color": "#38BDF8",
-    "category": "internship",
+    "category": "jump_pad",
     "link": "",
     "inProgress": true,
     "entranceDir": 0

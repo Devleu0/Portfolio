@@ -344,6 +344,26 @@ body {
     width: 6px;
 }
 
+.event-wrapper .frame-wall.floating-platform {
+    width: 100px;
+    /* Override wall-horizontal's width: 100% */
+    height: 20px;
+    /* Be explicit */
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    /* Crucial: unset top from .wall-top */
+    bottom: -20px;
+    /* Position it so its top aligns with the wrapper's bottom */
+
+    /* Visual styles copied from previous attempt for safety */
+    background: #334155;
+    border: 3px solid #0F172A;
+    box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.2), inset -3px -3px 0 rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    z-index: 49;
+}
+
 @keyframes shockwaveMinimal {
     0% {
         transform: scale(1);

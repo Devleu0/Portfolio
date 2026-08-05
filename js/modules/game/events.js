@@ -30,11 +30,17 @@ export function createEvent(data, fallbackId) {
     };
 
     if (elevation > 0) {
-        const pole = document.createElement('div');
-        pole.className = 'event-pole';
-        pole.style.bottom = `-${elevation}px`;
-        pole.style.height = `${elevation}px`;
-        wrapper.appendChild(pole);
+        if (data.isFloatingPlatform) {
+            const platform = document.createElement('div');
+            platform.className = 'floating-platform debug-collision platform-surface frame-wall wall-horizontal wall-top';
+            wrapper.appendChild(platform);
+        } else {
+            const pole = document.createElement('div');
+            pole.className = 'event-pole';
+            pole.style.bottom = `-${elevation}px`;
+            pole.style.height = `${elevation}px`;
+            wrapper.appendChild(pole);
+        }
     }
 
     const event = document.createElement('div');
@@ -94,6 +100,17 @@ export function createEvent(data, fallbackId) {
         event.style.left = data.customIcon ? '-8px' : '0';
         wrapper.appendChild(event);
         wrapper.walls = [];
+    }
+
+    // 부유 발판이 있을 경우, 충돌 감지 대상에 추가
+    if (data.isFloatingPlatform) {
+        const platform = wrapper.querySelector('.floating-platform');
+        if (platform) {
+            if (!wrapper.walls) {
+                wrapper.walls = [];
+            }
+            wrapper.walls.push(platform);
+        }
     }
 
     const tag = document.createElement('div');
