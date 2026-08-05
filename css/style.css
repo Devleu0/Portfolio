@@ -54,7 +54,7 @@ body {
     position: relative;
     z-index: 10;
     font-family: var(--font-title);
-    font-size: 3rem;
+    font-size: clamp(2rem, 1rem + 4vw, 3rem);
     font-weight: normal;
     letter-spacing: normal;
     padding-left: 50px;
@@ -67,7 +67,7 @@ body {
     position: relative;
     z-index: 10;
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 0.7rem + 0.5vw, 1rem);
     font-weight: 600;
     color: var(--text-sub);
     padding-left: 55px;
@@ -207,39 +207,38 @@ body {
 
 
 .zone-building--small {
-    width: calc(100px + 4vw);
-    height: calc(105px + 3vw);
+    width: clamp(120px, calc(100px + 4vw), 200px);
+    height: clamp(120px, calc(105px + 3vw), 180px);
 }
 
 .zone-building--medium {
-    width: calc(150px + 4.5vw);
-    height: calc(100px + 3.5vw);
+    width: clamp(170px, calc(150px + 4.5vw), 280px);
+    height: clamp(120px, calc(100px + 3.5vw), 200px);
 }
 
 .zone-building--large {
-    width: calc(200px + 10vw);
-    height: calc(140px + 6vw);
+    width: clamp(250px, calc(200px + 10vw), 400px);
+    height: clamp(180px, calc(140px + 6vw), 260px);
 }
 
 .zone-building--tower {
-    width: calc(1500px + 11.5vw);
-    height: calc(260px + 10.5vw);
+    width: clamp(1500px, calc(1500px + 11.5vw), 3000px);
+    height: clamp(280px, calc(260px + 10.5vw), 400px);
     background-repeat: repeat;
 }
 
 .zone-building--university {
-    width: calc(310px + 14vw);
-    height: calc(230px + 10vw);
+    width: clamp(350px, calc(310px + 14vw), 550px);
+    height: clamp(260px, calc(230px + 10vw), 400px);
 }
 
-/* scramble crossing overlay for Shibuya internship zone */
 .zone-overlay--scramble {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     bottom: 20vh;
-    width: calc(260px + 11.5vw);
-    height: calc(140px + 6vw);
+    width: clamp(280px, calc(260px + 11.5vw), 450px);
+    height: clamp(160px, calc(140px + 6vw), 240px);
     background-repeat: no-repeat;
     background-size: contain;
     z-index: 10;
@@ -266,8 +265,8 @@ body {
     left: 50%;
     transform: translateX(-50%);
     bottom: 20vh;
-    width: calc(828px + 50vw);
-    height: calc(124px + 5vw);
+    width: clamp(900px, calc(828px + 50vw), 1800px);
+    height: clamp(140px, calc(124px + 5vw), 220px);
     background-repeat: repeat;
     background-size: contain;
     z-index: 10;
@@ -440,7 +439,7 @@ body {
 
 /* 1. 단단한 강철 베이스 및 두께감 */
 .event-wrapper .frame-wall.floating-platform {
-    width: 110px; /* 점프 패드와 너비 통일 */
+    width: 200px; /* 점프 패드와 너비 통일 */
     height: 22px;
     left: 50%;
     transform: translateX(-50%);
