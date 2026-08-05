@@ -1334,13 +1334,24 @@
         }
 
         if (field.type === 'select') {
-          const val = item[field.key] ?? 0;
+          const val = item[field.key];
+          const isNumeric = !isNaN(parseInt(field.options[0].split(':')[0], 10));
+
           wrap.innerHTML = `
       <label>${field.label}</label>
-      <select>${field.options.map(o => `<option value="${o}" ${val === parseInt(o.split(':')[0], 10) ? 'selected' : ''}>${o}</option>`).join('')}</select>
+      <select>${field.options.map(o => {
+        const currentOptionValue = isNumeric ? parseInt(o.split(':')[0], 10) : o;
+        // For numeric, if val is undefined, default to 0. For string, if undefined, it won't match anything which is fine.
+        const selected = (val ?? (isNumeric ? 0 : '')) === currentOptionValue;
+        return `<option value="${o}" ${selected ? 'selected' : ''}>${o}</option>`;
+      }).join('')}</select>
     `;
           wrap.querySelector('select').addEventListener('change', (e) => {
-            item[field.key] = parseInt(e.target.value.split(':')[0], 10);
+            if (isNumeric) {
+              item[field.key] = parseInt(e.target.value.split(':')[0], 10);
+            } else {
+              item[field.key] = e.target.value;
+            }
             markDirty(tab.file);
             updateListRowLabel(item, tab);
           });
