@@ -73,7 +73,7 @@ export function createEvent(data, fallbackId) {
         frame.appendChild(event);
 
         const wallDefs = {
-            top: '<div class="frame-wall wall-horizontal wall-top platform-surface"></div>',
+            top: `<div class="frame-wall wall-horizontal wall-top platform-surface"${data.category === 'jump_pad' ? ' data-is-jump-pad="true"' : ''}></div>`,
             bottom: '<div class="frame-wall wall-horizontal wall-bottom platform-surface"></div>',
             left: '<div class="frame-wall wall-vertical wall-left platform-surface"></div>',
             right: '<div class="frame-wall wall-vertical wall-right platform-surface"></div>',
