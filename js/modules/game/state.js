@@ -12,4 +12,5 @@ export const gameState = {
     beingCollected: new Set(),
     pendingCollectTimeouts: new Map(),
     actionJustPressed: false,
-};
+    actionTimestamp: 0,
+    };

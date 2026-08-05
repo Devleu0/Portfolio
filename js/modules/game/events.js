@@ -117,37 +117,47 @@ export function createEvent(data, fallbackId) {
     return wrapper;
 }
 
-export function finalizeCollection(event, didAction) {
+export function processInteraction(event, judgement) {
     const dataId = parseInt(event.getAttribute('data-id'), 10);
-    if (!dataId || gameState.locallyCollected.has(dataId)) return;
+    if (!dataId || gameState.locallyCollected.has(dataId) || gameState.beingCollected.has(dataId)) return;
+    
+    gameState.beingCollected.delete(dataId);
+    gameState.pendingCollectTimeouts.delete(dataId);
 
-    const eventBadge = event.querySelector('.event-badge');
+    const isSuccess = judgement === 'perfect' || judgement === 'good';
 
-    if (didAction) {
+    if (isSuccess) {
         state.comboCount++;
         state.maxCombo = Math.max(state.maxCombo, state.comboCount);
-        const multiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
-        state.totalScore += Math.round(500 * multiplier);
-        state.perfectCount++;
-        triggerComboEffect(state.comboCount);
-    } else {
-        if (state.comboCount >= 5) {
-            showComboBreakToast(state.comboCount);
-        }
-        state.lastComboBeforeReset = state.comboCount;
-        state.comboCount = 0;
-        hideComboCounter();
-        state.totalScore += 100;
     }
 
-    const frame = event.querySelector('.cyber-frame');
-    if (frame && didAction) {
-        triggerCollectEffect(eventBadge, didAction, event.dataset.category);
-        event.classList.add('collected');
-    } else {
-        triggerCollectEffect(event, didAction, event.dataset.category);
-        event.classList.add('collected');
+    switch (judgement) {
+        case 'perfect':
+            const multiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
+            state.totalScore += Math.round(500 * multiplier);
+            state.perfectCount++;
+            triggerComboEffect(state.comboCount);
+            break;
+        case 'good':
+            state.totalScore += 250;
+            state.goodCount++;
+            break;
+        case 'miss':
+            if (state.comboCount >= 5) {
+                showComboBreakToast(state.comboCount);
+            }
+            state.lastComboBeforeReset = state.comboCount;
+            state.comboCount = 0;
+            hideComboCounter();
+            state.totalScore += 50;
+            state.missCount++;
+            break;
     }
+    
+    const eventBadge = event.querySelector('.event-badge');
+    const targetEl = event.querySelector('.cyber-frame') || event;
+    triggerCollectEffect(targetEl, judgement, event.dataset.category);
+    event.classList.add('collected');
 
     playSound('./audio/coin.mp3');
     gameState.locallyCollected.add(dataId);
@@ -161,10 +171,13 @@ export function finalizeCollection(event, didAction) {
     updateCounter();
     updateScoreDisplay();
     updateComboDisplay();
-    gameState.pendingCollectTimeouts.delete(dataId);
-    gameState.beingCollected.delete(dataId);
 
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        try { navigator.vibrate(didAction ? 80 : 40); } catch (err) { }
+        try { navigator.vibrate(isSuccess ? 80 : 40); } catch (err) { }
     }
+}
+
+
+export function finalizeCollection(event, isMiss) {
+    processInteraction(event, isMiss ? 'miss' : 'miss');
 }
