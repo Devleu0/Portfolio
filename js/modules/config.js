@@ -71,6 +71,8 @@ export const state = {
     collectedIds: new Set(),    // 수집한 이벤트 ID 목록
     totalScore: 0,              // 총 점수
     perfectCount: 0,            // 'Perfect' 판정 횟수
+    goodCount: 0,               // 'Good' 판정 횟수
+    missCount: 0,               // 'Miss' 판정 횟수
     comboCount: 0,              // 현재 콤보 수
     maxCombo: 0,                // 최대 콤보 수
     lastComboBeforeReset: 0,    // 이전 콤보 상태 저장
@@ -79,6 +81,12 @@ export const state = {
     isGameHudVisible: false,    // 게임 HUD가 보이는지 여부
     isStatSectionCounted: false,// 통계 섹션 카운트 애니메이션 실행 여부
 };
+
+// ---------------------------------------------------------------------------------
+// 게임플레이 상수
+// ---------------------------------------------------------------------------------
+export const PERFECT_THRESHOLD = 40; // 'Perfect' 판정을 위한 최대 거리 (px)
+export const GOOD_THRESHOLD = 90;  // 'Good' 판정을 위한 최대 거리 (px)
 
 // ---------------------------------------------------------------------------------
 // 유틸리티 함수
