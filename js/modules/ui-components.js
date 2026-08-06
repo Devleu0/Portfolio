@@ -46,11 +46,11 @@ export function showBuffPopup(buffType) {
 
     const playerRect = playerEl.getBoundingClientRect();
     const popup = document.createElement('div');
-    popup.className = 'score-popup'; // Reuse score-popup style
+    popup.className = 'score-popup score-popup-buff'; // Reuse score-popup style
     popup.textContent = text;
     popup.style.cssText = `
         position: fixed;
-        left: ${playerRect.left + playerRect.width / 2}px;
+        left: ${playerRect.left + playerRect.width * 3}px;
         top: ${playerRect.top - 20}px;
         transform: translateX(-50%);
         font-family: var(--font-title);
@@ -229,7 +229,6 @@ function initTerminalEffect() {
     (function typeChar() {
         const text = window._termTypedText || '';
         if (ti <= text.length) {
-            // 정규식 내부를 /\n/g 로 수정
             termTyped.innerHTML = text.slice(0, ti).replace(/\n/g, '<br>') + '<span class="term-cursor" id="term-cursor">█</span>';
             ti++;
             setTimeout(typeChar, 30);
