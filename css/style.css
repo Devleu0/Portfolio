@@ -369,7 +369,7 @@ body {
 /* 1. 기계식 점프 패드 베이스 (두께감 및 형태) */
 .event-wrapper .jump-pad-platform, 
 .frame-wall[data-is-jump-pad="true"] {
-    width: 110px; /* 기존 뱃지(96px)보다 살짝 더 넓게 하여 지탱하는 안정감 부여 */
+    width: 200px; /* 기존 뱃지(96px)보다 살짝 더 넓게 하여 지탱하는 안정감 부여 */
     height: 26px; /* 두께감을 위해 높이 증가 */
     left: 50%;
     transform: translateX(-50%);
