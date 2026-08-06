@@ -80,6 +80,13 @@ export const state = {
     // UI 및 애니메이션 상태
     isGameHudVisible: false,    // 게임 HUD가 보이는지 여부
     isStatSectionCounted: false,// 통계 섹션 카운트 애니메이션 실행 여부
+
+    // 파워업/버프 상태
+    activeBuffs: {
+        speed: { active: false, timeoutId: null },
+        shield: { active: false, timeoutId: null },
+        multiplier: { active: false, value: 1, timeoutId: null },
+    },
 };
 
 // ---------------------------------------------------------------------------------
