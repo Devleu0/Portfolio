@@ -850,33 +850,114 @@ body {
 }
 
 /* 플레이어 버프 효과 */
-.player-buff-shield .player-wrapper::after, .player-buff-speed .player-wrapper::after {
-    content: '';
-    position: absolute;
-    top: -20%; 
-    left: -20%;
-    width: 140%;
-    height: 140%;
-    border-radius: 50%;
-    z-index: -1;
-    animation: buff-pulse 1.5s infinite ease-in-out;
-}
-
-.player-buff-shield .player-wrapper::after {
-    background: radial-gradient(circle, rgba(29, 78, 216, 0) 40%, rgba(59, 130, 246, 0.4) 70%, rgba(29, 78, 216, 0) 80%);
-    border: 2px solid rgba(96, 165, 250, 0.8);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.7);
-}
-
-.player-buff-speed .player-wrapper::after {
-    background: radial-gradient(circle, rgba(253, 224, 71, 0) 40%, rgba(250, 204, 21, 0.3) 65%, rgba(253, 224, 71, 0) 75%);
-    border: 2px solid rgba(253, 224, 71, 0.7);
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
-}
-
 .player-buff-speed .player-inner {
     filter: drop-shadow(0 0 12px #FBBF24) !important;
 }
+
+/* New Shield Effect */
+.player-buff-shield .player-wrapper {
+    --shield-color: #38BDF8;
+    --shield-glow: rgba(56, 189, 248, 0.7);
+    --shield-thickness: 4px;
+    --shield-offset: -12px;
+    --shield-anim-duration: 0.8s;
+}
+
+.player-buff-shield .player-wrapper::before,
+.player-buff-shield .player-wrapper::after,
+.player-buff-shield .player-inner::before,
+.player-buff-shield .player-inner::after {
+    content: '';
+    position: absolute;
+    background-color: var(--shield-color);
+    box-shadow: 0 0 12px var(--shield-glow);
+    opacity: 0.8;
+    animation: shield-pulse var(--shield-anim-duration) infinite alternate;
+}
+
+/* Top bar */
+.player-buff-shield .player-wrapper::before {
+    top: var(--shield-offset);
+    left: var(--shield-offset);
+    right: var(--shield-offset);
+    height: var(--shield-thickness);
+    animation-delay: 0s;
+}
+
+/* Bottom bar */
+.player-buff-shield .player-wrapper::after {
+    bottom: var(--shield-offset);
+    left: var(--shield-offset);
+    right: var(--shield-offset);
+    height: var(--shield-thickness);
+    animation-delay: calc(var(--shield-anim-duration) / 2);
+}
+
+/* Left bar */
+.player-buff-shield .player-inner::before {
+    top: var(--shield-offset);
+    bottom: var(--shield-offset);
+    left: var(--shield-offset);
+    width: var(--shield-thickness);
+    animation-delay: calc(var(--shield-anim-duration) / 4);
+}
+
+/* Right bar */
+.player-buff-shield .player-inner::after {
+    top: var(--shield-offset);
+    bottom: var(--shield-offset);
+    right: var(--shield-offset);
+    width: var(--shield-thickness);
+    animation-delay: calc(var(--shield-anim-duration) * 3 / 4);
+}
+
+@keyframes shield-pulse {
+    from {
+        opacity: 0.5;
+        box-shadow: 0 0 8px var(--shield-glow);
+    }
+    to {
+        opacity: 1;
+        box-shadow: 0 0 20px var(--shield-glow);
+    }
+}
+
+
+/* Speed Lines Effect */
+#speed-lines-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2; /* Below sky-overlay but above background */
+    display: none; /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+#speed-lines-overlay.speed-lines-active {
+    display: block;
+    opacity: 1;
+}
+
+#speed-lines-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 20px,
+        rgba(255, 255, 255, 0.2) 20px,
+        rgba(255, 255, 255, 0.2) 22px
+    );
+    background-size: 100% 42px;
+    animation: speed-lines-anim 0.2s linear infinite;
+}
+
+@keyframes speed-lines-anim {
+    from { background-position: 0 0; }
+    to { background-position: 0 -42px; }
+}
+
 
 @keyframes buff-pulse {
     0% {

@@ -12,7 +12,9 @@ export function gameLoop(time, deltaTime) {
         doJump();
     }
 
-    const scrollSpeed = isMobile ? 16 : 24;
+    const baseScrollSpeed = isMobile ? 16 : 24;
+    const speedMultiplier = state.activeBuffs.speed.active ? 1.3 : 1;
+    const scrollSpeed = baseScrollSpeed * speedMultiplier;
     const horizontalMove = scrollSpeed * timeScale;
 
     let scrollDelta = 0;

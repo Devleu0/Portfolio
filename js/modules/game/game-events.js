@@ -1,7 +1,46 @@
 import { THEME, ICONS, buildLangAttrs, getStr, getCategoryColor, state, isMobile } from '../app-config.js';
 import { playSound } from '../audio-manager.js';
-import { updateCounter, updateScoreDisplay, updateComboDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast } from '../ui-components.js';
+import { updateCounter, updateScoreDisplay, updateComboDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast, updatePlayerBuffVisuals, showBuffPopup } from '../ui-components.js';
 import { gameState } from './game-state.js';
+
+const BUFF_DURATION = 10000; // 10초
+
+/**
+ * 지정된 타입의 버프를 활성화하고, 일정 시간 후 비활성화합니다.
+ * @param {string} buffType - 'speed', 'shield', 'score_multiplier' 등 버프의 종류
+ */
+function activateBuff(buffType) {
+    if (!buffType || !state.activeBuffs[buffType]) return;
+
+    const buff = state.activeBuffs[buffType];
+
+    // 이미 활성화된 버프의 타이머가 있다면 초기화
+    if (buff.timeoutId) {
+        clearTimeout(buff.timeoutId);
+    }
+
+    buff.active = true;
+    showBuffPopup(buffType); // 버프 팝업 표시
+    console.log(`${buffType} buff activated!`);
+
+    if (buffType === 'score_multiplier') {
+        buff.value = 2; // 점수 2배
+    }
+
+    // 일정 시간 후 버프 비활성화
+    buff.timeoutId = setTimeout(() => {
+        buff.active = false;
+        if (buffType === 'score_multiplier') {
+            buff.value = 1; // 점수 배율 초기화
+        }
+        buff.timeoutId = null;
+        console.log(`${buffType} buff deactivated.`);
+        updatePlayerBuffVisuals(); // 버프 비활성화 시 시각 효과 업데이트
+    }, BUFF_DURATION);
+
+    updatePlayerBuffVisuals(); // 버프 활성화 시 시각 효과 업데이트
+}
+
 
 export function createEvent(data, fallbackId) {
     const hasImg = !!data.customIcon;
@@ -21,6 +60,11 @@ export function createEvent(data, fallbackId) {
 
     const catColor = data.colorOverride || getCategoryColor(data.category);
     wrapper.style.setProperty('--cat-color', catColor);
+
+    // 이벤트 데이터 객체에 buffType 저장
+    if (data.buffType) {
+        wrapper.dataset.buffType = data.buffType;
+    }
 
     wrapper.onclick = (e) => {
         e.stopPropagation();
@@ -146,12 +190,20 @@ export function processInteraction(event, judgement) {
     gameState.beingCollected.delete(dataId);
     gameState.pendingCollectTimeouts.delete(dataId);
 
+    // 버프 타입 확인 및 활성화
+    const buffType = event.dataset.buffType;
+    if (buffType) {
+        activateBuff(buffType);
+    }
+
     // 모든 상호작용을 'perfect'로 처리
     state.comboCount++;
     state.maxCombo = Math.max(state.maxCombo, state.comboCount);
 
-    const multiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
-    state.totalScore += Math.round(500 * multiplier);
+    const comboMultiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
+    const scoreMultiplier = state.activeBuffs.multiplier.value || 1;
+    state.totalScore += Math.round(500 * comboMultiplier * scoreMultiplier);
+
     state.perfectCount++;
     triggerComboEffect(state.comboCount);
 

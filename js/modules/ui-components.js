@@ -16,11 +16,82 @@ export function updateComboDisplay() {
     if (comboEl) comboEl.textContent = state.comboCount;
 }
 
+export function showBuffPopup(buffType) {
+    const playerEl = getPlayerElement();
+    if (!playerEl) return;
+
+    let text = '';
+    let color = '';
+
+    switch (buffType) {
+        case 'speed':
+            text = 'SPEED UP!';
+            color = '#FDE047'; // Yellow
+            break;
+        case 'shield':
+            text = 'SHIELD ON!';
+            color = '#38BDF8'; // Blue
+            break;
+        case 'score_multiplier':
+            text = 'SCORE x2!';
+            color = '#FBBF24'; // Gold
+            break;
+        case 'powerup':
+            text = 'POWER UP!';
+            color = '#FFFFFF'; // White
+            break;
+        default:
+            return;
+    }
+
+    const playerRect = playerEl.getBoundingClientRect();
+    const popup = document.createElement('div');
+    popup.className = 'score-popup'; // Reuse score-popup style
+    popup.textContent = text;
+    popup.style.cssText = `
+        position: fixed;
+        left: ${playerRect.left + playerRect.width / 2}px;
+        top: ${playerRect.top - 20}px;
+        transform: translateX(-50%);
+        font-family: var(--font-title);
+        font-size: 1.8em;
+        font-weight: bold;
+        color: ${color};
+        text-shadow: 3px 3px 0 var(--shadow);
+        white-space: nowrap;
+        z-index: 101;
+        pointer-events: none;
+    `;
+    document.body.appendChild(popup);
+
+    gsap.fromTo(popup,
+        { opacity: 0, y: 0, scale: 0.5 },
+        {
+            opacity: 1,
+            y: -50,
+            scale: 1,
+            duration: 0.4,
+            ease: 'back.out(1.7)',
+            onComplete: () => {
+                gsap.to(popup, {
+                    opacity: 0,
+                    y: -100,
+                    duration: 0.5,
+                    delay: 0.8,
+                    ease: 'power1.in',
+                    onComplete: () => popup.remove()
+                });
+            }
+        }
+    );
+}
+
+
 export function triggerCollectEffect(eventEl, judgement = 'perfect', category = 'other') {
     // 사각 애니메이션 (이벤트 기준)
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave is-perfect';
-    
+
     const catColor = getCategoryColor(category);
     wave.style.setProperty('--wave-color', catColor);
 
@@ -75,7 +146,7 @@ function createProgressMarkers() {
 
         const tooltip = document.createElement('div');
         tooltip.className = 'progress-tooltip';
-        
+
         // Add data attributes for each language
         if (typeof event.title === 'object' && event.title !== null) {
             tooltip.dataset.ko = event.title.ko || '';
@@ -158,6 +229,7 @@ function initTerminalEffect() {
     (function typeChar() {
         const text = window._termTypedText || '';
         if (ti <= text.length) {
+            // 정규식 내부를 /\n/g 로 수정
             termTyped.innerHTML = text.slice(0, ti).replace(/\n/g, '<br>') + '<span class="term-cursor" id="term-cursor">█</span>';
             ti++;
             setTimeout(typeChar, 30);
@@ -193,7 +265,7 @@ function initStatCounter() {
             if (finalRankEl) {
                 const events = getEventData();
                 const totalObjects = events.length;
-                const estimatedMaxScore = totalObjects * 500 * 1.2; 
+                const estimatedMaxScore = totalObjects * 500 * 1.2;
 
                 const rankThresholds = {
                     S: estimatedMaxScore * 0.9,
@@ -295,6 +367,23 @@ function initZoneScenery() {
     });
 }
 
+/**
+ * 플레이어의 버프 상태에 따라 시각적 효과(CSS 클래스)를 업데이트합니다.
+ */
+export function updatePlayerBuffVisuals() {
+    const playerEl = getPlayerElement();
+    if (!playerEl) return;
+
+    // Player-specific visual cues
+    playerEl.classList.toggle('player-buff-speed', !!state.activeBuffs.speed.active);
+    playerEl.classList.toggle('player-buff-shield', !!state.activeBuffs.shield.active);
+
+    // Global visual cues
+    const speedOverlay = document.getElementById('speed-lines-overlay');
+    if (speedOverlay) {
+        speedOverlay.classList.toggle('speed-lines-active', !!state.activeBuffs.speed.active);
+    }
+}
 
 export function initUI() {
     initModeButtons();
@@ -337,8 +426,8 @@ export function triggerComboEffect(combo) {
     comboEl.dataset.tier = tier;
 
     // Counter punch animation
-    gsap.fromTo(comboEl, 
-        { scale: 1.4 }, 
+    gsap.fromTo(comboEl,
+        { scale: 1.4 },
         { scale: 1, duration: 0.25, ease: 'back.out(3)' }
     );
 
@@ -355,8 +444,8 @@ export function triggerComboEffect(combo) {
 export function hideComboCounter() {
     const comboEl = document.getElementById('combo-display');
     if (!comboEl) return;
-    gsap.to(comboEl, { 
-        opacity: 0, scale: 0.8, duration: 0.3, 
+    gsap.to(comboEl, {
+        opacity: 0, scale: 0.8, duration: 0.3,
         onComplete: () => {
             comboEl.classList.remove('is-active');
             // Reset opacity and scale for the next time
@@ -370,7 +459,7 @@ function triggerScreenShake(tier) {
     const container = document.querySelector('.horizontal-container');
     if (!container) return;
     const shakeClass = `shake-${tier}`;
-    
+
     // Using a timeout to allow the class to be removed before re-adding
     container.classList.remove('shake-mid', 'shake-high', 'shake-max');
     setTimeout(() => {
@@ -385,9 +474,9 @@ function triggerBackgroundFlash(tier) {
     const flash = document.getElementById('combo-flash');
     if (!flash) return;
     const color = tier === 'max' ? 'radial-gradient(circle, rgba(253,224,71,0.5), transparent 70%)'
-                : tier === 'high' ? 'radial-gradient(circle, rgba(253,224,71,0.3), transparent 70%)'
-                : 'radial-gradient(circle, rgba(34,211,238,0.2), transparent 70%)';
-    
+        : tier === 'high' ? 'radial-gradient(circle, rgba(253,224,71,0.3), transparent 70%)'
+            : 'radial-gradient(circle, rgba(34,211,238,0.2), transparent 70%)';
+
     flash.style.background = color;
     gsap.fromTo(flash, { opacity: 1 }, { opacity: 0, duration: tier === 'max' ? 0.5 : 0.3, ease: 'power2.out' });
 }
@@ -408,9 +497,10 @@ function showMaxComboPopup(combo) {
         z-index: 100;
     `;
     document.body.appendChild(popup);
-    gsap.fromTo(popup, 
+    gsap.fromTo(popup,
         { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)', 
+        {
+            scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)',
             onComplete: () => {
                 gsap.to(popup, { opacity: 0, scale: 1.5, duration: 0.5, delay: 0.5, onComplete: () => popup.remove() });
             }
@@ -441,7 +531,8 @@ export function showComboBreakToast(lastCombo) {
     document.body.appendChild(toast);
     gsap.fromTo(toast,
         { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out',
+        {
+            y: 0, opacity: 1, duration: 0.3, ease: 'power2.out',
             onComplete: () => {
                 gsap.to(toast, { opacity: 0, y: -20, duration: 0.6, delay: 0.6, ease: 'power1.in', onComplete: () => toast.remove() });
             }
