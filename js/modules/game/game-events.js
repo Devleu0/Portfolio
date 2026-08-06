@@ -1,9 +1,7 @@
-import { THEME, ICONS, buildLangAttrs, getStr, getCategoryColor, state, isMobile } from '../app-config.js';
+import { THEME, ICONS, buildLangAttrs, getStr, getCategoryColor, state, isMobile, BUFF_SETTINGS } from '../app-config.js';
 import { playSound } from '../audio-manager.js';
 import { updateCounter, updateScoreDisplay, updateComboDisplay, triggerCollectEffect, triggerComboEffect, hideComboCounter, showComboBreakToast, updatePlayerBuffVisuals, showBuffPopup } from '../ui-components.js';
 import { gameState } from './game-state.js';
-
-const BUFF_DURATION = 10000; // 10초
 
 /**
  * 지정된 타입의 버프를 활성화하고, 일정 시간 후 비활성화합니다.
@@ -24,7 +22,7 @@ function activateBuff(buffType) {
     console.log(`${buffType} buff activated!`);
 
     if (buffType === 'score_multiplier') {
-        buff.value = 2; // 점수 2배
+        buff.value = BUFF_SETTINGS.scoreMultiplier; // 점수 배율 설정
     }
 
     // 일정 시간 후 버프 비활성화
@@ -36,7 +34,7 @@ function activateBuff(buffType) {
         buff.timeoutId = null;
         console.log(`${buffType} buff deactivated.`);
         updatePlayerBuffVisuals(); // 버프 비활성화 시 시각 효과 업데이트
-    }, BUFF_DURATION);
+    }, BUFF_SETTINGS.duration);
 
     updatePlayerBuffVisuals(); // 버프 활성화 시 시각 효과 업데이트
 }

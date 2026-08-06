@@ -369,7 +369,7 @@
     "link": "https://devleu.tistory.com/43",
     "entranceDir": 0,
     "isFloatingPlatform": true,
-    "buffType": "shield"
+    "buffType": "none"
   },
   {
     "id": 26,
@@ -413,7 +413,7 @@
     "entranceDir": 0,
     "isFloatingPlatform": false,
     "isJumpPad": true,
-    "buffType": "powerup"
+    "buffType": "none"
   },
   {
     "id": 25,
@@ -455,7 +455,7 @@
     "link": "https://www.dataq.or.kr/",
     "entranceDir": 0,
     "isFloatingPlatform": true,
-    "buffType": "score_multiplier"
+    "buffType": "none"
   },
   {
     "id": 22,
@@ -539,7 +539,7 @@
     "link": "https://devleu.tistory.com/42",
     "entranceDir": 0,
     "isFloatingPlatform": true,
-    "buffType": "speed"
+    "buffType": "none"
   },
   {
     "id": 19,
@@ -581,5 +581,65 @@
     "link": "",
     "isJumpPad": true,
     "inProgress": true
+  },
+  {
+    "id": 48365,
+    "pos": 4000,
+    "elevation": 50,
+    "title": {
+      "ko": "C",
+      "en": "C",
+      "ja": "C"
+    },
+    "desc": {
+      "ko": "C 입문",
+      "en": "C language",
+      "ja": "C入門"
+    },
+    "color": "#38BDF8",
+    "category": "other",
+    "link": "",
+    "isJumpPad": true,
+    "buffType": "powerup"
+  },
+  {
+    "id": 60029,
+    "pos": 5500,
+    "elevation": 50,
+    "title": {
+      "ko": "Unity",
+      "en": "Unity",
+      "ja": "Unity"
+    },
+    "desc": {
+      "ko": "Unity 입문",
+      "en": "Introduction to Unity",
+      "ja": "Unity入門"
+    },
+    "color": "#38BDF8",
+    "category": "other",
+    "link": "",
+    "isJumpPad": true,
+    "buffType": "speed"
+  },
+  {
+    "id": 10963,
+    "pos": 7000,
+    "elevation": 50,
+    "title": {
+      "ko": "Python",
+      "en": "Python",
+      "ja": "Python"
+    },
+    "desc": {
+      "ko": "Python 시작",
+      "en": "Start Python",
+      "ja": "Pythonを起動する"
+    },
+    "color": "#38BDF8",
+    "category": "other",
+    "link": "",
+    "buffType": "shield",
+    "isJumpPad": true
   }
 ]
