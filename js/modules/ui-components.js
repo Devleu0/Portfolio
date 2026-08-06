@@ -376,6 +376,7 @@ export function updatePlayerBuffVisuals() {
     // Player-specific visual cues
     playerEl.classList.toggle('player-buff-speed', !!state.activeBuffs.speed.active);
     playerEl.classList.toggle('player-buff-shield', !!state.activeBuffs.shield.active);
+    playerEl.classList.toggle('player-buff-score', !!state.activeBuffs.score_multiplier.active);
 
     // Global visual cues
     const speedOverlay = document.getElementById('speed-lines-overlay');
