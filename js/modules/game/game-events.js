@@ -199,7 +199,7 @@ export function processInteraction(event, judgement) {
     state.maxCombo = Math.max(state.maxCombo, state.comboCount);
 
     const comboMultiplier = state.comboCount >= 10 ? 2.0 : state.comboCount >= 5 ? 1.5 : state.comboCount >= 3 ? 1.2 : 1.0;
-    const scoreMultiplier = state.activeBuffs.multiplier.value || 1;
+    const scoreMultiplier = state.activeBuffs.score_multiplier.value || 1;
     state.totalScore += Math.round(500 * comboMultiplier * scoreMultiplier);
 
     state.perfectCount++;

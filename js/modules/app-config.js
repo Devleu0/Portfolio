@@ -86,7 +86,7 @@ export const state = {
         speed_multiplier: { active: false, timeoutId: null },
         shield: { active: false, timeoutId: null },
         score_multiplier: { active: false, value: 1, timeoutId: null },
-        powerUp: { active: false, timeoutId: null },
+        powerup: { active: false, timeoutId: null },
     },
 };
 

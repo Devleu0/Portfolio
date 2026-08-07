@@ -13,7 +13,7 @@ export function gameLoop(time, deltaTime) {
     }
 
     const baseScrollSpeed = isMobile ? 16 : 24;
-    const speedMultiplier = state.activeBuffs.speed.active ? BUFF_SETTINGS.speedMultiplier : 1;
+    const speedMultiplier = state.activeBuffs.speed_multiplier.active ? BUFF_SETTINGS.speedMultiplier : 1;
     const scrollSpeed = baseScrollSpeed * speedMultiplier;
     const horizontalMove = scrollSpeed * timeScale;
 

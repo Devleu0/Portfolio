@@ -368,8 +368,7 @@
     "inProgress": false,
     "link": "https://devleu.tistory.com/43",
     "entranceDir": 0,
-    "isFloatingPlatform": true,
-    "buffType": "none"
+    "isFloatingPlatform": true
   },
   {
     "id": 26,
@@ -412,8 +411,7 @@
     "link": "https://devleu.tistory.com/46",
     "entranceDir": 0,
     "isFloatingPlatform": false,
-    "isJumpPad": true,
-    "buffType": "none"
+    "isJumpPad": true
   },
   {
     "id": 25,
@@ -454,8 +452,7 @@
     "category": "certificate",
     "link": "https://www.dataq.or.kr/",
     "entranceDir": 0,
-    "isFloatingPlatform": true,
-    "buffType": "none"
+    "isFloatingPlatform": true
   },
   {
     "id": 22,
@@ -538,8 +535,7 @@
     "inProgress": false,
     "link": "https://devleu.tistory.com/42",
     "entranceDir": 0,
-    "isFloatingPlatform": true,
-    "buffType": "none"
+    "isFloatingPlatform": true
   },
   {
     "id": 19,
@@ -620,7 +616,7 @@
     "category": "other",
     "link": "",
     "isJumpPad": true,
-    "buffType": "speed"
+    "buffType": "speed_multiplier"
   },
   {
     "id": 10963,

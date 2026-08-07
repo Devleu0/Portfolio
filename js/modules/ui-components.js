@@ -366,22 +366,57 @@ function initZoneScenery() {
     });
 }
 
+// A map of buffs that have dedicated visual elements
+const BUFF_VISUALS = {
+    shield: 'shield-visual',
+    // ... add other buffs here that have a visual representation
+};
+
 /**
- * 플레이어의 버프 상태에 따라 시각적 효과(CSS 클래스)를 업데이트합니다.
+ * 플레이어의 버프 상태에 따라 시각적 효과를 업데이트합니다.
+ * 일부 버프(예: 실드)는 DOM에 요소를 직접 추가/제거하고,
+ * 다른 버프는 플레이어 요소의 CSS 클래스를 토글합니다.
  */
 export function updatePlayerBuffVisuals() {
     const playerEl = getPlayerElement();
     if (!playerEl) return;
 
-    // Player-specific visual cues
-    playerEl.classList.toggle('player-buff-speed', !!state.activeBuffs.speed.active);
-    playerEl.classList.toggle('player-buff-shield', !!state.activeBuffs.shield.active);
-    playerEl.classList.toggle('player-buff-score', !!state.activeBuffs.score_multiplier.active);
+    // --- Player-specific visual cues ---
 
-    // Global visual cues
+    // Handle buffs that add/remove elements (e.g., shield)
+    for (const buffKey in BUFF_VISUALS) {
+        const buff = state.activeBuffs[buffKey];
+        const visualClass = BUFF_VISUALS[buffKey];
+        let visualEl = playerEl.querySelector(`.${visualClass}`);
+
+        if (buff && buff.active) {
+            if (!visualEl) {
+                visualEl = document.createElement('div');
+                visualEl.classList.add('player-buff-visual', visualClass);
+                // Ensure playerEl has position relative or similar for correct positioning
+                playerEl.appendChild(visualEl);
+
+                // Initial animation
+                gsap.fromTo(visualEl, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
+            }
+        } else {
+            if (visualEl) {
+                // Animation on removal
+                gsap.to(visualEl, { opacity: 0, scale: 0.5, duration: 0.3, ease: 'back.in(1.7)', onComplete: () => visualEl.remove() });
+            }
+        }
+    }
+
+    // Handle buffs that only toggle classes
+    playerEl.classList.toggle('player-buff-speed_multiplier', !!(state.activeBuffs.speed_multiplier && state.activeBuffs.speed_multiplier.active));
+    playerEl.classList.toggle('player-buff-score_multiplier', !!(state.activeBuffs.score_multiplier && state.activeBuffs.score_multiplier.active));
+    playerEl.classList.toggle('player-buff-powerup', !!(state.activeBuffs.powerup && state.activeBuffs.powerup.active));
+
+
+    // --- Global visual cues ---
     const speedOverlay = document.getElementById('speed-lines-overlay');
     if (speedOverlay) {
-        speedOverlay.classList.toggle('speed-lines-active', !!state.activeBuffs.speed.active);
+        speedOverlay.classList.toggle('speed-lines-active', !!(state.activeBuffs.speed_multiplier && state.activeBuffs.speed_multiplier.active));
     }
 }
 
