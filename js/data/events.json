@@ -15,7 +15,7 @@
       "ja": "光州広域市 (2003年9月)"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "birth",
     "link": "https://www.gwangju.go.kr/",
     "hidden": false,
     "entranceDir": 0,
@@ -352,7 +352,7 @@
       "ja": "韓国空軍兵長 (851期, 2025年6月)"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "military",
     "link": "https://rokaf.mil.kr/",
     "entranceDir": 0,
     "isJumpPad": true
@@ -560,7 +560,7 @@
       "ja": "グローバルイノベーションハンドル（2026年6月）"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "internship",
     "link": "",
     "inProgress": true,
     "entranceDir": 0,
