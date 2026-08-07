@@ -86,7 +86,6 @@ export const state = {
         speed_multiplier: { active: false, timeoutId: null },
         shield: { active: false, timeoutId: null },
         score_multiplier: { active: false, value: 1, timeoutId: null },
-        powerup: { active: false, timeoutId: null },
     },
 };
 
@@ -101,7 +100,7 @@ export const GOOD_THRESHOLD_MS = 200;  // 'Good' 판정을 위한 최대 시간 
 // 버프 설정
 // ---------------------------------------------------------------------------------
 export const BUFF_SETTINGS = {
-    duration: 10000,           // 버프 지속시간 (ms)
+    duration: 5000,           // 버프 지속시간 (ms)
     speedMultiplier: 1.3,      // 속도 증가 배율
     scoreMultiplier: 2,        // 점수 획득 배율
 };

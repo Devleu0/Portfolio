@@ -36,10 +36,6 @@ export function showBuffPopup(buffType) {
             text = 'SCORE x2!';
             color = '#FBBF24'; // Gold
             break;
-        case 'powerup':
-            text = 'POWER UP!';
-            color = '#FFFFFF'; // White
-            break;
         default:
             return;
     }
@@ -366,54 +362,70 @@ function initZoneScenery() {
     });
 }
 
-// A map of buffs that have dedicated visual elements
-const BUFF_VISUALS = {
-    shield: 'shield-visual',
-    // ... add other buffs here that have a visual representation
+// A configuration object for buffs that have dedicated visual elements.
+// This makes it easy to add new visual effects in the future.
+const BUFF_VISUAL_CONFIG = {
+    shield: {
+        className: 'shield-visual',
+        // Inline styles are used here as a temporary measure to ensure visibility,
+        // bypassing potential issues in external CSS files.
+        // These can be moved to a proper CSS file later.
+        inlineStyle: 'position: absolute; top: -15%; left: -15%; width: 130%; height: 130%; border-radius: 50%; background-color: rgba(56, 189, 248, 0.4); border: 2px solid rgba(56, 189, 248, 0.8); pointer-events: none;'
+    }
+    // Future buffs with dedicated visuals can be added here.
 };
 
 /**
- * 플레이어의 버프 상태에 따라 시각적 효과를 업데이트합니다.
- * 일부 버프(예: 실드)는 DOM에 요소를 직접 추가/제거하고,
- * 다른 버프는 플레이어 요소의 CSS 클래스를 토글합니다.
+ * Manages the creation, update, and removal of a buff's visual element based on its state.
+ * @param {HTMLElement} playerEl - The player's main DOM element.
+ * @param {string} buffKey - The key for the buff (e.g., 'shield').
+ * @param {boolean} isActive - Whether the buff is currently active.
+ */
+function manageBuffVisual(playerEl, buffKey, isActive) {
+    const config = BUFF_VISUAL_CONFIG[buffKey];
+    if (!config) return;
+
+    const visualClass = config.className;
+    let visualEl = playerEl.querySelector(`.${visualClass}`);
+
+    if (isActive) {
+        if (!visualEl) {
+            visualEl = document.createElement('div');
+            visualEl.className = `player-buff-visual ${visualClass}`;
+            if (config.inlineStyle) {
+                visualEl.style.cssText = config.inlineStyle;
+            }
+            playerEl.appendChild(visualEl);
+            gsap.fromTo(visualEl, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
+        }
+    } else {
+        if (visualEl) {
+            gsap.to(visualEl, { opacity: 0, scale: 0.5, duration: 0.3, ease: 'back.in(1.7)', onComplete: () => visualEl.remove() });
+        }
+    }
+}
+
+/**
+ * Updates all visual effects based on the player's current buffs.
+ * It handles both buffs that require dedicated DOM elements (like shields)
+ * and those that just toggle CSS classes on the player.
  */
 export function updatePlayerBuffVisuals() {
     const playerEl = getPlayerElement();
     if (!playerEl) return;
 
-    // --- Player-specific visual cues ---
-
-    // Handle buffs that add/remove elements (e.g., shield)
-    for (const buffKey in BUFF_VISUALS) {
+    // --- Handle buffs that add/remove dedicated visual elements ---
+    Object.keys(BUFF_VISUAL_CONFIG).forEach(buffKey => {
         const buff = state.activeBuffs[buffKey];
-        const visualClass = BUFF_VISUALS[buffKey];
-        let visualEl = playerEl.querySelector(`.${visualClass}`);
+        manageBuffVisual(playerEl, buffKey, !!(buff && buff.active));
+    });
 
-        if (buff && buff.active) {
-            if (!visualEl) {
-                visualEl = document.createElement('div');
-                visualEl.classList.add('player-buff-visual', visualClass);
-                // Ensure playerEl has position relative or similar for correct positioning
-                playerEl.appendChild(visualEl);
-
-                // Initial animation
-                gsap.fromTo(visualEl, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
-            }
-        } else {
-            if (visualEl) {
-                // Animation on removal
-                gsap.to(visualEl, { opacity: 0, scale: 0.5, duration: 0.3, ease: 'back.in(1.7)', onComplete: () => visualEl.remove() });
-            }
-        }
-    }
-
-    // Handle buffs that only toggle classes
+    // --- Handle buffs that only toggle classes on the player ---
     playerEl.classList.toggle('player-buff-speed_multiplier', !!(state.activeBuffs.speed_multiplier && state.activeBuffs.speed_multiplier.active));
     playerEl.classList.toggle('player-buff-score_multiplier', !!(state.activeBuffs.score_multiplier && state.activeBuffs.score_multiplier.active));
-    playerEl.classList.toggle('player-buff-powerup', !!(state.activeBuffs.powerup && state.activeBuffs.powerup.active));
+    
 
-
-    // --- Global visual cues ---
+    // --- Handle global visual cues (e.g., screen-wide effects) ---
     const speedOverlay = document.getElementById('speed-lines-overlay');
     if (speedOverlay) {
         speedOverlay.classList.toggle('speed-lines-active', !!(state.activeBuffs.speed_multiplier && state.activeBuffs.speed_multiplier.active));
