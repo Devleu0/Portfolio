@@ -853,127 +853,87 @@ body {
    플레이어 버프 이펙트 (개선안)
    ========================================================================== */
 
-/* 1. 스피드 버프 (잔상 이펙트 & 기울임 연출) */
-.player-buff-speed .player-inner {
-    /* 겹겹이 쌓인 피셀 잔상과 강력한 글로우 */
-    filter: drop-shadow(-8px 0 0 #FBBF24) 
-            drop-shadow(-16px 0 0 rgba(245, 158, 11, 0.5)) 
-            drop-shadow(0 0 12px #FBBF24) !important;
-    /* 공기 저항을 받는 듯한 실시간 기울임 이펙트 */
-    transform: skewX(-8deg);
-    animation: speed-jitter 0.12s steps(2) infinite;
+/* Generic styles for all buff visuals. Handles centering within the player element. */
+.player-buff-visual {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* Add a transition for smooth appearance/disappearance if needed, but GSAP handles it. */
 }
 
-@keyframes speed-jitter {
-    0% { transform: skewX(-8deg) translateY(0); }
-    50% { transform: skewX(-10deg) translateY(-1px); }
-    100% { transform: skewX(-8deg) translateY(0); }
+/* 1. 스피드 버프 (회전하는 시안 네온 대쉬 링) */
+.speed-visual {
+    width: 180%; /* Relative to player size */
+    height: 180%; /* Relative to player size */
+    border-radius: 50%;
+    border: 4px dashed var(--accent); /* Using var(--accent) for cyan */
+    box-shadow: 0 0 16px var(--accent), inset 0 0 16px var(--accent);
+    animation: spin 3s linear infinite;
+    z-index: 15; /* Above player (z-index 10) */
 }
 
+/* Afterimage for speed buff */
+.speed-afterimage {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9; /* Below player (z-index 10) but above other things */
+    opacity: 0.7;
+    color: var(--accent); /* Cyan color */
+    filter: drop-shadow(0 0 8px var(--accent));
+    will-change: opacity, transform;
+}
+
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
 
 /* 2. 사이버 에너틱 쉴드 (구형 파동 및 회전 링) */
+.shield-visual {
+    width: 130%; /* Relative to player size */
+    height: 130%; /* Relative to player size */
+    border-radius: 50%;
+    background-color: rgba(56, 189, 248, 0.4);
+    border: 2px solid rgba(56, 189, 248, 0.8);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.7), inset 0 0 8px rgba(56, 189, 248, 0.5);
+    z-index: 15; /* Same as speed-visual */
+}
+
+/* Player-specific buff class for direct player styling (e.g., glow) */
+/* The player-buff-speed_multiplier class is now toggled on the playerEl */
+.player-buff-speed_multiplier .player-inner {
+    filter: drop-shadow(0 0 10px var(--accent)) drop-shadow(0 0 5px white);
+}
 .player-buff-shield .player-inner {
-    position: relative;
+    /* No direct styling here, handled by shield-visual element */
+}
+.player-buff-score_multiplier .player-inner {
+    /* No direct styling here, handled by a separate element or popup */
 }
 
-/* 외부 회전 점선 링 */
-.player-buff-shield .player-inner::before {
-    content: '';
-    position: absolute;
-    inset: -16px;
-    border-radius: 50%;
-    border: 3px dashed #38BDF8;
-    background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0.4) 70%, transparent 100%);
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.8), inset 0 0 12px rgba(56, 189, 248, 0.5);
-    animation: shield-rotate 4s linear infinite, shield-pulse 1s ease-in-out infinite alternate;
-    pointer-events: none;
-    z-index: 200;
-}
-
-/* 내부 충격파 글로우 층 */
+/* HIDE old buff styles (pseudo-elements are no longer used for new system) */
+.player-buff-speed .player-inner,
+.player-buff-speed .player-inner::before,
+.player-buff-speed .player-inner::after,
+.player-buff-shield .player-inner::before,
 .player-buff-shield .player-inner::after {
-    content: '';
-    position: absolute;
-    inset: -10px;
-    border-radius: 50%;
-    border: 2px solid #22D3EE;
-    opacity: 0.7;
-    animation: shield-pulse 0.7s ease-in-out infinite alternate-reverse;
-    pointer-events: none;
-    z-index: 201;
-}
-
-@keyframes shield-rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes shield-pulse {
-    0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 10px rgba(56, 189, 248, 0.6), inset 0 0 8px rgba(56, 189, 248, 0.4);
-    }
-    100% {
-        transform: scale(1.08);
-        box-shadow: 0 0 24px rgba(56, 189, 248, 0.95), inset 0 0 16px rgba(56, 189, 248, 0.7);
-    }
-}
-
-/* 3. 점수 2배 버프 (테스트용) */
-.player-buff-score .player-wrapper {
-    border: 10px solid #22c55e; /* 밝은 녹색의 두꺼운 테두리 */
-}
-.player-buff-score .player-inner {
-    /* 쉴드와 충돌 방지 */
+    all: unset; /* Remove all inherited styles */
+    display: none !important;
 }
 
 
-/* 4. 가로형 고속 스피드 라인 오버레이 */
+/* HIDE old global speed lines overlay permanently */
 #speed-lines-overlay {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    display: none !important;
 }
 
-#speed-lines-overlay.speed-lines-active {
-    display: block;
-    opacity: 1;
-}
 
-/* 가로 방향(90deg)으로 가속되어 흐르는 광선 스트라이프 */
-#speed-lines-overlay::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 150px,
-        rgba(253, 224, 71, 0.15) 150px,
-        rgba(253, 224, 71, 0.35) 220px,
-        transparent 220px,
-        transparent 350px
-    );
-    background-size: 700px 100%;
-    animation: horizontal-speed-anim 0.22s linear infinite;
-}
-
-/* 화면 가장자리를 어둡게 만들어 속도 몰입감을 높이는 비네트(Vignette) 효과 */
-#speed-lines-overlay::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(2, 6, 23, 0.65) 100%);
-}
-
-@keyframes horizontal-speed-anim {
-    from { background-position: 0 0; }
-    to { background-position: -700px 0; }
-}
 
 
 /* 4. 범용 버프 펄스 애니메이션 (UI / HUD용) */
@@ -2573,6 +2533,35 @@ button.action {
         /* 각 아이템 사이 적절한 여백 */
         margin-bottom: 20px !important;
     }
+}
+
+/* Buff Visual Effects - New System */
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.speed-visual {
+    width: 180%;
+    height: 180%;
+    border-radius: 50%;
+    border: 4px dashed #22D3EE; /* Cyan color from theme */
+    box-shadow: 0 0 16px #22D3EE, inset 0 0 16px #22D3EE;
+    animation: spin 3s linear infinite;
+}
+
+.speed-afterimage {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9; /* Below player (z-index 10) */
+    opacity: 0.7;
+    color: #22D3EE; /* Cyan color */
+    filter: drop-shadow(0 0 8px #22D3EE);
+    will-change: opacity, transform;
 }
 
 /* --- DEBUG COLLISION ---

@@ -36,6 +36,7 @@ export function showBuffPopup(buffType) {
             text = 'SCORE x2!';
             color = '#FBBF24'; // Gold
             break;
+        // 'powerup' case removed as it is no longer in use.
         default:
             return;
     }
@@ -366,13 +367,13 @@ function initZoneScenery() {
 // This makes it easy to add new visual effects in the future.
 const BUFF_VISUAL_CONFIG = {
     shield: {
-        className: 'shield-visual',
-        // Inline styles are used here as a temporary measure to ensure visibility,
-        // bypassing potential issues in external CSS files.
-        // These can be moved to a proper CSS file later.
-        inlineStyle: 'position: absolute; top: -15%; left: -15%; width: 130%; height: 130%; border-radius: 50%; background-color: rgba(56, 189, 248, 0.4); border: 2px solid rgba(56, 189, 248, 0.8); pointer-events: none;'
+        className: 'shield-visual'
+        // inlineStyle removed, positioning will be handled by CSS classes.
+    },
+    speed_multiplier: {
+        className: 'speed-visual'
+        // Style will be defined in style.css
     }
-    // Future buffs with dedicated visuals can be added here.
 };
 
 /**
@@ -392,9 +393,7 @@ function manageBuffVisual(playerEl, buffKey, isActive) {
         if (!visualEl) {
             visualEl = document.createElement('div');
             visualEl.className = `player-buff-visual ${visualClass}`;
-            if (config.inlineStyle) {
-                visualEl.style.cssText = config.inlineStyle;
-            }
+            // Removed if (config.inlineStyle) block
             playerEl.appendChild(visualEl);
             gsap.fromTo(visualEl, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
         }
@@ -423,12 +422,13 @@ export function updatePlayerBuffVisuals() {
     // --- Handle buffs that only toggle classes on the player ---
     playerEl.classList.toggle('player-buff-speed_multiplier', !!(state.activeBuffs.speed_multiplier && state.activeBuffs.speed_multiplier.active));
     playerEl.classList.toggle('player-buff-score_multiplier', !!(state.activeBuffs.score_multiplier && state.activeBuffs.score_multiplier.active));
-    
+
 
     // --- Handle global visual cues (e.g., screen-wide effects) ---
+    // The global speed overlay is now replaced by the player-centric 'speed-visual' effect.
     const speedOverlay = document.getElementById('speed-lines-overlay');
     if (speedOverlay) {
-        speedOverlay.classList.toggle('speed-lines-active', !!(state.activeBuffs.speed_multiplier && state.activeBuffs.speed_multiplier.active));
+        speedOverlay.classList.remove('speed-lines-active');
     }
 }
 
