@@ -767,12 +767,14 @@
         label: item => (item.title && item.title.ko) || ('#' + item.id),
         sub: item => `pos:${item.pos ?? '-'}  ${item.category ?? ''}`,
         sortBy: item => item.pos ?? 0,
-        newItem: () => ({ id: Date.now() % 100000, pos: 0, elevation: 0, title: emptyLang(), desc: emptyLang(), color: '#38BDF8', category: 'other', link: '' }),
+        newItem: () => ({ id: Date.now() % 100000, pos: 0, elevation: 0, infoTagHidden: false, width: 0, title: emptyLang(), desc: emptyLang(), color: '#38BDF8', category: 'other', link: '' }),
         fields: [
           { key: 'id', type: 'number', label: 'ID' },
+          { key: 'infoTagHidden', type: 'checkbox', label: '정보 태그 숨김 (infoTagHidden)' },
           { key: 'pos', type: 'number', label: 'Position (pos)' },
           { key: 'elevation', type: 'number', label: 'Elevation' },
           { key: 'isFloatingPlatform', type: 'checkbox', label: '부유 발판 (isFloatingPlatform)' },
+          { key: 'width', type: 'number', label: 'Width (px)', optional: true },
           { key: 'isJumpPad', type: 'checkbox', label: '점프 패드 (isJumpPad)' },
           { key: 'color', type: 'color', label: 'Color' },
           { key: 'category', type: 'select', label: 'Category', options: CATEGORY_OPTIONS },
@@ -783,6 +785,7 @@
           { key: 'hidden', type: 'checkbox', label: '숨김 (hidden)' },
           { key: 'inProgress', type: 'checkbox', label: '진행중 (inProgress)' },
           { key: 'entranceDir', type: 'select', label: 'Entrance Direction (entranceDir)', options: ['0: None', '1: Top (∪)', '2: Right (⊂)', '3: Bottom (∩)', '4: Left (⊃)'] },
+          { key: 'buffType', type: 'select', label: 'Buff Type', options: ['none', 'speed_multiplier', 'shield', 'score_multiplier'], optional: true },
 
         ],
       };

@@ -3,6 +3,7 @@
     "id": 1,
     "pos": 700,
     "elevation": 0,
+    "infoTagHidden": true,
     "title": {
       "ko": "출생",
       "en": "Birth",
@@ -14,11 +15,18 @@
       "ja": "光州広域市 (2003年9月)"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "birth",
     "link": "https://www.gwangju.go.kr/",
     "hidden": false,
     "entranceDir": 0,
     "isJumpPad": true
+  },
+  {
+    "id": 99999,
+    "pos": 2500,
+    "elevation": 120,
+    "isFloatingPlatform": true,
+    "width": 300
   },
   {
     "id": 2,
@@ -35,7 +43,7 @@
       "ja": "長徳小学校 (2010年3月)"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "enrollment",
     "link": "http://jangdeok.gen.es.kr/",
     "entranceDir": 0,
     "isFloatingPlatform": false,
@@ -76,7 +84,7 @@
       "ja": "長徳中学校 (2016年3月)"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "enrollment",
     "link": "http://jangdeok.gen.ms.kr/",
     "entranceDir": 0,
     "isFloatingPlatform": false,
@@ -117,7 +125,7 @@
       "ja": "光州進興高校 (2019年3月)"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "enrollment",
     "link": "http://jinheung.gen.hs.kr/",
     "entranceDir": 0,
     "isJumpPad": true
@@ -147,7 +155,7 @@
     "pos": 6596,
     "elevation": 0,
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "enrollment",
     "title": {
       "ko": "대학교 입학",
       "en": "University Entrance",
@@ -264,7 +272,8 @@
     "category": "military",
     "link": "https://rokaf.mil.kr/",
     "entranceDir": 0,
-    "isFloatingPlatform": true
+    "isFloatingPlatform": false,
+    "isJumpPad": true
   },
   {
     "id": 12,
@@ -284,7 +293,8 @@
     "category": "military",
     "link": "https://rokaf.mil.kr/",
     "entranceDir": 0,
-    "isFloatingPlatform": true
+    "isFloatingPlatform": false,
+    "isJumpPad": true
   },
   {
     "id": 13,
@@ -304,7 +314,8 @@
     "category": "military",
     "link": "https://rokaf.mil.kr/",
     "entranceDir": 0,
-    "isFloatingPlatform": true
+    "isFloatingPlatform": false,
+    "isJumpPad": true
   },
   {
     "id": 14,
@@ -341,7 +352,7 @@
       "ja": "韓国空軍兵長 (851期, 2025年6月)"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "military",
     "link": "https://rokaf.mil.kr/",
     "entranceDir": 0,
     "isJumpPad": true
@@ -407,7 +418,8 @@
     "inProgress": false,
     "link": "https://devleu.tistory.com/46",
     "entranceDir": 0,
-    "isFloatingPlatform": true
+    "isFloatingPlatform": false,
+    "isJumpPad": true
   },
   {
     "id": 25,
@@ -548,10 +560,89 @@
       "ja": "グローバルイノベーションハンドル（2026年6月）"
     },
     "color": "#38BDF8",
-    "category": "jump_pad",
+    "category": "internship",
     "link": "",
     "inProgress": true,
     "entranceDir": 0,
+    "isJumpPad": true
+  },
+  {
+    "id": 38334,
+    "pos": 21500,
+    "elevation": 0,
+    "title": {
+      "ko": "발판",
+      "en": "",
+      "ja": ""
+    },
+    "desc": {
+      "ko": "발판",
+      "en": "",
+      "ja": ""
+    },
+    "color": "#38BDF8",
+    "category": "other",
+    "link": "",
+    "isJumpPad": true,
+    "inProgress": true
+  },
+  {
+    "id": 48365,
+    "pos": 4000,
+    "elevation": 50,
+    "title": {
+      "ko": "C",
+      "en": "C",
+      "ja": "C"
+    },
+    "desc": {
+      "ko": "C 입문",
+      "en": "C language",
+      "ja": "C入門"
+    },
+    "color": "#38BDF8",
+    "category": "other",
+    "link": "",
+    "isJumpPad": true
+  },
+  {
+    "id": 60029,
+    "pos": 5500,
+    "elevation": 50,
+    "title": {
+      "ko": "Unity",
+      "en": "Unity",
+      "ja": "Unity"
+    },
+    "desc": {
+      "ko": "Unity 입문",
+      "en": "Introduction to Unity",
+      "ja": "Unity入門"
+    },
+    "color": "#38BDF8",
+    "category": "other",
+    "link": "",
+    "isJumpPad": true,
+    "buffType": "speed_multiplier"
+  },
+  {
+    "id": 10963,
+    "pos": 7000,
+    "elevation": 50,
+    "title": {
+      "ko": "Python",
+      "en": "Python",
+      "ja": "Python"
+    },
+    "desc": {
+      "ko": "Python 시작",
+      "en": "Start Python",
+      "ja": "Pythonを起動する"
+    },
+    "color": "#38BDF8",
+    "category": "other",
+    "link": "",
+    "buffType": "shield",
     "isJumpPad": true
   }
 ]

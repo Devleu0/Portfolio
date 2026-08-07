@@ -1,4 +1,4 @@
-import { isMobile, state, PERFECT_THRESHOLD_MS, GOOD_THRESHOLD_MS } from '../app-config.js';
+import { isMobile, state, BUFF_SETTINGS, PERFECT_THRESHOLD_MS, GOOD_THRESHOLD_MS } from '../app-config.js';
 import { gameState } from './game-state.js';
 import { moveAxis, shiftRect, cacheWallRect } from './collision-system.js';
 import { processInteraction } from './game-events.js';
@@ -12,7 +12,9 @@ export function gameLoop(time, deltaTime) {
         doJump();
     }
 
-    const scrollSpeed = isMobile ? 16 : 24;
+    const baseScrollSpeed = isMobile ? 16 : 24;
+    const speedMultiplier = state.activeBuffs.speed_multiplier.active ? BUFF_SETTINGS.speedMultiplier : 1;
+    const scrollSpeed = baseScrollSpeed * speedMultiplier;
     const horizontalMove = scrollSpeed * timeScale;
 
     let scrollDelta = 0;

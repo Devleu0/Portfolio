@@ -16,11 +16,79 @@ export function updateComboDisplay() {
     if (comboEl) comboEl.textContent = state.comboCount;
 }
 
+export function showBuffPopup(buffType) {
+    const playerEl = getPlayerElement();
+    if (!playerEl) return;
+
+    let text = '';
+    let color = '';
+
+    switch (buffType) {
+        case 'speed_multiplier':
+            text = 'SPEED UP!';
+            color = '#FDE047'; // Yellow
+            break;
+        case 'shield':
+            text = 'SHIELD ON!';
+            color = '#38BDF8'; // Blue
+            break;
+        case 'score_multiplier':
+            text = 'SCORE x2!';
+            color = '#FBBF24'; // Gold
+            break;
+        // 'powerup' case removed as it is no longer in use.
+        default:
+            return;
+    }
+
+    const playerRect = playerEl.getBoundingClientRect();
+    const popup = document.createElement('div');
+    popup.className = 'score-popup score-popup-buff'; // Reuse score-popup style
+    popup.textContent = text;
+    popup.style.cssText = `
+        position: fixed;
+        left: ${playerRect.left + playerRect.width * 3}px;
+        top: ${playerRect.top - 20}px;
+        transform: translateX(-50%);
+        font-family: var(--font-title);
+        font-size: 1.8em;
+        font-weight: bold;
+        color: ${color};
+        text-shadow: 3px 3px 0 var(--shadow);
+        white-space: nowrap;
+        z-index: 101;
+        pointer-events: none;
+    `;
+    document.body.appendChild(popup);
+
+    gsap.fromTo(popup,
+        { opacity: 0, y: 0, scale: 0.5 },
+        {
+            opacity: 1,
+            y: -50,
+            scale: 1,
+            duration: 0.4,
+            ease: 'back.out(1.7)',
+            onComplete: () => {
+                gsap.to(popup, {
+                    opacity: 0,
+                    y: -100,
+                    duration: 0.5,
+                    delay: 0.8,
+                    ease: 'power1.in',
+                    onComplete: () => popup.remove()
+                });
+            }
+        }
+    );
+}
+
+
 export function triggerCollectEffect(eventEl, judgement = 'perfect', category = 'other') {
     // 사각 애니메이션 (이벤트 기준)
     const wave = document.createElement('div');
     wave.className = 'collect-shockwave is-perfect';
-    
+
     const catColor = getCategoryColor(category);
     wave.style.setProperty('--wave-color', catColor);
 
@@ -67,6 +135,8 @@ function createProgressMarkers() {
     if (totalWidth <= 0) return;
 
     eventsData.forEach(event => {
+        if (!event.title) return;
+        
         const marker = document.createElement('div');
         marker.className = 'progress-marker';
         const position = (event.pos / totalWidth) * 100;
@@ -75,7 +145,7 @@ function createProgressMarkers() {
 
         const tooltip = document.createElement('div');
         tooltip.className = 'progress-tooltip';
-        
+
         // Add data attributes for each language
         if (typeof event.title === 'object' && event.title !== null) {
             tooltip.dataset.ko = event.title.ko || '';
@@ -193,7 +263,7 @@ function initStatCounter() {
             if (finalRankEl) {
                 const events = getEventData();
                 const totalObjects = events.length;
-                const estimatedMaxScore = totalObjects * 500 * 1.2; 
+                const estimatedMaxScore = totalObjects * 500 * 1.2;
 
                 const rankThresholds = {
                     S: estimatedMaxScore * 0.9,
@@ -295,6 +365,74 @@ function initZoneScenery() {
     });
 }
 
+// A configuration object for buffs that have dedicated visual elements.
+// This makes it easy to add new visual effects in the future.
+const BUFF_VISUAL_CONFIG = {
+    shield: {
+        className: 'shield-visual'
+        // inlineStyle removed, positioning will be handled by CSS classes.
+    },
+    speed_multiplier: {
+        className: 'speed-visual'
+        // Style will be defined in style.css
+    }
+};
+
+/**
+ * Manages the creation, update, and removal of a buff's visual element based on its state.
+ * @param {HTMLElement} playerEl - The player's main DOM element.
+ * @param {string} buffKey - The key for the buff (e.g., 'shield').
+ * @param {boolean} isActive - Whether the buff is currently active.
+ */
+function manageBuffVisual(playerEl, buffKey, isActive) {
+    const config = BUFF_VISUAL_CONFIG[buffKey];
+    if (!config) return;
+
+    const visualClass = config.className;
+    let visualEl = playerEl.querySelector(`.${visualClass}`);
+
+    if (isActive) {
+        if (!visualEl) {
+            visualEl = document.createElement('div');
+            visualEl.className = `player-buff-visual ${visualClass}`;
+            // Removed if (config.inlineStyle) block
+            playerEl.appendChild(visualEl);
+            gsap.fromTo(visualEl, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
+        }
+    } else {
+        if (visualEl) {
+            gsap.to(visualEl, { opacity: 0, scale: 0.5, duration: 0.3, ease: 'back.in(1.7)', onComplete: () => visualEl.remove() });
+        }
+    }
+}
+
+/**
+ * Updates all visual effects based on the player's current buffs.
+ * It handles both buffs that require dedicated DOM elements (like shields)
+ * and those that just toggle CSS classes on the player.
+ */
+export function updatePlayerBuffVisuals() {
+    const playerEl = getPlayerElement();
+    if (!playerEl) return;
+
+    // --- Handle buffs that add/remove dedicated visual elements ---
+    Object.keys(BUFF_VISUAL_CONFIG).forEach(buffKey => {
+        const buff = state.activeBuffs[buffKey];
+        manageBuffVisual(playerEl, buffKey, !!(buff && buff.active));
+    });
+
+    // --- Handle buffs that only toggle classes on the player ---
+    playerEl.classList.toggle('player-buff-speed_multiplier', !!(state.activeBuffs.speed_multiplier && state.activeBuffs.speed_multiplier.active));
+    playerEl.classList.toggle('player-buff-score_multiplier', !!(state.activeBuffs.score_multiplier && state.activeBuffs.score_multiplier.active));
+
+
+    // --- Handle global visual cues (e.g., screen-wide effects) ---
+    // The global speed overlay is now replaced by the player-centric 'speed-visual' effect.
+    const speedOverlay = document.getElementById('speed-lines-overlay');
+    if (speedOverlay) {
+        speedOverlay.classList.remove('speed-lines-active');
+    }
+}
 
 export function initUI() {
     initModeButtons();
@@ -337,8 +475,8 @@ export function triggerComboEffect(combo) {
     comboEl.dataset.tier = tier;
 
     // Counter punch animation
-    gsap.fromTo(comboEl, 
-        { scale: 1.4 }, 
+    gsap.fromTo(comboEl,
+        { scale: 1.4 },
         { scale: 1, duration: 0.25, ease: 'back.out(3)' }
     );
 
@@ -355,8 +493,8 @@ export function triggerComboEffect(combo) {
 export function hideComboCounter() {
     const comboEl = document.getElementById('combo-display');
     if (!comboEl) return;
-    gsap.to(comboEl, { 
-        opacity: 0, scale: 0.8, duration: 0.3, 
+    gsap.to(comboEl, {
+        opacity: 0, scale: 0.8, duration: 0.3,
         onComplete: () => {
             comboEl.classList.remove('is-active');
             // Reset opacity and scale for the next time
@@ -370,7 +508,7 @@ function triggerScreenShake(tier) {
     const container = document.querySelector('.horizontal-container');
     if (!container) return;
     const shakeClass = `shake-${tier}`;
-    
+
     // Using a timeout to allow the class to be removed before re-adding
     container.classList.remove('shake-mid', 'shake-high', 'shake-max');
     setTimeout(() => {
@@ -385,9 +523,9 @@ function triggerBackgroundFlash(tier) {
     const flash = document.getElementById('combo-flash');
     if (!flash) return;
     const color = tier === 'max' ? 'radial-gradient(circle, rgba(253,224,71,0.5), transparent 70%)'
-                : tier === 'high' ? 'radial-gradient(circle, rgba(253,224,71,0.3), transparent 70%)'
-                : 'radial-gradient(circle, rgba(34,211,238,0.2), transparent 70%)';
-    
+        : tier === 'high' ? 'radial-gradient(circle, rgba(253,224,71,0.3), transparent 70%)'
+            : 'radial-gradient(circle, rgba(34,211,238,0.2), transparent 70%)';
+
     flash.style.background = color;
     gsap.fromTo(flash, { opacity: 1 }, { opacity: 0, duration: tier === 'max' ? 0.5 : 0.3, ease: 'power2.out' });
 }
@@ -408,9 +546,10 @@ function showMaxComboPopup(combo) {
         z-index: 100;
     `;
     document.body.appendChild(popup);
-    gsap.fromTo(popup, 
+    gsap.fromTo(popup,
         { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)', 
+        {
+            scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)',
             onComplete: () => {
                 gsap.to(popup, { opacity: 0, scale: 1.5, duration: 0.5, delay: 0.5, onComplete: () => popup.remove() });
             }
@@ -441,7 +580,8 @@ export function showComboBreakToast(lastCombo) {
     document.body.appendChild(toast);
     gsap.fromTo(toast,
         { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out',
+        {
+            y: 0, opacity: 1, duration: 0.3, ease: 'power2.out',
             onComplete: () => {
                 gsap.to(toast, { opacity: 0, y: -20, duration: 0.6, delay: 0.6, ease: 'power1.in', onComplete: () => toast.remove() });
             }

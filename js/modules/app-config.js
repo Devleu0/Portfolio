@@ -80,6 +80,13 @@ export const state = {
     // UI 및 애니메이션 상태
     isGameHudVisible: false,    // 게임 HUD가 보이는지 여부
     isStatSectionCounted: false,// 통계 섹션 카운트 애니메이션 실행 여부
+
+    // 파워업/버프 상태
+    activeBuffs: {
+        speed_multiplier: { active: false, timeoutId: null },
+        shield: { active: false, timeoutId: null },
+        score_multiplier: { active: false, value: 1, timeoutId: null },
+    },
 };
 
 // ---------------------------------------------------------------------------------
@@ -88,6 +95,15 @@ export const state = {
 export const effectOffset = { x: 80, y: -80 }; // 이펙트 위치 오프셋
 export const PERFECT_THRESHOLD_MS = 120; // 'Perfect' 판정을 위한 최대 시간 (ms)
 export const GOOD_THRESHOLD_MS = 200;  // 'Good' 판정을 위한 최대 시간 (ms)
+
+// ---------------------------------------------------------------------------------
+// 버프 설정
+// ---------------------------------------------------------------------------------
+export const BUFF_SETTINGS = {
+    duration: 5000,           // 버프 지속시간 (ms)
+    speedMultiplier: 1.3,      // 속도 증가 배율
+    scoreMultiplier: 2,        // 점수 획득 배율
+};
 
 // ---------------------------------------------------------------------------------
 // 유틸리티 함수

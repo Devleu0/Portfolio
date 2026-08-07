@@ -369,7 +369,7 @@ body {
 /* 1. 기계식 점프 패드 베이스 (두께감 및 형태) */
 .event-wrapper .jump-pad-platform, 
 .frame-wall[data-is-jump-pad="true"] {
-    width: 110px; /* 기존 뱃지(96px)보다 살짝 더 넓게 하여 지탱하는 안정감 부여 */
+    width: 200px; /* 기존 뱃지(96px)보다 살짝 더 넓게 하여 지탱하는 안정감 부여 */
     height: 26px; /* 두께감을 위해 높이 증가 */
     left: 50%;
     transform: translateX(-50%);
@@ -849,12 +849,115 @@ body {
     animation: finale-bounce-kf 0.5s ease-in-out infinite;
 }
 
+/* ==========================================================================
+   플레이어 버프 이펙트 (개선안)
+   ========================================================================== */
+
+/* Generic styles for all buff visuals. Handles centering within the player element. */
+.player-buff-visual {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* Add a transition for smooth appearance/disappearance if needed, but GSAP handles it. */
+}
+
+/* 1. 스피드 버프 (회전하는 시안 네온 대쉬 링) */
+.speed-visual {
+    width: 180%; /* Relative to player size */
+    height: 180%; /* Relative to player size */
+    border-radius: 50%;
+    border: 4px dashed var(--accent); /* Using var(--accent) for cyan */
+    box-shadow: 0 0 16px var(--accent), inset 0 0 16px var(--accent);
+    animation: spin 3s linear infinite;
+    z-index: 15; /* Above player (z-index 10) */
+}
+
+/* Afterimage for speed buff */
+.speed-afterimage {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9; /* Below player (z-index 10) but above other things */
+    opacity: 0.7;
+    color: var(--accent); /* Cyan color */
+    filter: drop-shadow(0 0 8px var(--accent));
+    will-change: opacity, transform;
+}
+
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* 2. 사이버 에너틱 쉴드 (구형 파동 및 회전 링) */
+.shield-visual {
+    width: 130%; /* Relative to player size */
+    height: 130%; /* Relative to player size */
+    border-radius: 50%;
+    background-color: rgba(56, 189, 248, 0.4);
+    border: 2px solid rgba(56, 189, 248, 0.8);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.7), inset 0 0 8px rgba(56, 189, 248, 0.5);
+    z-index: 15; /* Same as speed-visual */
+}
+
+/* Player-specific buff class for direct player styling (e.g., glow) */
+/* The player-buff-speed_multiplier class is now toggled on the playerEl */
+.player-buff-speed_multiplier .player-inner {
+    filter: drop-shadow(0 0 10px var(--accent)) drop-shadow(0 0 5px white);
+}
+.player-buff-shield .player-inner {
+    /* No direct styling here, handled by shield-visual element */
+}
+.player-buff-score_multiplier .player-inner {
+    /* No direct styling here, handled by a separate element or popup */
+}
+
+/* HIDE old buff styles (pseudo-elements are no longer used for new system) */
+.player-buff-speed .player-inner,
+.player-buff-speed .player-inner::before,
+.player-buff-speed .player-inner::after,
+.player-buff-shield .player-inner::before,
+.player-buff-shield .player-inner::after {
+    all: unset; /* Remove all inherited styles */
+    display: none !important;
+}
+
+
+/* HIDE old global speed lines overlay permanently */
+#speed-lines-overlay {
+    display: none !important;
+}
+
+
+
+
+/* 4. 범용 버프 펄스 애니메이션 (UI / HUD용) */
+@keyframes buff-pulse {
+    0% {
+        transform: scale(0.95);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.08);
+        filter: brightness(1.3);
+    }
+    100% {
+        transform: scale(0.95);
+        filter: brightness(1);
+    }
+}
+
 .finale-layer {
     position: absolute;
     inset: 0;
     pointer-events: none;
     overflow: hidden;
-    z-index: 6;
+    ad: 6;
 }
 
 .finale-confetti {
@@ -1896,12 +1999,6 @@ button.action {
     transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.card-wide {}
-
-.card-tall {}
-
-.card-large {}
-
 /* Hamburger Menu Styles */
 .hamburger-btn {
     display: none;
@@ -2436,6 +2533,35 @@ button.action {
         /* 각 아이템 사이 적절한 여백 */
         margin-bottom: 20px !important;
     }
+}
+
+/* Buff Visual Effects - New System */
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.speed-visual {
+    width: 180%;
+    height: 180%;
+    border-radius: 50%;
+    border: 4px dashed #22D3EE; /* Cyan color from theme */
+    box-shadow: 0 0 16px #22D3EE, inset 0 0 16px #22D3EE;
+    animation: spin 3s linear infinite;
+}
+
+.speed-afterimage {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9; /* Below player (z-index 10) */
+    opacity: 0.7;
+    color: #22D3EE; /* Cyan color */
+    filter: drop-shadow(0 0 8px #22D3EE);
+    will-change: opacity, transform;
 }
 
 /* --- DEBUG COLLISION ---
