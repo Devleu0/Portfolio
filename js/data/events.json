@@ -3,6 +3,7 @@
     "id": 1,
     "pos": 700,
     "elevation": 0,
+    "infoTagHidden": true,
     "title": {
       "ko": "출생",
       "en": "Birth",
@@ -19,6 +20,13 @@
     "hidden": false,
     "entranceDir": 0,
     "isJumpPad": true
+  },
+  {
+    "id": 99999,
+    "pos": 2500,
+    "elevation": 120,
+    "isFloatingPlatform": true,
+    "width": 300
   },
   {
     "id": 2,

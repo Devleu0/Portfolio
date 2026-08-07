@@ -135,6 +135,8 @@ function createProgressMarkers() {
     if (totalWidth <= 0) return;
 
     eventsData.forEach(event => {
+        if (!event.title) return;
+        
         const marker = document.createElement('div');
         marker.className = 'progress-marker';
         const position = (event.pos / totalWidth) * 100;
