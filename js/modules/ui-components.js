@@ -24,7 +24,7 @@ export function showBuffPopup(buffType) {
     let color = '';
 
     switch (buffType) {
-        case 'speed':
+        case 'speed_multiplier':
             text = 'SPEED UP!';
             color = '#FDE047'; // Yellow
             break;

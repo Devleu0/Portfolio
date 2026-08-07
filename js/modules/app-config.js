@@ -83,9 +83,10 @@ export const state = {
 
     // 파워업/버프 상태
     activeBuffs: {
-        speed: { active: false, timeoutId: null },
+        speed_multiplier: { active: false, timeoutId: null },
         shield: { active: false, timeoutId: null },
-        multiplier: { active: false, value: 1, timeoutId: null },
+        score_multiplier: { active: false, value: 1, timeoutId: null },
+        powerUp: { active: false, timeoutId: null },
     },
 };
 
